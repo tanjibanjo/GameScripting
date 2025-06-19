@@ -1,0 +1,87 @@
+Lane Pollock
+12 June 2025
+Pseudocode Problems
+
+1. Print use input to all caps
+----------------------------------------------------------
+Variables:
+	userInput = none
+	upperUserInput = none
+Algorithm:
+	1. Ask user what they would like to print
+	2. Store input in userInput variable
+		2a. Error check user input - if empty, a digit, or already capitalized
+			- ask again until input is valid
+	3. Use string function to capitalize input and store in upperUserInput
+	4. Print upperUserInput to screen 
+___________________________________________________________________________________________
+2. Add two user numbers together, print result
+----------------------------------------------------------
+variables:
+	num1 = 0;
+	num2 = 0;
+algorithm:
+	1. print "Enter first number : "
+	2. get user input 
+		2a. error check - if not a number, ask again until valid input 
+		2b. when valid input, store in num1
+	3. print "Enter second number: "
+		3a. error check - if not a number, ask again until valid input
+		3b. when input is valid, store in num2
+	4. print the result of num1 + num2 to screen
+___________________________________________________________________________________________
+3.  Get an unknown amount of numbers from the user and add them together, print result
+----------------------------------------------------------
+variables:
+	numToAdd = none
+	total = 0
+	addAnotherNum= 'y'(char)
+algorithm:
+	1. while addAnotherNum = 'y'
+		1. print out "Number to add to total: "
+		2. while numToAdd is none, empty, or not a digit, keep prompting for number
+			- when valid, store input to numToAdd
+		3. total += numToAdd
+		4. prompt if user would like to add another number? ([y/n]
+			4a. if 'y', repeat loop
+			4b. if 'n', exit loop and print current total
+			4c. if neither, ask again until valid
+___________________________________________________________________________________________
+4. have the user define a maximum whole number, print out a random number between 0 and their number, allow the user to play again or quit
+----------------------------------------------------------
+variables:
+	maxNum = none
+	playAgain = y
+algorithm:
+	1. while playAgain == 'y'
+		1. prompt user for max number
+		2. while maxNone is none, empty, or not a num
+			2a. keep prompting for valid number
+			2B. store into maxNum
+		3.  print random number between 0 and maxNum
+		4. prompt user it they would like to play again? [y/n]
+			4a. while input is not 'y' or 'n', ask until valid
+			4b. is 'y' - continue
+			4c. is 'n' - exit loop
+___________________________________________________________________________________________
+5. Get a random nummber, if the number is even, print "RIGHT", if it's odd, print "LEFT". Do this ten times. Then, print how many times it was "LEFT" and "RIGHT" respectively.
+----------------------------------------------------------
+variables:
+	i = 0 (index)
+	randNum = none
+	evenCount = 0
+	oddCount = 0
+algorithm:
+	1. while i < 10 (0-9 will run ten times)
+		1.  use random generator to generate number and store in randNum
+		2. if randNum == 0
+			2a. count this as even, print "RIGHT" and increment evenCount++
+		3. else if (randNum % 2 == 0)
+			3a. number is even and print "RIGHT"
+				- increment evenCount++
+		4. else, number is odd and print "LEFT"
+				- increment oddCount++
+		5. increment i++
+	2. print to screen "Output: Right: " and evenCount variable
+	3. print to screen "Output: Left:" and oddCount variable
+
