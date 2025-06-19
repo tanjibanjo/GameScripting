@@ -6,7 +6,7 @@ function capitalizeInput()
     local upperCaseResult = nil;
 
     --prompt for input
-    while(userInput == nil or userInput == ""  or userInput = string.upper(userInput) or tonumber(userInput)) do
+    while(userInput == nil or userInput == ""  or userInput == string.upper(userInput) or tonumber(userInput)) do
         print("Enter input to capitalize: ")
         userInput = io.read()
     end
