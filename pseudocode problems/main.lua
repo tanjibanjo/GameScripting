@@ -2,6 +2,6 @@ require("AddTwoNums");
 require("AddManyNums");
 require("ConvertToUpper");
 
-capitalizeInput(); --using ConvertToUpper
-printTwoNumSum(); --uses AddTwoNums
+--capitalizeInput(); --using ConvertToUpper
+--printTwoNumSum(); --uses AddTwoNums
 printUserSum(); --using AddManyNums

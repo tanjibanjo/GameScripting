@@ -15,16 +15,19 @@ function printUserSum()
         --add number to sum, then reset variable **very important because our while loop checks 
         sum = addNum + sum;
         addNum = nil;
+
         --prompt if user wants to add another
-        print("Add another?[y/n]");
-        userChoice = io.read();
-            if(userChoice == nil or (userChoice ~= 'y' and userChoice ~= 'n')) then
-                print("Add another?[y/n]");
-                userChoice = io.read();
-            end
+        while(userChoice == nil or (userChoice ~= 'y' and userChoice ~= 'n')) do
+            print("Add another?[y/n]");
+            userChoice = io.read();
+        end
+
         if(userChoice == 'n') then
             done = true;
         end
+
+        --reset userChoice
+        userChoice = nil;
 
     end
     print("Total: " .. sum);
