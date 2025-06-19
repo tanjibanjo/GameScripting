@@ -2,10 +2,10 @@
 
 function runGenerator()
     --local variables
-    i = 0;
-    randomNum = nil;
-    evenCount = 0;
-    oddCount = 0;
+    local i = 0;
+    local randomNum = nil;
+    local evenCount = 0;
+    local oddCount = 0;
 
     --seed and warm up the generator
     math.randomseed(os.time());
