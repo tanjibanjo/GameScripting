@@ -1,3 +1,6 @@
+
+--Lane Pollock
+--Pseudocode to Lua Assignments
 --add numbers from the user until they say they are done
 
 function printUserSum()

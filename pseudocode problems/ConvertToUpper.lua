@@ -1,3 +1,6 @@
+--Lane Pollock
+--Pseudocode to Lua Assignments
+
 -- take user input and capitalize it, then print the result.
 
 function capitalizeInput()

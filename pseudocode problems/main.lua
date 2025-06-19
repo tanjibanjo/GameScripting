@@ -1,3 +1,6 @@
+--Lane Pollock
+--Pseudocode to Lua Assignments
+
 require("AddTwoNums");
 require("AddManyNums");
 require("ConvertToUpper");

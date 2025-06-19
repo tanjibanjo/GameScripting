@@ -1,3 +1,6 @@
+--Lane Pollock
+--Pseudocode to Lua Assignments
+
 --get user input and generate a random number from 1 to that number
 
 function GenerateRandomUserNumber()

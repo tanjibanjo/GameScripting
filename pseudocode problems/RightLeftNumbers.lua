@@ -1,3 +1,5 @@
+--Lane Pollock
+--Pseudocode to Lua Assignments
 --this function will generate 10 random numbers, assigning them to left or right based on if they are even or odd, then display results
 
 function runGenerator()

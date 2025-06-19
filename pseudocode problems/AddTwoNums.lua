@@ -1,3 +1,6 @@
+--Lane Pollock
+--Pseudocode to Lua Assignments
+
 --take two numbers from user, print together and return sum
 function printTwoNumSum()
     --variables
