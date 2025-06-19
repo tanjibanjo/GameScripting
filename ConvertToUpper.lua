@@ -14,4 +14,5 @@ function capitalizeInput()
     upperCaseResult = string.upper(userInput);
 
     print(upperCaseResult)
+    
 end
