@@ -1,3 +1,5 @@
 require("AddTwoNums");
---using addtwonums
-printTwoNumSum();
+require("AddManyNums");
+
+--printTwoNumSum(); --uses AddTwoNums
+printUserSum();
