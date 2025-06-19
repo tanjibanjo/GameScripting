@@ -1,0 +1,29 @@
+Lane Pollock
+19 Jun 2025
+Guessing Game Pseudocode
+Variables:
+	correcNumber = nil
+	userGuess = nil
+	attempts = 0
+	continue = true
+	playAgain = true;
+	userChoice = nil;
+	
+Algorithm:
+	1. While (playAgain ~= false) --player wants to continue playing
+	2. use random generator to choose a random number in between 1 and 100 (inclusive)
+	3. while (attempts < 7 or continue == false) --max attempts are 7, so this will fire seven times, or until user guesses correctly
+		a. prompt user to enter a number guess and store in userGuess
+		b. check if the guess is the same as the correct number
+			i. if it is, set continue = false
+			ii. else, increment the attempts ++
+		c. reset the userGuess variable to nil
+	4. check the status of continue
+		a. if continue == false, the user has won the game 
+			i. print win message
+		b. if continue == true, the loop ended when the player guessed 7 times
+			ii. print lose message
+	5. prompt user if they want to play again and store in userChoice [y/n]
+		a. if userChoice ~= 'y' or 'n', prompt until it does
+		b. if userChoice == 'n'
+			i. playAgain = false;
