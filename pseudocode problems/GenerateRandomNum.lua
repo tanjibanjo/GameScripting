@@ -5,6 +5,10 @@ function GenerateRandomUserNumber()
     local maxNum = nil;
     local playAgain = true;
 
+    --seed the generator and warm it up
+        math.randomseed(os.time());
+        math.random(); math.random(); math.random();
+
     --main loop
     while(playAgain ~= false) do
 
@@ -16,10 +20,6 @@ function GenerateRandomUserNumber()
             print("Invalid. Enter a number.")
             maxNum = io.read();
         end
-
-        --seed the generator and warm it up
-        math.randomseed(os.time());
-        math.random(); math.random(); math.random();
 
         --generate and print the random number
         print("Random Number: " .. math.random(maxNum));
