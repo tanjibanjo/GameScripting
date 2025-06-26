@@ -7,7 +7,7 @@
 			"path": "GuessingGameAssignment"
 		},
 		{
-			"path": "LOVE_ENGINE"
+			"path": "LOVE_ENGINE/DropGame"
 		}
 	]
 }
