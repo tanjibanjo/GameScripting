@@ -20,10 +20,57 @@ end
 - Should have title screen, level 1, game over
 ]]
 
+--create a randomized table of stars
+function randomizeStars()
+    --set up randomization
+    math.randomseed(os.time());
+    math.random(); math.random(); math.random();
+
+    count = 100; --number of stars on our canvas
+    stars = {}; --table of x,y values for our star locations
+
+    while count > 0 do
+        stars[#stars+1] = math.random(0, love.graphics.getWidth()); --random x value
+        stars[#stars+1] = math.random(0, love.graphics.getHeight()); --random y value
+        --decrease lcv
+        count = count - 1;
+    end
+    return stars; --return the table
+end
+
+--function to draw the stars, takes a table of x and y coordinates
+function drawStars(stars)
+    --starglow (bigger brush, light opacity)
+    love.graphics.setColor(math.random(), math.random(), math.random(), .22) --fourth value is the opacity /alpha
+    love.graphics.setPointSize(10)
+    love.graphics.points(stars)
+    --center (small brush, high opacity)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setPointSize(2)
+    love.graphics.points(stars)
+
+end
+
 --function to set the window size
 function titleLoad()
+    planetA = love.graphics.newImage("planet_blue_smaller.png");
     titleText = "Drop Game";
     love.window.setTitle(titleText);
+end
+
+function titleDraw()
+    love.graphics.setFont(love.graphics.newFont(100));
+    --formatted print text
+    love.graphics.printf(titleText, 0, 200, love.graphics.getWidth(), "center");
+
+    --reset color
+    love.graphics.setColor(1,1,1);
+    --type, x, y, width, height, cornerx, cornery, segments
+    love.graphics.rectangle("fill", 50, 450, 250, 100, 10, 10, 6)
+    love.graphics.setColor(.3,.8,0)
+    love.graphics.setFont(love.graphics.newFont(75))
+    love.graphics.printf("Play", 50, 450, 250, "center")
+    love.graphics.setColor(1,1,1) --reset color back to white
 end
 
 -- ******************************************************
@@ -31,17 +78,17 @@ end
 -- ******************************************************
 function love.load()
     --by default, love sets window to 800x600
-    success = love.window.updateMode(1024, 768);
-    planetA = love.graphics.newImage("planet_blue_smaller.png");
-
+    success = love.window.updateMode(800, 600);
+    starsTable = randomizeStars();
     titleLoad(); --call screen function
+    
 
     --[[create scene variable 
         0 = title screen
         1 = game screen
         2 = game over screen]]
 
-    scene = 1;
+    scene = 0;
     
     --get planet variables
     
@@ -79,6 +126,10 @@ function love.mousepressed(x, y, button, istouch)
     if button == 1 then
         --if on title screen
         if scene == 0 then
+            --click on play button, play game
+            if x >= 50 and x <= 300 and y >=450 and y <= 550 then
+                scene = 1;
+            end
 
         end
         --if in game
@@ -108,13 +159,19 @@ end
 --UPDATE
 -- ******************************************************
 function love.update(dt)
+
+    if scene == 0 then
+        
+    end
+
+
     --if gameplay screen
     if scene == 1 then
         for i, value in ipairs(planetX) do
             --move slime
             if(planetY[i] + planetA:getHeight() >= love.graphics.getHeight()) then
                 print("GAMEOVER")
-                love.event.quit();
+                love.event.quit('restart');
             end
 
             planetY[i] = planetY[i] + planetSpeed[i] * dt;
@@ -126,9 +183,10 @@ end
 --DRAW
 -- ******************************************************
 function love.draw()
+    drawStars(stars)
     --title screen
     if (scene == 0) then
-        
+        titleDraw();
     end
     --gameplay
     if (scene == 1) then
