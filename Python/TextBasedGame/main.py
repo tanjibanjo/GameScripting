@@ -12,7 +12,7 @@ def main():
     enemyList = []
     characterList = []
     playerCharacter = Character("You", 50, 30, 85, "class") #default values
-    currentEnemy = Enemy("name", 1, 1, False) #default values - this will be reset with values every encounter
+    currentEnemy = Enemy("name", 1, 1, False, 0) #default values - this will be reset with values every encounter
     levelsPassed = 0.0
     count = 0 #keeps track of how many enemies you have faced
 
@@ -44,7 +44,6 @@ def main():
         encounterResult = combatEncounter(playerCharacter, currentEnemy)
         count += 1
 
-        print(levelsPassed)
         #if survived, go to the village and get character all the same
         if(encounterResult == True):
             levelsPassed += currentEnemy.score
