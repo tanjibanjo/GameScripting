@@ -126,4 +126,4 @@ def getPlayerCharacter(playerCharacter, characterList, enemyList):
             print("Huh?")
             
     #print info and start adventure
-    print("\n{%s}," % name + " a %s. Good timing too, I could really use your help." % playerCharacter.type)
+    print("\n%s," % name + " a %s. Good timing too, I could really use your help." % playerCharacter.type)
