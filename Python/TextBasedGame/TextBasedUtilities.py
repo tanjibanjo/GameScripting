@@ -4,6 +4,7 @@
 
 from CharactersClass import Character
 from CharactersClass import Enemy
+import random
 
 #function takes list and loads 9 enemies
 def loadEnemies(enemyList):
@@ -16,7 +17,7 @@ def loadEnemies(enemyList):
     orcLeader = Enemy("Orc Leader", 80, 40, False)
     goblin = Enemy("Goblin", 35, 15, False)
     swordsman = Enemy("Swordsman", 50, 25, False)
-    greedyVillager = Enemy("Greedy Villager", 20, 20, 0)
+    greedyVillager = Enemy("Greedy Villager", 40, 20, 0)
 
     #add all the enemies to the list - could initialize them in the extend statement, but it's not pretty
     #extend allows the list to not be resized every addition
@@ -32,12 +33,26 @@ def loadCharacters(characterList):
     #add characters
     characterList.extend([mage, rogue, warrior])
 
-#function prints the welcome message and background to the story
-def printIntro():
-    print("Intro goes here")
+#function prints the welcome message and background to the story - returns true if player goes to the house, false if they camp
+def introSequence():
+    print("You walk along the path, wary of monsters and of mortals known to ambush in the area.\nAlong comes a fork in the road. Left or Right? That is the question.")
+    choice = input()
+    #sorry, either way you get to the village 
+    print(f"You go {choice}. As you walk, the day dissapears to reveal dark. You think about shelter, but in the distance you see a light. Do you approach?")
+
+    while(choice != "y" and choice != "n"):
+        choice = input("[y/n]: ")
+    
+    match(choice):
+        case "y":
+            print("You get closer. Through the trees you can see someone in their home. It is a small village in the countryside that has been damaged by monsters. The people are cautious, but maybe they'll help you. You walk up and gently knock on the door.")
+            return True
+        case "n":
+            print("You spot a clearing to the left and decide it's a good enough spot. You camp off to the side of the clearing and fall asleep.")
+            return False
 
 #function prompts player for information on making their own character
-def getPlayerCharacter(playerCharacter, characterList, enemyList):
+def getPlayerCharacter(playerCharacter, characterList):
     #first get name
     name = input("What do they call you, stranger? ")
     choice = -1 #set playerChoice up
@@ -55,7 +70,7 @@ def getPlayerCharacter(playerCharacter, characterList, enemyList):
                 choice = int(input())
     except Exception as e:
         print("An error occured.")
-        return
+        choice = 2 #send player into loop below
 
     while(choice != -1):
         #switch on choice
@@ -77,9 +92,9 @@ def getPlayerCharacter(playerCharacter, characterList, enemyList):
                             choice = int(input())
                         else:
                             choice = int(input())
-                except Exception as e:
+                except Exception as e: #note: this is really just to handle if they input a letter
                     print("An error occured.")
-                    return
+                    choice = 2 #send back through loop 
             case _: #default
                 print("Not a choice...")
 
@@ -87,7 +102,6 @@ def getPlayerCharacter(playerCharacter, characterList, enemyList):
     playerCharacter.name = name
 
     #now, get player class decision and load the rest of the stats to the player character
-    print()
     #print the options
     for character in characterList:
         print(character.name + "\n\tHealth: %s" % character.health + "\n\tAttack: " + character.attack + "\n\tDexterity: %s" % character.dex)
@@ -99,7 +113,7 @@ def getPlayerCharacter(playerCharacter, characterList, enemyList):
                 print("Enter a valid choice...")
             choice = int(input("[1-3]: "))
     except Exception as e:
-        print("An error occured.")
+        print("An error occured. Crash Detected.")
         return
 
     #after valid choice, load the stats
@@ -127,3 +141,147 @@ def getPlayerCharacter(playerCharacter, characterList, enemyList):
             
     #print info and start adventure
     print("\n%s," % name + " a %s. Good timing too, I could really use your help." % playerCharacter.type)
+
+#function for 'wait' ability for player
+def wait(playerCharacter):
+    if(playerCharacter.name == "You"):
+        print("You wait.")
+    else:
+        print(f"{playerCharacter.name} waits.")
+
+
+#function for 'flee' ability for player - returns true or false based on success of flee
+def flee(playerCharacter):
+    #generate a random number between 0-100 and set
+    randNum = random.randint(0, 100)
+
+    #do a dex check
+    if(randNum >= playerCharacter.dex): #if dex is 80, this represents 80% success rate
+        print("Flee unsuccessful.")
+        return False
+    else:
+        print("Flee successful.")
+        return True
+    
+#function is for attack against player, takes enemy attack and applies it
+def attackPlayer(playerCharacter, enemy):
+    if(enemy.name != "Unicorn"): #skip if unicorn
+        #generate enemy attack within a range of possible numbers
+        #if enemy attack is 10, the range is 7 - 11/ 20 is 12 - 21 / 30 is 17-31
+        enemyAttack = 1 + (enemy.attack / 2) + random.randint(1, int(enemy.attack / 2)) 
+
+        #apply attack
+        playerCharacter.health -= enemy.attack
+        if(playerCharacter.health < 0):
+            playerCharacter.health = 0
+
+        #print update
+        print(f"Enemy attacks for {enemyAttack} damage. Player HP at {playerCharacter.health}.")
+    elif(enemy.name == "Unicorn"):
+        #apply health boost
+        playerCharacter.health -= enemy.attack
+
+        #update
+        print("The unicorn slowly approaches. As it nears, you can see the reflections in its eyes and its horn glows.\nThe next thing you know, you're waking up on the floor feeling surprisingly rested.")
+
+        #decrement the unicorn health to 0 to end the encounter
+        enemy.health -= 1
+
+#this function is for player attacking the enemy
+def attackEnemy(playerCharacter, enemy):
+    #depending on which character the player is, generate an attack in that range.
+    if(playerCharacter.type == "Mage"):
+        playerAttack = random.randint(20, 60) #20-60
+    elif(playerCharacter.type == "Rogue"):
+        playerAttack = (random.randint(0,25) + random.randint(0,25)) #0-25 x2
+    else: #warrior is 35-50
+        playerAttack = random.randint(35, 50)
+    
+    #apply attack
+    enemy.health -= playerAttack
+    if(enemy.health <0):
+        enemy.health = 0
+
+    #update
+    print(f"Player attacks for {playerAttack} damage. Enemy HP at {enemy.health}")
+
+#function takes the enemy list and generates a random index to choose for the combat encounter
+#RETURNS INDEX
+def getEnemy(enemyList):
+    #get random index
+    index = random.randint(0, 8)
+    
+    while(enemyList[index].used == True): #if the enemy has been used already, get new index
+        index = random.randint(0,9)
+
+    #return the index so the enemy can be set in the main
+    return index
+
+#function simulates a combat encounter - takes one enemy and the player character
+def combatEncounter(playerCharacter, enemy, levelsPassed):
+    #variables
+    actionChoice = -1 
+    fleeAttempt = False #represent success of flee
+
+    #player always goes first in this demo
+    while(playerCharacter.health > 0 and enemy.health > 0 and fleeAttempt != True): #both are alive and not fled
+        if(enemy.name != "Unicorn"):
+            print(f"{enemy.name} approaches...\nHP: {enemy.health}\nAttack: {enemy.attack}")
+        elif(enemy.name == "Unicorn"):
+            print(f"{enemy.name} approaches...")
+
+        #get choice
+        print("What will you do?")
+        try:
+            actionChoice = int(input("[1] Attack\n[2] Flee\n[3] Wait\n"))
+        except Exception as e:
+            actionChoice = 4
+
+        #match on choice
+        match(actionChoice):
+            case 1:
+                attackEnemy(playerCharacter, enemy)
+            case 2:
+                if(flee(playerCharacter) == True):
+                    fleeAttempt = True
+            case 3:
+                wait(playerCharacter)
+            case _:
+                print("Turn was lost.")
+        
+        #enemy turn
+        if(fleeAttempt != True and enemy.health > 0):
+            attackPlayer(playerCharacter, enemy)
+
+    #return results
+    if(enemy.health <= 0):
+        print(f"{enemy.name} defeated.\nRemaining HP: {playerCharacter.health}")
+        levelsPassed += 1
+        enemy.used = True
+        return True
+    elif(fleeAttempt == True):
+        print(f"Player got away.\nRemaining HP: {playerCharacter.health}")
+        levelsPassed += 0.5
+        enemy.used = True
+        return True
+    elif(playerCharacter.health <= 0):
+        print(f"{playerCharacter.name} was lost.")
+        return False
+
+
+#function contains the villagePerson encounter and its logic
+def villagePersonEncounter():
+    print("This land is beyond saving. There's tell that a paradise lays beyond the nothing, but it's too dangerous.\nY-you can make it though. Please try, and return to tell me if it exists.")
+    try:
+        choice = int(input("[1] If you can shelter me for the evening, I'll go look.\n[2] What? I just met you, you're crazy.\n"))
+    except Exception as e:
+        choice = int(input())
+    
+    if(choice == 1):
+        print("The villager sticks out their hand and points you to a small shed behind the house. You enter it, and make shelter for the night.")
+        print("You think to yourself, what is really out there?")
+        return True
+    if(choice == 2):
+        print("You deny the villager. As you turn to move on, you hear a scuffle. Turning around, you see the villager with a knife in their hand.")
+        return False
+    
