@@ -6,18 +6,24 @@ from CharactersClass import Character
 from CharactersClass import Enemy
 import random
 
+#function prints game over
+def gameOver(levelsPassed):
+
+    print(f"Score: {levelsPassed}\n") 
+
+
 #function takes list and loads 9 enemies
 def loadEnemies(enemyList):
     #enemies list
-    wolf = Enemy("Wolf", 50, 10, False)
-    giantSpider = Enemy("Giant Spider", 90, 30, False)
-    unicorn = Enemy("Unicorn", 1, -20, False) #this one returns health
-    demon = Enemy("Demon", 65, 25, False)
-    orc = Enemy("Orc", 40, 20, False)
-    orcLeader = Enemy("Orc Leader", 80, 40, False)
-    goblin = Enemy("Goblin", 35, 15, False)
-    swordsman = Enemy("Swordsman", 50, 25, False)
-    greedyVillager = Enemy("Greedy Villager", 40, 20, 0)
+    wolf = Enemy("Wolf", 50, 10, False, 125)
+    giantSpider = Enemy("Giant Spider", 90, 30, False, 250)
+    unicorn = Enemy("Unicorn", 1, -20, False, 25) #this one returns health
+    demon = Enemy("Demon", 65, 25, False, 140)
+    orc = Enemy("Orc", 40, 20, False, 100)
+    orcLeader = Enemy("Orc Leader", 80, 40, False, 175)
+    goblin = Enemy("Goblin", 35, 15, False, 75)
+    swordsman = Enemy("Swordsman", 50, 25, False, 100)
+    greedyVillager = Enemy("Greedy Villager", 40, 20, 0, 75)
 
     #add all the enemies to the list - could initialize them in the extend statement, but it's not pretty
     #extend allows the list to not be resized every addition
@@ -113,7 +119,7 @@ def getPlayerCharacter(playerCharacter, characterList):
                 print("Enter a valid choice...")
             choice = int(input("[1-3]: "))
     except Exception as e:
-        print("An error occured. Crash Detected.")
+        print("An error occured.")
         return
 
     #after valid choice, load the stats
@@ -218,17 +224,17 @@ def getEnemy(enemyList):
     return index
 
 #function simulates a combat encounter - takes one enemy and the player character
-def combatEncounter(playerCharacter, enemy, levelsPassed):
+def combatEncounter(playerCharacter, enemy):
     #variables
     actionChoice = -1 
     fleeAttempt = False #represent success of flee
+    if(enemy.name != "Unicorn"):
+        print(f"{enemy.name} approaches...\nHP: {enemy.health}\nAttack: {enemy.attack}")
+    elif(enemy.name == "Unicorn"):
+        print(f"{enemy.name} approaches...")
 
     #player always goes first in this demo
     while(playerCharacter.health > 0 and enemy.health > 0 and fleeAttempt != True): #both are alive and not fled
-        if(enemy.name != "Unicorn"):
-            print(f"{enemy.name} approaches...\nHP: {enemy.health}\nAttack: {enemy.attack}")
-        elif(enemy.name == "Unicorn"):
-            print(f"{enemy.name} approaches...")
 
         #get choice
         print("What will you do?")
@@ -256,12 +262,10 @@ def combatEncounter(playerCharacter, enemy, levelsPassed):
     #return results
     if(enemy.health <= 0):
         print(f"{enemy.name} defeated.\nRemaining HP: {playerCharacter.health}")
-        levelsPassed += 1
         enemy.used = True
         return True
     elif(fleeAttempt == True):
         print(f"Player got away.\nRemaining HP: {playerCharacter.health}")
-        levelsPassed += 0.5
         enemy.used = True
         return True
     elif(playerCharacter.health <= 0):

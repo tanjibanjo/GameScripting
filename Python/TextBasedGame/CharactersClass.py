@@ -11,8 +11,9 @@ class Character:
         self.type = type
 
 class Enemy:
-    def __init__(self, name, health, attack, used):
+    def __init__(self, name, health, attack, used, score):
         self.name = name
         self.health = health
         self.attack = attack
         self.used = used
+        self.score = score
