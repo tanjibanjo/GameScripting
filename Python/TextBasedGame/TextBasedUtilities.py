@@ -349,4 +349,4 @@ def endGame(playerCharacter, levelsPassed, hasOrb, questTaken):
         elif(choice == "n"):
             print("There's something supernatural about this orb. You decide no one should have the power it holds, so you bury it where it cannot be found.")
     else:
-        print("The journey to Paradise continues...but who knows if you'll find it.")
+        print("The journey to Paradise continues...but you know you're on the right path...maybe.")
