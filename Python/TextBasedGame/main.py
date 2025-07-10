@@ -124,6 +124,7 @@ def main():
 
 
     #next encounter - strange innkeeper
+    print()
     encounterResult = innkeeperEncounter(playerCharacter)
     if(encounterResult == True):
         hasOrb = True

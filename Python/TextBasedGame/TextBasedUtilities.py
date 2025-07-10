@@ -293,9 +293,7 @@ def villagePersonEncounter():
     
 #function contains the innkeeper encounter
 def innkeeperEncounter(playerCharacter):
-    print()
     choice = input("[]")
-    print()
 
     print("\nYou smell something funny. It's kind of weird, but you're so hungry you follow it anyway.")
     print("Through the forest, you come across a building. It's out of place. There's music coming from within. Enter?")
