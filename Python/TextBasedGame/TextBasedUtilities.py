@@ -311,7 +311,7 @@ def innkeeperEncounter(playerCharacter):
 
         playerGuess = input("[enter answer]: ")
 
-        if(playerGuess == "coffin" or playerGuess == "Coffin" or playerGuess == "a coffin"):
+        if(playerGuess == "coffin" or playerGuess == "Coffin" or playerGuess == "a coffin" or playerGuess == "casket" or playerGuess == "Casket" or playerGuess == "a casket"):
             print("I knew it was you. Here's the orb. [hands over orb]")
             return True
         else:
