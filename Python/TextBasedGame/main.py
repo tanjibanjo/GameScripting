@@ -175,6 +175,9 @@ def main():
                 gameOver(levelsPassed)
                 return
 
+    pause = input("[]")
+    print("...")
+    pause = input("[]")
     #if they make it to this point, they make it to paradise
     print("The trees clear. The skies are a beautiful pink and blueish hue. You feel the breeze brush up against you, and close your eyes.")
     levelsPassed += 149
