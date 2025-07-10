@@ -339,9 +339,13 @@ def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
         if(choice == "y"):
             print("You return to the villager. When you hand them the orb, you notice a glow eminating from the ground all around. The souls of the town are at peace.")
             print("When you turn back around, the villager is gone.\nAll that remains is a map. You pick it up, and smirk.")
+            print("[dexterity increased by 10]")
+            playerCharacter.dex += 10
             return True
         elif(choice == "n"):
             print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
+            print("[health raised by 15]") 
+            playerCharacter.health += 15
             return False
     elif(hasOrb == True and questTaken == False):
         print("Use orb?")
@@ -350,11 +354,15 @@ def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
         
         if(choice == "y"):
             print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
+            print("[health raised by 15]") 
+            playerCharacter.health += 15
             return False
         elif(choice == "n"):
             print("There's something supernatural about this orb. You decide no one should have the power it holds, so you bury it where it cannot be found.\nBy the tree where you bury it, you notice a piece of paper.")
             pause = input("[]")
             print("You pick it up. It is a map. You look on into the distance in anticipation of the journey ahead.")
+            print("[dexterity increased by 10]")
+            playerCharacter.dex += 10
             return True
         
     else:
