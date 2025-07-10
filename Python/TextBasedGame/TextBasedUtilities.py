@@ -338,6 +338,7 @@ def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
         
         if(choice == "y"):
             print("You return to the villager. When you hand them the orb, you notice a glow eminating from the ground all around. The souls of the town are at peace.")
+            pause = input("[]")
             print("When you turn back around, the villager is gone.\nAll that remains is a map. You pick it up, and smirk.")
             print("[dexterity increased by 10]")
             playerCharacter.dex += 10
