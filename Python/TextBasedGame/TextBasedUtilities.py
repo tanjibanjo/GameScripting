@@ -219,7 +219,7 @@ def getEnemy(enemyList):
     index = random.randint(0, 8)
     
     while(enemyList[index].used == True): #if the enemy has been used already, get new index
-        index = random.randint(0,9)
+        index = random.randint(0,8)
 
     #return the index so the enemy can be set in the main
     return index
