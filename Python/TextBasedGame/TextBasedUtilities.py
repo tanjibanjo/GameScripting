@@ -32,9 +32,9 @@ def loadEnemies(enemyList):
 #function takes the list of characters and loads the options for player character
 def loadCharacters(characterList):
     #characters to be added
-    mage = Character("Mage", 50, "20-60", 40, "Mage")
+    mage = Character("Mage", 50, "20-60", 30, "Mage")
     rogue = Character("Rogue", 65, "0-25 x2", 75, "Rogue")
-    warrior = Character("Warrior", 80, "35-50", 50, "Warrior")
+    warrior = Character("Warrior", 80, "33-44", 45, "Warrior")
 
     #add characters
     characterList.extend([mage, rogue, warrior])
@@ -47,7 +47,7 @@ def introSequence():
     print(f"You go {choice}. As you walk, the day dissapears to reveal dark. You think about shelter, but in the distance you see a light. Do you approach?")
 
     while(choice != "y" and choice != "n"):
-        choice = input("[y/n]: ")
+        choice = input("[y/n] ")
     
     match(choice):
         case "y":
@@ -59,6 +59,7 @@ def introSequence():
 
 #function prompts player for information on making their own character
 def getPlayerCharacter(playerCharacter, characterList):
+    print()
     #first get name
     name = input("What do they call you, stranger? ")
     choice = -1 #set playerChoice up
@@ -201,7 +202,7 @@ def attackEnemy(playerCharacter, enemy):
     elif(playerCharacter.type == "Rogue"):
         playerAttack = (random.randint(0,25) + random.randint(0,25)) #0-25 x2
     else: #warrior is 35-50
-        playerAttack = random.randint(35, 50)
+        playerAttack = random.randint(33, 44)
     
     #apply attack
     enemy.health -= playerAttack
@@ -275,6 +276,7 @@ def combatEncounter(playerCharacter, enemy):
 
 #function contains the villagePerson encounter and its logic
 def villagePersonEncounter():
+    print()
     print("This land is beyond saving. There's tell that a paradise lays beyond the nothing, but it's too dangerous.\nY-you can make it though. The orb- please return it to me.")
     try:
         choice = int(input("[1] If you can shelter me for the evening, I'll go look.\n[2] What? I just met you, you're crazy.\n"))
@@ -291,7 +293,9 @@ def villagePersonEncounter():
     
 #function contains the innkeeper encounter
 def innkeeperEncounter(playerCharacter):
+    print()
     choice = input("[]")
+    print()
 
     print("\nYou smell something funny. It's kind of weird, but you're so hungry you follow it anyway.")
     print("Through the forest, you come across a building. It's out of place. There's music coming from within. Enter?")
@@ -307,7 +311,7 @@ def innkeeperEncounter(playerCharacter):
         print("[innkeeper] I've been waiting for you. Now I can finally take a breather. Just answer me this: ")
         print("Who makes it has no need of it. Who buys it has no use for it. Who uses it can neither see nor feel it. What is it?")
 
-        playerGuess = input()
+        playerGuess = input("[enter answer]: ")
 
         if(playerGuess == "coffin" or playerGuess == "Coffin" or playerGuess == "a coffin"):
             print("I knew it was you. Here's the orb. [hands over orb]")
@@ -387,4 +391,3 @@ def endGame(hasMap):
             return False
         else:
             print("You go on, and it feels like you just know the right way. Is this the orb?\n")
-            
