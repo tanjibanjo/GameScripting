@@ -8,7 +8,7 @@ import random
 
 #function prints game over
 def gameOver(levelsPassed):
-
+    print("-JOURNEY OVER-")
     print(f"Score: {levelsPassed}\n") 
 
 
@@ -261,21 +261,21 @@ def combatEncounter(playerCharacter, enemy):
 
     #return results
     if(enemy.health <= 0):
-        print(f"{enemy.name} defeated.\nRemaining HP: {playerCharacter.health}")
+        print(f"{enemy.name} defeated.\nRemaining HP: {playerCharacter.health}\n")
         enemy.used = True
         return True
     elif(fleeAttempt == True):
-        print(f"Player got away.\nRemaining HP: {playerCharacter.health}")
+        print(f"Player got away.\nRemaining HP: {playerCharacter.health}\n")
         enemy.used = True
         return True
     elif(playerCharacter.health <= 0):
-        print(f"{playerCharacter.name} was lost.")
+        print(f"{playerCharacter.name} was lost.\n")
         return False
 
 
 #function contains the villagePerson encounter and its logic
 def villagePersonEncounter():
-    print("This land is beyond saving. There's tell that a paradise lays beyond the nothing, but it's too dangerous.\nY-you can make it though. Please try, and return to tell me if it exists.")
+    print("This land is beyond saving. There's tell that a paradise lays beyond the nothing, but it's too dangerous.\nY-you can make it though. The orb- please return it to me.")
     try:
         choice = int(input("[1] If you can shelter me for the evening, I'll go look.\n[2] What? I just met you, you're crazy.\n"))
     except Exception as e:
@@ -326,7 +326,7 @@ def innkeeperEncounter(playerCharacter):
             return False
 
 #function handles ending options
-def endGame(playerCharacter, levelsPassed, hasOrb, questTaken):
+def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
     if(hasOrb == True and questTaken == True):
         choice = input("[]")
         print("Return orb to the villager?")
@@ -336,9 +336,11 @@ def endGame(playerCharacter, levelsPassed, hasOrb, questTaken):
         
         if(choice == "y"):
             print("You return to the villager. When you hand them the orb, you notice a glow eminating from the ground all around. The souls of the town are at peace.")
-            print("When you turn back around, the villager is gone.\nAs you venture on, you know you made a difference.")
+            print("When you turn back around, the villager is gone.\nAll that remains is a map. You pick it up, and smirk.")
+            return True
         elif(choice == "n"):
             print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
+            return False
     elif(hasOrb == True and questTaken == False):
         print("Use orb?")
         while(choice != "y" and choice != "n"):
@@ -346,7 +348,43 @@ def endGame(playerCharacter, levelsPassed, hasOrb, questTaken):
         
         if(choice == "y"):
             print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
+            return False
         elif(choice == "n"):
-            print("There's something supernatural about this orb. You decide no one should have the power it holds, so you bury it where it cannot be found.")
+            print("There's something supernatural about this orb. You decide no one should have the power it holds, so you bury it where it cannot be found.\nBy the tree where you bury it, you notice a piece of paper.")
+            pause = input("[]")
+            print("You pick it up. It is a map. You look on into the distance in anticipation of the journey ahead.")
+            return True
+        
     else:
+        pause = input("[]")
         print("The journey to Paradise continues...but you know you're on the right path...maybe.")
+
+
+def endGame(hasMap):
+    if(hasMap == True):
+        #prompt for continuing journey
+        print("Do you follow the map?")
+        choice = input("[y/n]")
+        #validate
+        while(choice != "y" and choice != "n"):
+            choice = input("[y/n]")
+        #handle y/n
+        if(choice == "n"):
+            return False
+        else:
+            print("You continue.\n")
+            return True
+    else: #no map means they have orb
+        #prompt for continuing journey
+        print("Do you continue onward?")
+
+        choice = input("[y/n]")
+        #validate
+        while(choice != "y" and choice != "n"):
+            choice = input("[y/n]")
+
+        if(choice == "n"):
+            return False
+        else:
+            print("You go on, and it feels like you just know the right way. Is this the orb?\n")
+            

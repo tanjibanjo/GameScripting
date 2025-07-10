@@ -17,12 +17,13 @@ def main():
     count = 0 #keeps track of how many enemies you have faced
     questTaken = False
     hasOrb = False
+    hasMap = False
 
     #start the game by loading enemies and characters
     loadEnemies(enemyList)
     loadCharacters(characterList)
 
-    print("[] When you see open brackets, press enter to continue.\n")
+    print("\n[] When you see open brackets, press enter to continue.\n")
 
     #INTRO SEQUENCE
     encounterResult = introSequence() #stores the true or false in a variable
@@ -134,10 +135,43 @@ def main():
     else:
         print("[you reflect on the journey you've had]")
 
-    endGame(playerCharacter, levelsPassed, hasOrb, questTaken)
+    #get player's decision with the orb - returns true if now has map/false if has orb
+    encounterResult = orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken)
 
-    print("To be continued...")
+    #if true, player has map/ if not player has orb
+    if(encounterResult == True):
+        hasMap = True
+        hasOrb = False
+    else:
+        hasMap = False
+        hasOrb = True
 
+    #get decision to continue or not - false is no true is yes
+    encounterResult = endGame(hasMap)
+
+    if(encounterResult == False):
+        gameOver(levelsPassed)
+    else:
+        i = 0
+        while(i < 3):
+            pause = input("[]")
+            #get new enemy
+            currentEnemy = enemyList[getEnemy(enemyList)]
+            #combat
+            encounterResult = combatEncounter(playerCharacter, currentEnemy)
+            #result
+            if(encounterResult == True):
+                levelsPassed += currentEnemy.score
+                count += 1
+                print("The journey continues...")
+            else:
+                gameOver(levelsPassed)
+
+    #if they make it to this point, they make it to paradise
+    print("The trees clear. The skies are a beautiful pink and blueish hue. You feel the breeze brush up against you, and close your eyes.")
+    levelsPassed += 149
+
+    print("\nThanks for playing.")
     gameOver(levelsPassed)
 
 if __name__ == "__main__":
