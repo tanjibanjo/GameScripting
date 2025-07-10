@@ -88,7 +88,7 @@ def main():
     pause = input("[]")
 
     #transition to the next encounter
-    print("\nThe next day, ther's no one around. No villagers. You decide to carry on, into what the villager called 'the nothing'. Just looks like a forest to you.")
+    print("\nThe next day, there's no one around. No villagers. You decide to carry on, into what the villager called 'the nothing'. Just looks like a forest to you.")
 
     #journey begins, combat encounters
     print("You journey on through the forest. There really is nothing but trees here, until you hear something in the distance. You venture closer...")
