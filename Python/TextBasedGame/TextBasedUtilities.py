@@ -285,7 +285,7 @@ def villagePersonEncounter():
     
     if(choice == 1):
         print("The villager sticks out their hand and points you to a small shed behind the house. You enter it, and make shelter for the night.")
-        print("There's woodworkings and designs for caskets scattered about. Business must be booming.\nYou think to yourself, what is really out there?")
+        print("There's woodworkings and notes -designs for caskets- scattered about. Business must be booming.\nYou think to yourself, what is really out there?")
         return True
     if(choice == 2):
         print("You deny the villager. As you turn to move on, you hear a scuffle. Turning around, you see the villager with a knife in their hand.")

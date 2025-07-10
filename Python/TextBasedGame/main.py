@@ -23,19 +23,24 @@ def main():
     loadEnemies(enemyList)
     loadCharacters(characterList)
 
-    print("\n[] When you see open brackets, press enter to continue.\n")
+    print("\n[] When you see open brackets, press enter to continue.")
+    pause = input("[]")
+
+    print("")
 
     #INTRO SEQUENCE
     encounterResult = introSequence() #stores the true or false in a variable
 
     if(encounterResult == True): #at door of villager
+        pause = input("[]")
         print("The door opens, but just barely. There's little light but you hear a voice from within.")
         #get player character
         getPlayerCharacter(playerCharacter, characterList)
     else: #camped
+        pause = input("[]")
         print("You hear a noise, and jump up to see what it is. What a drag.\n")
 
-        pause = input("[]")
+        
 
         print()
         #get enemy from list and assign
@@ -71,7 +76,7 @@ def main():
 
         if(encounterResult == True):
             levelsPassed += currentEnemy.score
-            print("You rummage around the villager's house as you take shelter. Strange notes and bones lay around.\nYou think maybe it was a good thing you didn't help them.")
+            print("You rummage around the villager's house as you take shelter. Strange notes - plans of coffins- and bones lay around.\nYou think maybe it was a good thing you didn't help them.")
             count += 1
 
         else:
@@ -124,7 +129,7 @@ def main():
 
 
     #next encounter - strange innkeeper
-    print()
+    print("")
     encounterResult = innkeeperEncounter(playerCharacter)
     if(encounterResult == True):
         hasOrb = True
