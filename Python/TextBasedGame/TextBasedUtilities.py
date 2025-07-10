@@ -42,7 +42,7 @@ def loadCharacters(characterList):
 #function prints the welcome message and background to the story - returns true if player goes to the house, false if they camp
 def introSequence():
     print("You walk along the path, wary of monsters and of mortals known to ambush in the area.\nAlong comes a fork in the road. Left or Right? That is the question.")
-    choice = input()
+    choice = input("[enter direction]: ")
     #sorry, either way you get to the village 
     print(f"You go {choice}. As you walk, the day dissapears to reveal dark. You think about shelter, but in the distance you see a light. Do you approach?")
 
@@ -334,7 +334,7 @@ def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
         print("Return orb to the villager?")
 
         while(choice != "y" and choice != "n"):
-            choice = input("[y/n]")
+            choice = input("[y/n] ")
         
         if(choice == "y"):
             print("You return to the villager. When you hand them the orb, you notice a glow eminating from the ground all around. The souls of the town are at peace.")
@@ -351,7 +351,7 @@ def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
     elif(hasOrb == True and questTaken == False):
         print("Use orb?")
         while(choice != "y" and choice != "n"):
-            choice = input("[y/n]")
+            choice = input("[y/n] ")
         
         if(choice == "y"):
             print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
@@ -375,10 +375,10 @@ def endGame(hasMap):
     if(hasMap == True):
         #prompt for continuing journey
         print("Do you follow the map?")
-        choice = input("[y/n]")
+        choice = input("[y/n] ")
         #validate
         while(choice != "y" and choice != "n"):
-            choice = input("[y/n]")
+            choice = input("[y/n] ")
         #handle y/n
         if(choice == "n"):
             return False
@@ -389,10 +389,10 @@ def endGame(hasMap):
         #prompt for continuing journey
         print("Do you continue onward?")
 
-        choice = input("[y/n]")
+        choice = input("[y/n] ")
         #validate
         while(choice != "y" and choice != "n"):
-            choice = input("[y/n]")
+            choice = input("[y/n] ")
 
         if(choice == "n"):
             return False
