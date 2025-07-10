@@ -15,6 +15,8 @@ def main():
     currentEnemy = Enemy("name", 1, 1, False, 0) #default values - this will be reset with values every encounter
     levelsPassed = 0.0
     count = 0 #keeps track of how many enemies you have faced
+    questTaken = False
+    hasOrb = False
 
     #start the game by loading enemies and characters
     loadEnemies(enemyList)
@@ -74,6 +76,8 @@ def main():
         else:
             gameOver(levelsPassed)
             return
+    else: #helping the villager
+        questTaken = True
 
     pause = input("[]")
 
@@ -117,6 +121,24 @@ def main():
         gameOver(levelsPassed)
         return
 
+
+    #next encounter - strange innkeeper
+    encounterResult = innkeeperEncounter(playerCharacter)
+    if(encounterResult == True):
+        hasOrb = True
+
+    pause = input("[]")
+    
+    if(hasOrb == True):
+        print("\n[looking at the orb] Paradise, huh?")
+    else:
+        print("[you reflect on the journey you've had]")
+
+    endGame(playerCharacter, levelsPassed, hasOrb, questTaken)
+
+    print("To be continued...")
+
+    gameOver(levelsPassed)
 
 if __name__ == "__main__":
     main()

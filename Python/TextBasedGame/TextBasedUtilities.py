@@ -283,9 +283,70 @@ def villagePersonEncounter():
     
     if(choice == 1):
         print("The villager sticks out their hand and points you to a small shed behind the house. You enter it, and make shelter for the night.")
-        print("You think to yourself, what is really out there?")
+        print("There's woodworkings and designs for caskets scattered about. Business must be booming.\nYou think to yourself, what is really out there?")
         return True
     if(choice == 2):
         print("You deny the villager. As you turn to move on, you hear a scuffle. Turning around, you see the villager with a knife in their hand.")
         return False
     
+#function contains the innkeeper encounter
+def innkeeperEncounter(playerCharacter):
+    choice = input("[]")
+
+    print("\nYou smell something funny. It's kind of weird, but you're so hungry you follow it anyway.")
+    print("Through the forest, you come across a building. It's out of place. There's music coming from within. Enter?")
+    while(choice != "y" and choice != "n"):
+        choice = input("[y/n] ")
+
+    #impplement choice
+    if(choice == "n"):
+        print("You walk along, deciding it's not worth the trouble.")
+        return False
+    elif(choice == "y"):
+        print("You enter the inn, or whatever it is. There's an inkeeper inside with a big smile on their face.")
+        print("[innkeeper] I've been waiting for you. Now I can finally take a breather. Just answer me this: ")
+        print("Who makes it has no need of it. Who buys it has no use for it. Who uses it can neither see nor feel it. What is it?")
+
+        playerGuess = input()
+
+        if(playerGuess == "coffin" or playerGuess == "Coffin" or playerGuess == "a coffin"):
+            print("I knew it was you. Here's the orb. [hands over orb]")
+            return True
+        else:
+            print("[the innkeeper laughs] Absolutely. Here's a drink, cheers to new company.")
+            print("\nEverything begins to go fuzzy...")
+
+            pause = input("[]")
+
+            print("You wake up in the back of the house in a pile of mud and debris. You weren't supposed to make it, but you did.")
+            
+            #player loses health from this
+            playerCharacter.health -= 10
+            print(f"Player health at {playerCharacter.health}")
+            return False
+
+#function handles ending options
+def endGame(playerCharacter, levelsPassed, hasOrb, questTaken):
+    if(hasOrb == True and questTaken == True):
+        choice = input("[]")
+        print("Return orb to the villager?")
+
+        while(choice != "y" and choice != "n"):
+            choice = input("[y/n]")
+        
+        if(choice == "y"):
+            print("You return to the villager. When you hand them the orb, you notice a glow eminating from the ground all around. The souls of the town are at peace.")
+            print("When you turn back around, the villager is gone.\nAs you venture on, you know you made a difference.")
+        elif(choice == "n"):
+            print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
+    elif(hasOrb == True and questTaken == False):
+        print("Use orb?")
+        while(choice != "y" and choice != "n"):
+            choice = input("[y/n]")
+        
+        if(choice == "y"):
+            print("You focus all your energy on the orb. It glows, and you feel powerful. A slight grin appears on your face as you walk away, onward.")
+        elif(choice == "n"):
+            print("There's something supernatural about this orb. You decide no one should have the power it holds, so you bury it where it cannot be found.")
+    else:
+        print("The journey to Paradise continues...but who knows if you'll find it.")
