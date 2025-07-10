@@ -20,17 +20,19 @@ def main():
     loadEnemies(enemyList)
     loadCharacters(characterList)
 
+    print("[] When you see open brackets, press enter to continue.\n")
+
     #INTRO SEQUENCE
     encounterResult = introSequence() #stores the true or false in a variable
 
     if(encounterResult == True): #at door of villager
-        print("The door opens, but just barely. There's litle light but you hear a voice from within.")
+        print("The door opens, but just barely. There's little light but you hear a voice from within.")
         #get player character
         getPlayerCharacter(playerCharacter, characterList)
     else: #camped
         print("You hear a noise, and jump up to see what it is. What a drag.\n")
 
-        pause = input("[] (when you see empty brackets, press enter to progress)")
+        pause = input("[]")
 
         print()
         #get enemy from list and assign

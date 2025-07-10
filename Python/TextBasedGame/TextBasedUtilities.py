@@ -51,7 +51,7 @@ def introSequence():
     
     match(choice):
         case "y":
-            print("You get closer. Through the trees you can see someone in their home. It is a small village in the countryside that has been damaged by monsters. The people are cautious, but maybe they'll help you. You walk up and gently knock on the door.")
+            print("You get closer. Through the trees you can see someone in their home. It is a small village in the countryside that has been damaged by monsters. \nThe people are cautious, but maybe they'll help you. You walk up and gently knock on the door.")
             return True
         case "n":
             print("You spot a clearing to the left and decide it's a good enough spot. You camp off to the side of the clearing and fall asleep.")
