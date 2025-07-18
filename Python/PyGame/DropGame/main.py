@@ -36,7 +36,13 @@ green = (74, 93, 35)
 orange = (243, 121, 78)
 black = (0,0,0)
 
-pygame.display.set_icon(planet)
+pygame.display.set_icon(meteor)
+
+#Title and game over stuff
+titleY = 100
+titleFont = pygame.font.SysFont("Arial", 65)
+meteorTitle = titleFont.render("It's Raining Meteors", False, green)
+gameOverTitle = titleFont.render("Collision", False, green)
 
 ###############
 #GAME LOOP
@@ -58,8 +64,15 @@ while running == True:
     ###############
     #DRAW
     ###############
-
-    screen.fill(orange)
+    if scene == 0:
+        screen.fill(orange)
+        #draw title
+        screen.blit(meteorTitle, ((width / 2) - (meteorTitle.get_width()/2), titleY))
+        #planet left
+        screen.blit(planet, ((width/2) - (meteorTitle.get_width() / 2) - planet.get_width(), titleY) )
+        #planet right
+        screen.blit(planet, ((width/2) + (meteorTitle.get_width() / 2), titleY) )
+    
     #flip page - render dispplay
     pygame.display.flip()
 
