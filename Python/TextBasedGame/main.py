@@ -103,7 +103,7 @@ def main():
     if(encounterResult == True):
         levelsPassed += currentEnemy.score
         count +=1
-        print("Not what you expected. You think what am I even looking for out here?")
+        print("Not what you expected. You think, what am I even looking for out here?")
     else:
         gameOver(levelsPassed)
         return
@@ -182,7 +182,7 @@ def main():
     print("The trees clear. The skies are a beautiful pink and blueish hue. You feel the breeze brush up against you, and close your eyes.")
     levelsPassed += 149
 
-    print("\nThanks for playing.")
+    print("\nYou think, this must be paradise.")
     gameOver(levelsPassed)
 
 if __name__ == "__main__":
