@@ -1,7 +1,11 @@
 # Lane Pollock
 # Game Scripting
 # Text-Based Adventure
-# Create a text based adventure with at least 10 prompts
+
+
+####################
+#This text based adventure takes you, a traveler, through a dangerous and war-torn country as you fight (or not) your way through encounters on your journey.
+####################
 
 #IMPORTS
 from TextBasedUtilities import *
