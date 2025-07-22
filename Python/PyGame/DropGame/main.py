@@ -20,7 +20,7 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 #scenes and loop
-scene = 1 #0 = title, 1 = game, 2 = gameover/replay
+scene = 2 #0 = title, 1 = game, 2 = gameover/replay
 running = True
 dt = 0
 
@@ -53,7 +53,8 @@ quitWord = btnFont.render("QUIT", False, green)
 restartWord = btnFont.render("RESTART", False, orange)
 #screen, color, x, y, width, height, curve
 playbtn = pygame.draw.rect(screen, black, ((width/2)-(playWord.get_width()/2) - btnMargin, playY - btnMargin, playWord.get_width() + (btnMargin * 2), playWord.get_height() + (btnMargin * 2)), 0)
-
+quitbtn = pygame.draw.rect(screen, black, ((width/4)-(quitWord.get_width()/2) - btnMargin, playY - btnMargin, quitWord.get_width() + (btnMargin * 2), quitWord.get_height() + (btnMargin * 2)), 0)
+restartbtn = pygame.draw.rect(screen, green, ((width * .75)-(restartWord.get_width()/2) - btnMargin, playY - btnMargin, restartWord.get_width() + (btnMargin * 2), restartWord.get_height() + (btnMargin * 2)), 0)
 ###################################
 #gameplay setup
 counter = 0
@@ -148,6 +149,19 @@ while running == True:
 
     else: #scene is 2- game over
         screen.fill(black)
+        #text
+        screen.blit(gameOverTitle, (width/2 - gameOverTitle.get_width()/2, titleY))
+        #planet left
+        screen.blit(planet, ((width/2) - (gameOverTitle.get_width() / 2) - planet.get_width(), titleY) )
+        #planet right
+        screen.blit(planet, ((width/2) + (gameOverTitle.get_width() / 2), titleY) )
+
+        #buttons
+        coords = pygame.mouse.get_pos()
+        if pygame.Rect.collidepoint(quitbtn, coords):
+            quitbtn = pygame.draw.rect(screen, green, ((width/4)-(quitWord.get_width()/2) - btnMargin, playY - btnMargin, quitWord.get_width() + (btnMargin * 2), quitWord.get_height() + (btnMargin * 2)), 0)
+            #restartbtn = pygame.draw.rect(screen, green, ((width * .75)-(restartWord.get_width()/2) - btnMargin, playY - btnMargin, restartWord.get_width() + (btnMargin * 2), restartWord.get_height() + (btnMargin * 2)), 0)
+
     
     #flip page - render dispplay
     pygame.display.flip()
