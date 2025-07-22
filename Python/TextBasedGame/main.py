@@ -2,7 +2,6 @@
 # Game Scripting
 # Text-Based Adventure
 
-
 ####################
 #This text based adventure takes you, a traveler, through a dangerous and war-torn country as you fight (or not) your way through encounters on your journey.
 ####################
