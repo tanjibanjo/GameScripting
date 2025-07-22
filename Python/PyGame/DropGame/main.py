@@ -160,12 +160,20 @@ while running == True:
         coords = pygame.mouse.get_pos()
         if pygame.Rect.collidepoint(quitbtn, coords):
             quitbtn = pygame.draw.rect(screen, green, ((width/4)-(quitWord.get_width()/2) - btnMargin, playY - btnMargin, quitWord.get_width() + (btnMargin * 2), quitWord.get_height() + (btnMargin * 2)), 0)
-            #restartbtn = pygame.draw.rect(screen, green, ((width * .75)-(restartWord.get_width()/2) - btnMargin, playY - btnMargin, restartWord.get_width() + (btnMargin * 2), restartWord.get_height() + (btnMargin * 2)), 0)
+        else:
+            quitbtn = pygame.draw.rect(screen, orange, ((width/4)-(quitWord.get_width()/2) - btnMargin, playY - btnMargin, quitWord.get_width() + (btnMargin * 2), quitWord.get_height() + (btnMargin * 2)), 0)
+            screen.blit(quitWord, ((width/4) - (quitWord.get_width()/2), playY))
 
-    
+        #restart
+        if pygame.Rect.collidepoint(restartbtn, coords):
+            restartbtn = pygame.draw.rect(screen, orange, ((width * .75)-(restartWord.get_width()/2) - btnMargin, playY - btnMargin, restartWord.get_width() + (btnMargin * 2), restartWord.get_height() + (btnMargin * 2)), 0)
+        else:
+            restartbtn = pygame.draw.rect(screen, green, ((width * .75)-(restartWord.get_width()/2) - btnMargin, playY - btnMargin, restartWord.get_width() + (btnMargin * 2), restartWord.get_height() + (btnMargin * 2)), 0)    
+            screen.blit(restartWord, ((width*.75) - (restartWord.get_width()/2), playY))
     #flip page - render dispplay
     pygame.display.flip()
 
 ###############
 #QUIT
 ###############
+pygame.display.quit()
