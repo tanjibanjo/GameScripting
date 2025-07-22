@@ -20,7 +20,7 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 #scenes and loop
-scene = 0 #0 = title, 1 = game, 2 = gameover/replay
+scene = 1 #0 = title, 1 = game, 2 = gameover/replay
 running = True
 dt = 0
 
@@ -54,6 +54,28 @@ restartWord = btnFont.render("RESTART", False, orange)
 #screen, color, x, y, width, height, curve
 playbtn = pygame.draw.rect(screen, black, ((width/2)-(playWord.get_width()/2) - btnMargin, playY - btnMargin, playWord.get_width() + (btnMargin * 2), playWord.get_height() + (btnMargin * 2)), 0)
 
+###################################
+#gameplay setup
+counter = 0
+numThings = 7
+planetX = []
+planetY = []
+planetSpeed = []
+baseSpeed = .5
+speedMulti = 1.2
+
+while counter < numThings:
+    #add random planet
+    #x value
+    planetX.append(random.randint(0, width - planet.get_width()))
+    #y value
+    planetY.append(0 - random.randint(planet.get_height(), planet.get_height() * 2)
+)
+    #speed
+    planetSpeed.append((baseSpeed + random.random()) / 100)
+    counter += 1
+
+
 ###############
 #GAME LOOP
 ###############
@@ -71,10 +93,30 @@ while running == True:
         if scene == 0:
             if pygame.Rect.collidepoint(playbtn, coords):
                 scene = 1
+        elif scene == 1:
+            counter = 0
+            while counter < numThings:
+                #box collision check
+                if coords[0] >= planetX[counter] and coords[0] <= planetX[counter] + planet.get_width() and coords[1] >= planetY[counter] and coords[1] <= planetY[counter] + planet.get_height():
+                    #send back to top
+                    planetX[counter] = random.randint(0, width - planet.get_width())
+                    planetY[counter] = 0 - random.randint(planet.get_height(), planet.get_height() * 2)
+
+                    #increse speed
+                    planetSpeed[counter] *= speedMulti
+                counter += 1
 
     ###############
     #UPDATE
     ###############
+    if scene == 1:
+        counter = 0
+        while counter < numThings:
+            #check if hit bottom of screen
+            if(planetY[counter] + planet.get_height() > height):
+                scene = 2
+            planetY[counter] += planetSpeed[counter]
+            counter += 1
 
     ###############
     #DRAW
@@ -98,7 +140,11 @@ while running == True:
     
     elif scene == 1: #in game
         screen.fill(green)
-    
+        counter = 0
+        #draw
+        while counter < numThings:
+            screen.blit(planet, (planetX[counter], planetY[counter]))
+            counter +=1
 
     else: #scene is 2- game over
         screen.fill(black)
