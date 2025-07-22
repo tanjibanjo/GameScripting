@@ -44,6 +44,10 @@ titleFont = pygame.font.SysFont("Arial", 65)
 meteorTitle = titleFont.render("It's Raining Meteors", False, green)
 gameOverTitle = titleFont.render("Collision", False, green)
 
+#play button
+playY = 300
+btnMargin = 10
+
 ###############
 #GAME LOOP
 ###############
