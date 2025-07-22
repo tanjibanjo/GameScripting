@@ -44,9 +44,15 @@ titleFont = pygame.font.SysFont("Arial", 65)
 meteorTitle = titleFont.render("It's Raining Meteors", False, green)
 gameOverTitle = titleFont.render("Collision", False, green)
 
-#play button
+#initialize buttons before use
 playY = 300
 btnMargin = 10
+btnFont = pygame.font.SysFont("Arial", 30)
+playWord = btnFont.render("PLAY", False, green)
+quitWord = btnFont.render("QUIT", False, green)
+restartWord = btnFont.render("RESTART", False, orange)
+#screen, color, x, y, width, height, curve
+playbtn = pygame.draw.rect(screen, black, ((width/2)-(playWord.get_width()/2) - btnMargin, playY - btnMargin, playWord.get_width() + (btnMargin * 2), playWord.get_height() + (btnMargin * 2)), 0)
 
 ###############
 #GAME LOOP
@@ -60,6 +66,11 @@ while running == True:
     ###############
     #MOUSE CLICKS
     ###############
+    if pygame.mouse.get_pressed()[0]: #if left click
+        coords = pygame.mouse.get_pos()
+        if scene == 0:
+            if pygame.Rect.collidepoint(playbtn, coords):
+                scene = 1
 
     ###############
     #UPDATE
@@ -76,6 +87,21 @@ while running == True:
         screen.blit(planet, ((width/2) - (meteorTitle.get_width() / 2) - planet.get_width(), titleY) )
         #planet right
         screen.blit(planet, ((width/2) + (meteorTitle.get_width() / 2), titleY) )
+
+        #button changes if hovered over it
+        coords = pygame.mouse.get_pos()
+        if pygame.Rect.collidepoint(playbtn, coords): #make buton green
+            playbtn = pygame.draw.rect(screen, green, ((width/2)-(playWord.get_width()/2) - btnMargin, playY - btnMargin, playWord.get_width() + (btnMargin * 2), playWord.get_height() + (btnMargin * 2)), 0)
+        else:
+            playbtn = pygame.draw.rect(screen, black, ((width/2)-(playWord.get_width()/2) - btnMargin, playY - btnMargin, playWord.get_width() + (btnMargin * 2), playWord.get_height() + (btnMargin * 2)), 0)
+            screen.blit(playWord, ((width/2) - (playWord.get_width()/2), playY))
+    
+    elif scene == 1: #in game
+        screen.fill(green)
+    
+
+    else: #scene is 2- game over
+        screen.fill(black)
     
     #flip page - render dispplay
     pygame.display.flip()
