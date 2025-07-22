@@ -580,6 +580,7 @@ def main():
 
     if(encounterResult == False):
         gameOver(levelsPassed)
+        return
     else:
         i = 0
         while(i < 3):
