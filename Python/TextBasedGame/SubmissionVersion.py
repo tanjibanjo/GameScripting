@@ -376,6 +376,7 @@ def orbDecisions(playerCharacter, levelsPassed, hasOrb, questTaken):
             playerCharacter.health += 15
             return False
     elif(hasOrb == True and questTaken == False):
+        choice = input("[]")
         print("Use orb?")
         while(choice != "y" and choice != "n"):
             choice = input("[y/n] ")
