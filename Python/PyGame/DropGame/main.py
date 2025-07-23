@@ -6,6 +6,8 @@ import sys
 import pygame
 import random
 
+import pygame.font
+
 ###############
 #LOAD
 ###############
@@ -18,6 +20,14 @@ height = 720
 size = (width, height)
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+dt = clock.tick(60)
+powerUpScoreTrigger = random.randint(20, 30)
+powerUpX = 0
+powerUpY = 0
+powerUpDrawn = False
+score = 0
+scoreFont = pygame.font.SysFont("Arial", 50)
+
 
 #scenes and loop
 scene = 0 #0 = title, 1 = game, 2 = gameover/replay
@@ -27,6 +37,7 @@ dt = 0
 #load images
 planet = pygame.image.load("planet_blue_smaller.png")
 meteor = pygame.image.load("meteor_large.png")
+powerUp = pygame.image.load("icon.png")
 
 #caption
 pygame.display.set_caption("Meteors Incoming!")
@@ -37,6 +48,9 @@ orange = (243, 121, 78)
 black = (0,0,0)
 
 pygame.display.set_icon(meteor)
+
+#score display stuff
+scoreDisplay = scoreFont.render(str(score), False, black)
 
 #Title and game over stuff
 titleY = 100
@@ -62,7 +76,7 @@ numThings = 7
 planetX = []
 planetY = []
 planetSpeed = []
-baseSpeed = .5
+baseSpeed = 5
 speedMulti = 1.2
 
 while counter < numThings:
@@ -105,7 +119,22 @@ while running == True:
 
                     #increse speed
                     planetSpeed[counter] *= speedMulti
+                    score +=1
                 counter += 1
+            #check for collision with power up
+            if coords[0] >= powerUpX and coords[0] <= powerUpX + powerUp.get_width() and coords[1] >= powerUpY and coords[1] <= powerUpY + powerUp.get_height():
+                #move sprite off screen
+                powerUpX = 0
+                powerUpY = 0 + powerUp.get_height()
+                #adjust trigger
+                powerUpScoreTrigger += random.randint(10, 25)
+                #adjust planet speeds
+                i = 0
+                while i < numThings:
+                    planetSpeed[i] -= 5
+                    i += 1
+
+                powerUpDrawn = False
         else:
             #if game over button clicked
             if pygame.Rect.collidepoint(quitbtn, coords):
@@ -119,7 +148,8 @@ while running == True:
                     planetSpeed[counter] = (baseSpeed * speedMulti) / 100
                     counter += 1
                 scene = 0
-
+                score = 0
+                powerUpScoreTrigger = random.randint(20, 30)
 
     ###############
     #UPDATE
@@ -128,10 +158,12 @@ while running == True:
         counter = 0
         while counter < numThings:
             #check if hit bottom of screen
-            if(planetY[counter] + planet.get_height() > height):
+            if(planetY[counter] + planet.get_height() > height - planet.get_height()):
                 scene = 2
             planetY[counter] += planetSpeed[counter]
             counter += 1
+        #score display stuff
+        scoreDisplay = scoreFont.render(str(score), False, black)
 
     ###############
     #DRAW
@@ -157,8 +189,26 @@ while running == True:
         screen.fill(green)
         counter = 0
         #draw
+        #score
+        screen.blit(scoreDisplay, ((width - planet.get_width() * 2), planet.get_height()))
+        #planets
+        i = 0
+        while i < width - (planet.get_width()*2):
+            screen.blit(planet, ((0 + planet.get_width() + i), height - (planet.get_height() + 20) ))
+            i += planet.get_width()
+        #if score is higher than trigger - generate location and draw
+
+        if score >= powerUpScoreTrigger:
+            if powerUpDrawn == False:
+                #get and set coordinates
+                powerUpX = random.randint(planet.get_width(), width - planet.get_width())
+                powerUpY = random.randint(planet.get_height() + 20, height - planet.get_height())
+            screen.blit(powerUp, ( powerUpX, powerUpY ) )
+            powerUpDrawn = True
+
+        #meteors
         while counter < numThings:
-            screen.blit(planet, (planetX[counter], planetY[counter]))
+            screen.blit(meteor, (planetX[counter], planetY[counter]))
             counter +=1
 
     else: #scene is 2- game over
