@@ -7,13 +7,13 @@
 import pygame
 import sys
 
-
+#game class - object oriented
 class Game:
     def __init__(self):
         #init and setup
         pygame.init()
 
-        #handle window and clock
+        #handle window, clock, and icon
         icon = pygame.image.load("data/images/entities/player/idle/00.png")
         pygame.display.set_caption("I41")
         pygame.display.set_icon(icon)
@@ -56,4 +56,4 @@ class Game:
             pygame.display.update()
             self.clock.tick(60)
 
-Game().run()
+Game().run() #initalizes a Game object, then calls run in same line
