@@ -20,7 +20,7 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 #scenes and loop
-scene = 2 #0 = title, 1 = game, 2 = gameover/replay
+scene = 0 #0 = title, 1 = game, 2 = gameover/replay
 running = True
 dt = 0
 
@@ -106,6 +106,20 @@ while running == True:
                     #increse speed
                     planetSpeed[counter] *= speedMulti
                 counter += 1
+        else:
+            #if game over button clicked
+            if pygame.Rect.collidepoint(quitbtn, coords):
+                running = False
+            #if restart button clicked
+            if pygame.Rect.collidepoint(restartbtn, coords):
+                counter = 0
+                while counter < numThings:
+                    planetX[counter] = random.randint(0, width - planet.get_width())
+                    planetY[counter] = 0 - random.randint(planet.get_height(), planet.get_height() * 2)
+                    planetSpeed[counter] = (baseSpeed * speedMulti) / 100
+                    counter += 1
+                scene = 0
+
 
     ###############
     #UPDATE
