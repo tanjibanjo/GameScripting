@@ -77,7 +77,7 @@ planetX = []
 planetY = []
 planetSpeed = []
 baseSpeed = 5
-speedMulti = 1.2
+speedMulti = 1.7
 
 while counter < numThings:
     #add random planet
