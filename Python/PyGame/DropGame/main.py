@@ -131,7 +131,8 @@ while running == True:
                 #adjust planet speeds
                 i = 0
                 while i < numThings:
-                    planetSpeed[i] -= 5
+                    planetSpeed[i] -= (7 / 100)
+                
                     i += 1
 
                 powerUpDrawn = False
