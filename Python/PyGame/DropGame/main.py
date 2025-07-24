@@ -76,7 +76,7 @@ numThings = 7
 planetX = []
 planetY = []
 planetSpeed = []
-baseSpeed = 5
+baseSpeed = 2
 speedMulti = 1.7
 
 while counter < numThings:
