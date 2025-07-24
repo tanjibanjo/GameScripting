@@ -72,7 +72,7 @@ class Game:
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.movement[1] = True
                     if event.key == pygame.K_UP or event.key == pygame.K_SPACE:
-                        self.player.velocity[1] = -3 #just set velocity to negative so player moves up, then physics system will bring the velocity back down
+                        self.player.velocity[1] = self.player.jump_velocity #just set velocity to negative so player moves up, then physics system will bring the velocity back down
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         self.movement[0] = False

@@ -13,6 +13,7 @@ class PhysicsEntity:
         self.pos = list(pos) #to avoid reference 
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
+        self.jump_velocity = -3
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
         #gravity is universal so we can add to the entity, which the player entity will inherit from
 
