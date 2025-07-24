@@ -35,7 +35,8 @@ class Game:
             'grass': load_images('tiles/grass'),
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
-            'player': load_image('entities/player.png')
+            'player': load_image('entities/player.png'),
+            'background': load_image('background.png')
         }
 
         #define player!
@@ -44,19 +45,27 @@ class Game:
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
 
+        #camera stuf
+        self.scroll = [0, 0]
+
 
     def run(self):
         while True:
             #fill background
-            self.display.fill((14, 219, 248))
+            self.display.blit(self.assets['background'], (0, 0))
+
+            #camera focus on player
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 10
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 10
+            render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
             #render tile map behind the player
-            self.tilemap.render(self.display)
+            self.tilemap.render(self.display, offset=render_scroll)
 
             #update and render the player
             #update the movement for left and right
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            self.player.render(self.display)
+            self.player.render(self.display, offset=render_scroll)
 
 
 

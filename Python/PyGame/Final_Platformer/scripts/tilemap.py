@@ -41,17 +41,17 @@ class Tilemap:
         return rects
 
     #funtion for rendering tiles using the tilemap    
-    def render(self, surf):
+    def render(self, surf, offset=(0, 0)):
         #for offgrid tiles - render behind the grid since they are more decoration
         for tile in self.offgrid_tiles:
-            surf.blit(self.game.assets[tile['type']][tile['variant']], tile['pos'])
+            surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
 
         #when iterating over a dict, it returns the keys
         for loc in self.tilemap:
             tile = self.tilemap[loc] # get the location - access with the key
 
             #render
-            surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size, tile['pos'][1] * self.tile_size))
+            surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
         
         
 

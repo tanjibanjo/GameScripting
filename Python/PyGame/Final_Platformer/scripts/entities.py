@@ -71,5 +71,5 @@ class PhysicsEntity:
             self.velocity[1] = 0
 
     #render function, takes a surface
-    def render(self, surf):
-        surf.blit(self.game.assets['player'], self.pos)
+    def render(self, surf, offset=(0, 0)):
+        surf.blit(self.game.assets['player'], (self.pos[0] - offset[0], self.pos[1] - offset[1]))
