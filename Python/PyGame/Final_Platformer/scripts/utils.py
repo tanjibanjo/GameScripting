@@ -5,7 +5,7 @@
 
 
 import pygame
-
+#this base path just navigates to the images folder, where all the sprites pngs are
 BASE_IMG_PATH = 'data/images/'
 
 #loads image, takes path to add to base, returns the loaded image

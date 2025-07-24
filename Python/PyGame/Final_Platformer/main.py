@@ -40,6 +40,7 @@ class Game:
             self.display.fill((14, 219, 248))
 
             #update and render the player
+            #update the movement for left and right
             self.player.update((self.movement[1] - self.movement[0], 0))
             self.player.render(self.display)
 
