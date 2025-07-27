@@ -44,14 +44,20 @@ class Tilemap:
     def render(self, surf, offset=(0, 0)):
         #for offgrid tiles - render behind the grid since they are more decoration
         for tile in self.offgrid_tiles:
-            surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+           surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
 
-        #when iterating over a dict, it returns the keys
-        for loc in self.tilemap:
-            tile = self.tilemap[loc] # get the location - access with the key
 
-            #render
-            surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
+        #optimized workflow** 
+        #use ditionary bc it has O1 lookup time
+        #now iterate through the tiles around the player
+        for x in range(offset[0] // self.tile_size, (offset[0] + surf.get_width()) // self.tile_size + 1):
+            for y in range(offset[1] // self.tile_size, (offset[1] + surf.get_height()) // self.tile_size + 1):
+                #create the key with the loop indexes
+                loc = str(x) + ';' + str(y)
+                if loc in self.tilemap: #
+                    tile = self.tilemap[loc]
+                    #render the tile
+                    surf.blit(self.game.assets[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
         
         
 
