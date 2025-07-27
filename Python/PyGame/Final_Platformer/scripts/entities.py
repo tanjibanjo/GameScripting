@@ -97,7 +97,7 @@ class PhysicsEntity:
 class Player(PhysicsEntity): #inherit from entity
     def __init__(self, game, pos, size):
         super().__init__(game, 'player', pos, size)
-        self.air_time = 0
+        self.air_time = 0 #to keep track if in air
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
