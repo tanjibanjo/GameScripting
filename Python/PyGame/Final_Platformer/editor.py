@@ -104,7 +104,7 @@ class Editor:
 
                 #logic for deleting offgrid tiles
                 for tile in self.tilemap.offgrid_tiles.copy(): #use a copy so we dont use reference
-                    tile_img = self.asets[tile['type']][tile['variant']] #get the image
+                    tile_img = self.assets[tile['type']][tile['variant']] #get the image
                     tile_r = pygame.Rect(tile['pos'][0] - self.scroll[0], tile['pos'][1] - self.scroll[1], tile_img.get_width(), tile_img.get_height())
                     if tile_r.collidepoint(mpos): #if tile collides with mouse
                         self.tilemap.offgrid_tiles.remove(tile)
