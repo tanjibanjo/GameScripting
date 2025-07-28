@@ -54,7 +54,7 @@ class Game:
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
 
-        #camera stuf
+        #camera stuff
         self.scroll = [0, 0]
 
 

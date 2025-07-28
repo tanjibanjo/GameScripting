@@ -36,6 +36,7 @@ class Animation:
         self.done = False #set to true if not moving when reaches end
         self.frame = 0 #frame of the game
 
+    #since this is an object, it is returning a reference to this animation object
     def copy(self):
         return Animation(self.images, self.img_duration, self.loop)
     
