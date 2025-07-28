@@ -40,6 +40,11 @@ class Editor:
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
 
+        try:
+            self.tilemap.load('map.json')
+        except FileNotFoundError:
+            pass
+
         #camera stuff
         self.scroll = [0, 0]
 
@@ -52,12 +57,18 @@ class Editor:
         self.clicking = False
         self.right_clicking = False
         self.shift = False
+        self.on_grid = True
 
 
     def run(self):
         while True:
             #fill background
             self.display.fill((0, 0, 0))
+
+            #scroll calc for moving camera - 
+            self.scroll[0] += (self.movement[1] - self.movement[0]) * 2 #right - left
+            self.scroll[1] += (self.movement[3] - self.movement[2]) * 2 #down, up
+
             #offset, truncated
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
@@ -66,7 +77,7 @@ class Editor:
             
             #set the current image in the editor
             current_tile_img = self.assets[self.tile_list[self.tile_group]][self.tile_variant].copy()
-            current_tile_img.set_alpha(100) #semi transparent - 0-255 range
+            current_tile_img.set_alpha(170) #semi transparent - 0-255 range
 
             #get mouse position
             mpos = pygame.mouse.get_pos()
@@ -74,11 +85,15 @@ class Editor:
             #changes coordinates of mouse position to the tile scale -important to align to grid
             tile_pos = (int((mpos[0] + self.scroll[0]) // self.tilemap.tile_size), int((mpos[1] + self.scroll[1]) // self.tilemap.tile_size))
 
-            #converting back to pixel format then accounting for the offset - important to align to the grid
-            self.display.blit(current_tile_img, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
+
+            if self.on_grid:
+                #converting back to pixel format then accounting for the offset - important to align to the grid
+                self.display.blit(current_tile_img, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
+            else:
+                self.display.blit(current_tile_img, mpos)
 
             #converting index selection to the string names - this is for placing new tiles into the level
-            if self.clicking:
+            if self.clicking and self.on_grid:
                 self.tilemap.tilemap[str(tile_pos[0]) + ';' + str(tile_pos[1])] = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile_pos}
             
             #this will be for deleting tiles from the level
@@ -86,6 +101,13 @@ class Editor:
                 tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
                 if tile_loc in self.tilemap.tilemap: #this place exists
                     del self.tilemap.tilemap[tile_loc]
+
+                #logic for deleting offgrid tiles
+                for tile in self.tilemap.offgrid_tiles.copy(): #use a copy so we dont use reference
+                    tile_img = self.asets[tile['type']][tile['variant']] #get the image
+                    tile_r = pygame.Rect(tile['pos'][0] - self.scroll[0], tile['pos'][1] - self.scroll[1], tile_img.get_width(), tile_img.get_height())
+                    if tile_r.collidepoint(mpos): #if tile collides with mouse
+                        self.tilemap.offgrid_tiles.remove(tile)
 
             #sending out current tile to the screen
             self.display.blit(current_tile_img, (5, 5))
@@ -98,6 +120,8 @@ class Editor:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.clicking = True
+                        if not self.on_grid:
+                            self.tilemap.offgrid_tiles.append({'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': (mpos[0] + self.scroll[0], mpos[1] + self.scroll[1])})
                     if event.button == 3:
                         self.right_clicking = True
                     if self.shift:
@@ -127,10 +151,16 @@ class Editor:
                         self.movement[0] = True
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.movement[1] = True
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_UP or event.key == pygame.K_w:
                         self.movement[2] = True
-                    if event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                         self.movement[3] = True
+                    if event.key == pygame.K_g:
+                        self.on_grid = not self.on_grid #flips every time 
+                    if event.key == pygame.K_t:
+                        self.tilemap.autotile()
+                    if event.key == pygame.K_o:
+                        self.tilemap.save('map.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:
@@ -138,9 +168,9 @@ class Editor:
                         self.movement[0] = False
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.movement[1] = False
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_UP or event.key == pygame.K_w:
                         self.movement[2] = False
-                    if event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                         self.movement[3] = False
                     if event.key == pygame.K_LSHIFT:
                         self.shift = False

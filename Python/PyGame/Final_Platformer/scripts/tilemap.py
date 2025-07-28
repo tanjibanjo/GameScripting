@@ -1,8 +1,22 @@
 import pygame
+import json
+
+AUTOTILE_MAP = {
+    tuple(sorted([(1, 0), (0, 1)])): 0, #if those are the neighbors, use 0 
+    tuple(sorted([(1, 0), (0, 1), (-1, 0)])): 1,
+    tuple(sorted([(-1, 0), (0, 1)])): 2,
+    tuple(sorted([(-1, 0), (0, -1), (0, 1)])): 3,
+    tuple(sorted([(-1, 0), (0, -1)])): 4,
+    tuple(sorted([(-1, 0), (0, -1), (1, 0)])): 5,
+    tuple(sorted([(1, 0), (0, -1)])): 6,
+    tuple(sorted([(1, 0), (0, -1), (0, 1)])): 7,
+    tuple(sorted([(1, 0), (-1, 0), (0, 1), (0, -1)])): 8
+}
 
 
 NEIGHBOR_OFFSETS = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 0), (-1, 1), (0, 1), (1, 1)]
 PHYSICS_TILES = {'grass', 'stone'} #if no k/v pair, becomes like a set - no duplicates
+AUTOTILE_TYPES = {'grass', 'stone'}
 
 #creating a class to hold a system of tiles
 class Tilemap:
@@ -23,6 +37,26 @@ class Tilemap:
                 tiles.append(self.tilemap[check_loc])
         return tiles
     
+    #function for saving 
+    # a level map 
+    def save(self, path):
+        f = open(path, 'w')
+        json.dump({'tilemap': self.tilemap, 'tile_size': self.tile_size, 'offgrid': self.offgrid_tiles}, f)
+        #close
+        f.close
+
+    def load(self, path):
+        #open file
+        f = open(path, 'r')
+        #load data
+        map_data = json.load(f)
+        #close file
+        f.close()
+
+        self.tilemap = map_data['tilemap']
+        self.tile_size = map_data['tile_size']
+        self.offgrid_tiles = map_data['offgrid']
+    
     #convert all tiles that have physics into pygame.Rect which we can use for collisions - returns the rects created by the tiles
     def physics_rects_around(self, pos):
         rects = []
@@ -31,6 +65,22 @@ class Tilemap:
                 rects.append(pygame.Rect(tile['pos'][0] * self.tile_size, tile['pos'][1] * self.tile_size, self.tile_size, self.tile_size))
 
         return rects
+    
+    #function for auto tiling
+    def autotile(self):
+        #iterate through tilemap
+        for loc in self.tilemap:
+            tile = self.tilemap[loc]
+            neighbors = set() #get the neighbors of the tile
+            for shift in [(1, 0), (-1, 0), (0,1), (0, -1)]:
+                check_loc = str(tile['pos'][0] + shift[0]) + ';' + str(tile['pos'][1] + shift[1])
+                if check_loc in self.tilemap: #this location exists in the map
+                    if self.tilemap[check_loc]['type'] == tile['type']: #check if same group
+                        neighbors.add(shift)
+            neighbors = tuple(sorted(neighbors))
+            if (tile['type'] in AUTOTILE_TYPES) and (neighbors in AUTOTILE_MAP):
+                tile['variant'] = AUTOTILE_MAP[neighbors]
+
 
     #funtion for rendering tiles using the tilemap    
     def render(self, surf, offset=(0, 0)):
