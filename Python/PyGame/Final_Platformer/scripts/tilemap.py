@@ -12,14 +12,6 @@ class Tilemap:
         self.tilemap = {} #keeping most of tiles on a grid is more efficient (dictionary)
         self.offgrid_tiles = [] #list
 
-        #load tilemap
-        for i in range(10):
-            #tile is represented by the dictionary - type of tile, variant, and position 
-            #this one is going left/right I think
-            self.tilemap[str(3 + i) + ';10'] = {'type': 'grass', 'variant': 1, 'pos': (3 + i, 10)}
-            #other way
-            self.tilemap['10;' + str(5 + i)] = {'type': 'stone', 'variant': 1, 'pos': (10, 5 + i)}
-
     #pass in a pixel location and get the surrounding tiles to aid in collision
     def tiles_around(self, pos):
         tiles = []

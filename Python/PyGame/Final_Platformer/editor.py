@@ -48,18 +48,46 @@ class Editor:
         self.tile_group = 0 #which group -decor, grass, etc
         self.tile_variant = 0 #which tile within that group
 
+        #input stuff
         self.clicking = False
         self.right_clicking = False
+        self.shift = False
 
 
     def run(self):
         while True:
             #fill background
             self.display.fill((0, 0, 0))
+            #offset, truncated
+            render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
+            #rendering our tile map
+            self.tilemap.render(self.display, offset=render_scroll)
+            
+            #set the current image in the editor
             current_tile_img = self.assets[self.tile_list[self.tile_group]][self.tile_variant].copy()
             current_tile_img.set_alpha(100) #semi transparent - 0-255 range
 
+            #get mouse position
+            mpos = pygame.mouse.get_pos()
+            mpos = (mpos[0] / RENDER_SCALE, mpos[1] / RENDER_SCALE) 
+            #changes coordinates of mouse position to the tile scale -important to align to grid
+            tile_pos = (int((mpos[0] + self.scroll[0]) // self.tilemap.tile_size), int((mpos[1] + self.scroll[1]) // self.tilemap.tile_size))
+
+            #converting back to pixel format then accounting for the offset - important to align to the grid
+            self.display.blit(current_tile_img, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
+
+            #converting index selection to the string names - this is for placing new tiles into the level
+            if self.clicking:
+                self.tilemap.tilemap[str(tile_pos[0]) + ';' + str(tile_pos[1])] = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile_pos}
+            
+            #this will be for deleting tiles from the level
+            if self.right_clicking:
+                tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
+                if tile_loc in self.tilemap.tilemap: #this place exists
+                    del self.tilemap.tilemap[tile_loc]
+
+            #sending out current tile to the screen
             self.display.blit(current_tile_img, (5, 5))
 
             #handle events - left and right movement
@@ -72,11 +100,27 @@ class Editor:
                         self.clicking = True
                     if event.button == 3:
                         self.right_clicking = True
-                    #scroll between groups of decor
-                    if event.button == 4:
-                        self.tile_group = (self.tile_group - 1) % len(self.tile_list) # loops through the list
-                    if event.button == 5:
-                        self.tile_group = (self.tile_group + 1) % len(self.tile_list) # loops through the list
+                    if self.shift:
+                        #scroll between groups of decor
+                        if event.button == 4:
+                            self.tile_variant = (self.tile_variant - 1) % len(self.assets[self.tile_list[self.tile_group]]) # loops through the variants
+                        if event.button == 5:
+                            self.tile_variant = (self.tile_variant + 1) % len(self.assets[self.tile_list[self.tile_group]]) # loops through the variants
+                    else:
+                        #scroll between groups of decor
+                        if event.button == 4:
+                            self.tile_group = (self.tile_group - 1) % len(self.tile_list) # loops through the groups
+                            self.tile_variant = 0
+                        if event.button == 5:
+                            self.tile_group = (self.tile_group + 1) % len(self.tile_list) # loops through the groups
+                            self.tile_variant = 0
+                #update variables based on mouse state
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        self.clicking = False
+                    if event.button == 3:
+                        self.right_clicking = False
+
                 #movement inputs for up and down - uses keyboard keys
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -87,6 +131,8 @@ class Editor:
                         self.movement[2] = True
                     if event.key == pygame.K_DOWN:
                         self.movement[3] = True
+                    if event.key == pygame.K_LSHIFT:
+                        self.shift = True
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         self.movement[0] = False
@@ -96,6 +142,8 @@ class Editor:
                         self.movement[2] = False
                     if event.key == pygame.K_DOWN:
                         self.movement[3] = False
+                    if event.key == pygame.K_LSHIFT:
+                        self.shift = False
 
             #blit display onto screen, use scale to scale display to screen size
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
