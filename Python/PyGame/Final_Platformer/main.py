@@ -53,6 +53,7 @@ class Game:
 
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
+        self.tilemap.load('map.json')
 
         #camera stuff
         self.scroll = [0, 0]
