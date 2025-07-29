@@ -7,6 +7,7 @@ import pygame
 import math
 import random
 from scripts.particle import Particle
+from scripts.spark import Spark
 
 
 #class will handle physics later, takes the game, entity type, position to spawn, and size for entity
@@ -127,8 +128,12 @@ class Enemy(PhysicsEntity):
                 if (abs(dis[1]) < 16):
                     if (self.flip and dis[0] < 0): #player is to the left, and looking left
                         self.game.projectiles.append([[self.rect().centerx - 7, self.rect().centery], -1.5, 0])
+                        for i in range(4):
+                            self.game.sparks.append(Spark(self.game.projectiles[-1][0], random.random() - 0.5 + math.pi, 2 + random.random()))
                     if (not self.flip and dis[1] > 0):
                         self.game.projectiles.append([[self.rect().centerx + 7, self.rect().centery], 1.5, 0])
+                        for i in range(4):
+                            self.game.sparks.append(Spark(self.game.projectiles[-1][0], random.random() - 0.5, 2 + random.random()))
 
         elif random.random() < 0.01: # has a 1-100 chance of firing, by 60 fps
             self.walking = random.randint(30, 120)
