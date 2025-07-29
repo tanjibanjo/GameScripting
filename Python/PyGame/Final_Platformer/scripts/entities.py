@@ -100,6 +100,58 @@ class PhysicsEntity:
     def render(self, surf, offset=(0, 0)):
         surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False), (self.pos[0] - offset[0] + self.anim_offset[0], self.pos[1] - offset[1] + self.anim_offset[1]))
 
+#class for enemy
+class Enemy(PhysicsEntity):
+    def __init__(self, game, pos, size):
+        super().__init__(game, 'enemy', pos, size)
+        #enemies should just be moving back and forth but not off the sides of the platforms
+        #shoot only horizontally
+        #timer for walking
+        self.walking = 0
+    
+    def update(self, tilemap, movement=(0, 0)):
+        if self.walking:
+            #scan forward and into ground then pass to the solid check
+            if tilemap.solid_check((self.rect().centerx + (-7 if self.flip else 7), self.pos[1] + 23)):
+                if (self.collisions['right'] or self.collisions['left']):
+                    self.flip = not self.flip
+                else:
+                    movement = (movement[0] - .5 if self.flip else 0.5, movement[1])
+            else:
+                self.flip = not self.flip
+            
+            self.walking = max(0, self.walking - 1)
+
+            if not self.walking: #there is only one frame where this fires, before leaving loop
+                dis = (self.game.player.pos[0] - self.pos[0], self.game.player.pos[1] - self.pos[1])
+                if (abs(dis[1]) < 16):
+                    if (self.flip and dis[0] < 0): #player is to the left, and looking left
+                        self.game.projectiles.append([[self.rect().centerx - 7, self.rect().centery], -1.5, 0])
+                    if (not self.flip and dis[1] > 0):
+                        self.game.projectiles.append([[self.rect().centerx + 7, self.rect().centery], 1.5, 0])
+
+        elif random.random() < 0.01: # has a 1-100 chance of firing, by 60 fps
+            self.walking = random.randint(30, 120)
+    
+
+        super().update(tilemap, movement=movement)
+    
+        #movement anims
+        if movement[0] != 0:
+            self.set_action('run')
+        else:
+            self.set_action('idle')
+
+    #modify render function to draw a gun for the enemies
+    def render(self, surf, offset=(0, 0)):
+        super().render(surf,offset=offset)
+
+        #gun
+        if self.flip:
+            surf.blit(pygame.transform.flip(self.game.assets['gun'], True, False), (self.rect().centerx - 4 - self.game.assets['gun'].get_width() - offset[0], self.rect().centery - offset[1]))
+        else:
+            surf.blit(self.game.assets['gun'], (self.rect().centerx + 4 - offset[0], self.rect().centery - offset[1]))
+
 
 #player class
 class Player(PhysicsEntity): #inherit from entity
@@ -138,22 +190,27 @@ class Player(PhysicsEntity): #inherit from entity
                 self.set_action('run')
             else:
                 self.set_action('idle')
+        if abs(self.dashing) in {60, 50}: #at start or end of dash
+            for i in range(20): #create 20 particles with random angles and speeds
+                angle = random.random() * math.pi * 2
+                speed = random.random() * 0.5 + 0.5 #.5 to 1
+                pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed] #convert into cartesian coordinates for velocity
+                self.game.particles.append(Particle(self.game, 'particle', self.rect().center, velocity=pvelocity, frame= random.randint(0, 7)))
 
         #dashing logic
         if self.dashing > 0:
             self.dashing = max(0, self.dashing - 1)
         if self.dashing < 0:
             self.dashing = min(0, self.dashing + 1)
-            #if we are in first 10 frames of dash, go fast left or right
-            #use absolute to remove the direction, keep the velocity
+        #if we are in first 10 frames of dash, go fast left or right
+        #use absolute to remove the direction, keep the velocity - *8 to move faster
         if abs(self.dashing) > 50:
             self.velocity[0] = abs(self.dashing) / self.dashing * 8
             if abs(self.dashing) == 51:
-                self.velocity[0] *= 0.1 #lower velocity very quickly after dash
-            angle = random.random() * math.pi * 2
-            speed = random.random() * 0.5 + 0.5 #.5 to 1
-            pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed] #convert into cartesian coordinates for velocity
+                self.velocity[0] *= 0.1 #lower velocity very quickly after dash is over
+            pvelocity = [abs(self.dashing) / self.dashing * random.random() * 3, 0] #set velocity so that particles move with the dash (0-3)
             self.game.particles.append(Particle(self.game, 'particle', self.rect().center, velocity=pvelocity, frame= random.randint(0, 7)))
+            
 
         #normalize the horizontal velocity as well, similar to y axis
         if self.velocity[0] > 0:
