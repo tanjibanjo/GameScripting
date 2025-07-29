@@ -13,7 +13,6 @@ class PhysicsEntity:
         self.pos = list(pos) #to avoid reference 
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
-        self.jump_velocity = -3
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
 
         self.action = ''
@@ -21,6 +20,9 @@ class PhysicsEntity:
         self.flip = False
         self.set_action('idle')
         #gravity is universal so we can add to the entity, which the player entity will inherit from
+
+        #set last movement
+        self.last_movement = [0, 0]
 
     #function creates a rect for the entity collision dynamically - so that it's not constantly updating when not needed
     def rect(self):
@@ -80,6 +82,8 @@ class PhysicsEntity:
         if movement[0] < 0: #if moving left
             self.flip = True
 
+        self.last_movement = movement
+
         #min function takes the lesser of the values, so addds .1 then effectively caps the terminal velocity at 5
         self.velocity[1] = min(5, self.velocity[1] + 0.1)
 
@@ -98,6 +102,8 @@ class Player(PhysicsEntity): #inherit from entity
     def __init__(self, game, pos, size):
         super().__init__(game, 'player', pos, size)
         self.air_time = 0 #to keep track if in air
+        self.jumps = 2 # two jumps before must hit the ground
+        self.wall_slide = False
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
@@ -105,11 +111,55 @@ class Player(PhysicsEntity): #inherit from entity
         self.air_time += 1
         if self.collisions['down']:
             self.air_time = 0
+            self.jumps = 2
 
-        if self.air_time > 4:
-            self.set_action('jump')
-        elif movement[0] != 0:
-            self.set_action('run')
+        #reset wallslide every frame - has to be made true
+        self.wall_slide = False
+
+        if (self.collisions['right'] or self.collisions['left']) and self.air_time > 4: #hitting a wall on the side, and in air
+            self.wall_slide = True
+            self.velocity[1] = min(self.velocity[1], 0.5) #capping the downward velocity at 0.5
+            if self.collisions['right']:
+                self.flip = False
+            else:
+                self.flip = True
+
+            self.set_action('wall_slide')
+        #only check other states if not in wall slide action
+        if not self.wall_slide:
+            if self.air_time > 4:
+                self.set_action('jump')
+            elif movement[0] != 0:
+                self.set_action('run')
+            else:
+                self.set_action('idle')
+
+        #normalize the horizontal velocity as well, similar to y axis
+        if self.velocity[0] > 0:
+            self.velocity[0] = max(self.velocity[0] - 0.1, 0) #bring it slowly to 0
         else:
-            self.set_action('idle')
+            self.velocity[0] = min(self.velocity[0] + 0.1, 0) #bring it slowly to 0
+
+    #function to jump
+    def jump(self):
+        #check wallslide first
+        if self.wall_slide:
+            if self.flip and self.last_movement[0] < 0: #checking if last mvmnt to left
+                self.velocity[0] = 3.5 #push you away from the wall right
+                self.velocity[1] = -2.5 #pushes you up
+                self.air_time = 5 #for anim
+                self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
+                return True
+            elif not self.flip and self.last_movement[0] > 0:
+                self.velocity[0] = -3.5 #push you away from the wall right
+                self.velocity[1] = -2.5 #pushes you up
+                self.air_time = 5 #for anim
+                self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
+                return True
+
+        elif self.jumps:
+            self.velocity[1] = -3
+            self.jumps -= 1 #decrements to 0, which ends loop bc it registers as false
+            self.air_time = 5 #force to transition to in air animation immediately
+            return True
 
