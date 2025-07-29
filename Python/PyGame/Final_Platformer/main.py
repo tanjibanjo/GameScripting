@@ -62,8 +62,11 @@ class Game:
 
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
-        self.tilemap.load('map.json')
+        self.load_level(0)
 
+    #function to load the map
+    def load_level(self, map_id):
+        self.tilemap.load('data/maps/' + str(map_id) + '.json')
         #getting info like position from only tree assets - for spawning leaves
         self.leaf_spawners = []
         for tree in self.tilemap.extract([('large_decor', 2)], keep=True):
@@ -82,6 +85,8 @@ class Game:
         self.projectiles = []
 
         self.particles = []
+
+        self.sparks = []
 
 
         #camera stuff
@@ -139,8 +144,14 @@ class Game:
                     if self.player.rect().collidepoint(projectile[0]):
                         self.projectiles.remove(projectile)
 
-                    
-
+            #handle sparks
+            for spark in self.sparks.copy():
+                kill = spark.update()
+                spark.render(self.display, offset=render_scroll)
+                if self.kill:
+                    self.sparks.remove(spark)
+            
+            #handle particles
             for particle in self.particles.copy():
                 kill = particle.update()
                 particle.render(self.display, offset=render_scroll)
