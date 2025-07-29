@@ -39,7 +39,7 @@ class Tilemap:
             tile = self.tilemap[loc]
             if (tile['type'], tile['variant']) in id_pairs:
                 matches.append(tile.copy())
-                matches[-1]['pos'] = matches[-1]-['pos'].copy()
+                matches[-1]['pos'] = matches[-1]['pos'].copy()
                 #convert to pixels
                 matches[-1]['pos'][0] *= self.tile_size
                 matches[-1]['pos'][1] *= self.tile_size

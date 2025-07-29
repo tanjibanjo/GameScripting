@@ -22,8 +22,8 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.screen = pygame.display.set_mode((640, 480))
-        self.display = pygame.Surface((320, 240)) #second surface we use for rendering - render on small screen and scale up to create pixel art effect
+        self.screen = pygame.display.set_mode((1280, 960)) #640, 480
+        self.display = pygame.Surface((320, 240)) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
 
         icon = load_image('entities/player.png')
         pygame.display.set_caption("I41")
@@ -63,7 +63,7 @@ class Game:
 
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
-        self.load_level(0)
+        self.load_level('map')
 
     #function to load the map
     def load_level(self, map_id):
