@@ -5,11 +5,14 @@
 
 #IMPORTS
 import pygame
+import random
+import math
 import sys
 from scripts.entities import PhysicsEntity, Player
 from scripts.utils import load_image, load_images, Animation
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
+from scripts.particle import Particle
 
 #game class - object oriented
 class Game:
@@ -43,7 +46,8 @@ class Game:
             'player/run': Animation(load_images('entities/player/run'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump')),
             'player/slide': Animation(load_images('entities/player/slide')),
-            'player/wall_slide': Animation(load_images('entities/player/wall_slide'))
+            'player/wall_slide': Animation(load_images('entities/player/wall_slide')),
+            'particle/leaf': Animation(load_images('particles/leaf'), img_dur=20, loop=False)
         }
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
@@ -54,6 +58,14 @@ class Game:
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
         self.tilemap.load('map.json')
+
+        #getting info like position from only tree assets - for spawning leaves
+        self.leaf_spawners = []
+        for tree in self.tilemap.extract([('large_decor', 2)], keep=True):
+            self.leaf_spawners.append(pygame.Rect(4 + tree['pos'][0], 4 + tree['pos'][1], 23, 13)) #offset spawn of leaves to fit the image better
+        
+        self.particles = []
+
 
         #camera stuff
         self.scroll = [0, 0]
@@ -69,6 +81,14 @@ class Game:
             self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 10
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
+            #spawn particle
+            for rect in self.leaf_spawners:
+                #multiply by large number so that it doesn't always fire - don't want leaves every frame
+                if random.random() * 49999 < rect.width * rect.height: # the amount of leaves spawned should be proportional to how large the tree is
+                    pos = (rect.x + random.random() * rect.width, rect.y + random.random() * rect.height)
+                    self.particles.append(Particle(self, 'leaf', pos, velocity=[-0.1, 0.3], frame=random.randint(0,20))) #random frame to spawn into
+
+
             #render clouds behind tiles
             self.clouds.update()
             self.clouds.render(self.display, offset=render_scroll)
@@ -81,7 +101,13 @@ class Game:
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=render_scroll)
 
-
+            for particle in self.particles.copy():
+                kill = particle.update()
+                particle.render(self.display, offset=render_scroll)
+                if particle.type == 'leaf':
+                    particle.pos[0] += math.sin(particle.animation.frame * 0.035) * 0.3 #sin function gives number between -1 and 1. more natural movement
+                if kill:
+                    self.particles.remove(particle)
 
             #handle events - left and right movement
             for event in pygame.event.get():

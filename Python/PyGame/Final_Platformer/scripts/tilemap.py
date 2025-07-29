@@ -26,6 +26,28 @@ class Tilemap:
         self.tilemap = {} #keeping most of tiles on a grid is more efficient (dictionary)
         self.offgrid_tiles = [] #list
 
+    #function takes a bunch of tiles and gets information about them - can choose to keep or remove as well
+    def extract(self, id_pairs, keep=False):
+        matches = []
+        for tile in self.offgrid_tiles.copy():
+            if (tile['type'], tile['variant']) in id_pairs:
+                matches.append(tile.copy())
+                if not keep:
+                    self.offgrid_tiles.remove(tile)
+
+        for loc in self.tilemap:
+            tile = self.tilemap[loc]
+            if (tile['type'], tile['variant']) in id_pairs:
+                matches.append(tile.copy())
+                matches[-1]['pos'] = matches[-1]-['pos'].copy()
+                #convert to pixels
+                matches[-1]['pos'][0] *= self.tile_size
+                matches[-1]['pos'][1] *= self.tile_size
+                if not keep:
+                    del self.tilemap[loc]
+
+        return matches
+
     #pass in a pixel location and get the surrounding tiles to aid in collision
     def tiles_around(self, pos):
         tiles = []
