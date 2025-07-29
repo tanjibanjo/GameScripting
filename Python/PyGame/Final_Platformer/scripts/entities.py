@@ -4,6 +4,10 @@
 #entity file to hold different entities used in the game
 
 import pygame
+import math
+import random
+from scripts.particle import Particle
+
 
 #class will handle physics later, takes the game, entity type, position to spawn, and size for entity
 class PhysicsEntity:
@@ -104,6 +108,7 @@ class Player(PhysicsEntity): #inherit from entity
         self.air_time = 0 #to keep track if in air
         self.jumps = 2 # two jumps before must hit the ground
         self.wall_slide = False
+        self.dashing = 0
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
@@ -134,11 +139,32 @@ class Player(PhysicsEntity): #inherit from entity
             else:
                 self.set_action('idle')
 
+        #dashing logic
+        if self.dashing > 0:
+            self.dashing = max(0, self.dashing - 1)
+        if self.dashing < 0:
+            self.dashing = min(0, self.dashing + 1)
+            #if we are in first 10 frames of dash, go fast left or right
+            #use absolute to remove the direction, keep the velocity
+        if abs(self.dashing) > 50:
+            self.velocity[0] = abs(self.dashing) / self.dashing * 8
+            if abs(self.dashing) == 51:
+                self.velocity[0] *= 0.1 #lower velocity very quickly after dash
+            angle = random.random() * math.pi * 2
+            speed = random.random() * 0.5 + 0.5 #.5 to 1
+            pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed] #convert into cartesian coordinates for velocity
+            self.game.particles.append(Particle(self.game, 'particle', self.rect().center, velocity=pvelocity, frame= random.randint(0, 7)))
+
         #normalize the horizontal velocity as well, similar to y axis
         if self.velocity[0] > 0:
             self.velocity[0] = max(self.velocity[0] - 0.1, 0) #bring it slowly to 0
         else:
             self.velocity[0] = min(self.velocity[0] + 0.1, 0) #bring it slowly to 0
+
+    #build on render
+    def render(self, surf, offset=(0, 0)):
+        if abs(self.dashing) <= 50:
+            super().render(surf, offset=offset) #makes player invisible if frames of anim are higher than 50
 
     #function to jump
     def jump(self):
@@ -163,3 +189,11 @@ class Player(PhysicsEntity): #inherit from entity
             self.air_time = 5 #force to transition to in air animation immediately
             return True
 
+    #function for dash
+    def dash(self):
+        #set the direction and length of dash, based on which way player is turned
+        if not self.dashing:
+            if self.flip:
+                self.dashing = -60
+            else:
+                self.dashing = 60
