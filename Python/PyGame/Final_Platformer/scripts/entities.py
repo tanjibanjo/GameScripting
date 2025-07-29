@@ -19,6 +19,7 @@ class PhysicsEntity:
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
+        self.speed_mod = 1.3
 
         self.action = ''
         self.anim_offset = (-3, -3)
@@ -47,7 +48,7 @@ class PhysicsEntity:
 
         #update position coords - important to do each dimension seperate
         #update x position based on frame movement
-        self.pos[0] += (frame_movement[0] * 1.3)
+        self.pos[0] += (frame_movement[0] * self.speed_mod)
 
         #collision for x axis
         entity_rect = self.rect()
@@ -210,7 +211,7 @@ class Player(PhysicsEntity): #inherit from entity
         #if we are in first 10 frames of dash, go fast left or right
         #use absolute to remove the direction, keep the velocity - *8 to move faster
         if abs(self.dashing) > 50:
-            self.velocity[0] = abs(self.dashing) / self.dashing * 8
+            self.velocity[0] = abs(self.dashing) / self.dashing * 5
             if abs(self.dashing) == 51:
                 self.velocity[0] *= 0.1 #lower velocity very quickly after dash is over
             pvelocity = [abs(self.dashing) / self.dashing * random.random() * 3, 0] #set velocity so that particles move with the dash (0-3)

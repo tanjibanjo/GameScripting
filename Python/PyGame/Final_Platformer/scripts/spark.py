@@ -15,7 +15,7 @@ class Spark():
         self.pos[1] += math.sin(self.angle) * self.speed
 
         #spark slows and shrinks over time till it dissapears
-        self.speed = max(0, self.speed - 1)
+        self.speed = max(0, self.speed - 0.1)
         return not self.speed
     
     def render(self, surf, offset=(0, 0)):
@@ -25,6 +25,4 @@ class Spark():
             (self.pos[0] + math.cos(self.angle + math.pi) * self.speed * 3 - offset[0], self.pos[1] + math.sin(self.angle + math.pi) * self.speed * 3 - offset[1]),
             (self.pos[0] + math.cos(self.angle - math.pi * .5) * self.speed * .5 - offset[0], self.pos[1] + math.sin(self.angle - math.pi * .5) * self.speed * .5 - offset[1]),
         ]
-        
-
         pygame.draw.polygon(surf, (255, 255, 255), render_points) #this creates a polygon
