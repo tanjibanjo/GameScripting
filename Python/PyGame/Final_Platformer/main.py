@@ -22,7 +22,7 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.screen = pygame.display.set_mode((1280, 960)) #640, 480
+        self.screen = pygame.display.set_mode((640, 480)) #640, 480
         self.display = pygame.Surface((320, 240)) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
 
         icon = load_image('entities/player.png')
@@ -63,7 +63,13 @@ class Game:
 
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
-        self.load_level('map')
+
+        #load level
+        self.level = 'map'
+        self.load_level(self.level)
+
+        #for screenshake
+        self.screenshake = 0
 
     #function to load the map
     def load_level(self, map_id):
@@ -78,6 +84,7 @@ class Game:
         for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1)]):
             if spawner['variant'] == 0: #player
                 self.player.pos = spawner['pos']
+                self.player.air_time = 0
             else:
                 self.enemies.append(Enemy(self, spawner['pos'], (8, 15)))
 
@@ -92,12 +99,21 @@ class Game:
 
         #camera stuff
         self.scroll = [0, 0]
+        
+        self.dead = 0
 
 
     def run(self):
         while True:
             #fill background
             self.display.blit(self.assets['background'], (0, 0))
+
+            self.screenshake = max(0, self.screenshake - 1)
+
+            if self.dead:
+                self.dead += 1
+                if self.dead > 40:
+                    self.load_level(self.level)
 
             #camera focus on player
             self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 10
@@ -126,10 +142,12 @@ class Game:
                 if kill:
                     self.enemies.remove(enemy)
 
-            #update and render the player
-            #update the movement for left and right
-            self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            self.player.render(self.display, offset=render_scroll)
+
+            if not self.dead:
+                #update and render the player
+                #update the movement for left and right
+                self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
+                self.player.render(self.display, offset=render_scroll)
 
             #render the projecvtiles
             #[[x, y], direction, timer]
@@ -148,6 +166,8 @@ class Game:
                 elif abs(self.player.dashing) < 50: # give i frame
                     if self.player.rect().collidepoint(projectile[0]):
                         self.projectiles.remove(projectile)
+                        self.dead += 1
+                        self.screenshake = max(16, self.screenshake)
                         for i in range(30): #spawn 30 sparks when player is hit
                             angle = random.random() * math.pi * 2 #random angle in a circle
                             speed = random.random() * 5
@@ -191,8 +211,10 @@ class Game:
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.movement[1] = False
 
+
+            screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
             #blit display onto screen, use scale to scale display to screen size
-            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
+            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (screenshake_offset))
 
             #update display, locked at 60 fps
             pygame.display.update()

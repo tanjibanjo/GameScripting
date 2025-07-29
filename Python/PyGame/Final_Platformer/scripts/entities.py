@@ -150,6 +150,7 @@ class Enemy(PhysicsEntity):
 
             if abs(self.game.player.dashing) >= 50: #we are in dashing mvmnt
                 if self.rect().colliderect(self.game.player.rect()): #player hit during dash
+                    self.game.screenshake = max(16, self.game.screenshake)
                     for i in range(30): #spawn 30 sparks when player is hit
                         angle = random.random() * math.pi * 2 #random angle in a circle
                         speed = random.random() * 5
@@ -183,6 +184,12 @@ class Player(PhysicsEntity): #inherit from entity
         super().update(tilemap, movement=movement)
 
         self.air_time += 1
+
+        if self.air_time > 120:
+            if not self.game.dead:
+                self.game.screenshake = max(16, self.game.screenshake)
+            self.game.dead += 1
+
         if self.collisions['down']:
             self.air_time = 0
             self.jumps = 2
