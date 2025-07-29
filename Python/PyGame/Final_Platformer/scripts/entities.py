@@ -148,6 +148,17 @@ class Enemy(PhysicsEntity):
         else:
             self.set_action('idle')
 
+            if abs(self.game.player.dashing) >= 50: #we are in dashing mvmnt
+                if self.rect().colliderect(self.game.player.rect()): #player hit during dash
+                    for i in range(30): #spawn 30 sparks when player is hit
+                        angle = random.random() * math.pi * 2 #random angle in a circle
+                        speed = random.random() * 5
+                        self.game.sparks.append(Spark(self.rect().center, angle, 2 + random.random()))
+                        self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
+                    self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
+                    self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
+                    return True #return true to remove enemy in main
+
     #modify render function to draw a gun for the enemies
     def render(self, surf, offset=(0, 0)):
         super().render(surf,offset=offset)
