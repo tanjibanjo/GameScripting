@@ -181,7 +181,7 @@ class Game:
                         self.movement[1] = True
                     if event.key == pygame.K_UP or event.key == pygame.K_SPACE:
                         self.player.jump() #just set velocity to negative so player moves up, then physics system will bring the velocity back down
-                    if event.key == pygame.K_LSHIFT:
+                    if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
                         self.player.dash()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:

@@ -47,7 +47,7 @@ class PhysicsEntity:
 
         #update position coords - important to do each dimension seperate
         #update x position based on frame movement
-        self.pos[0] += frame_movement[0]
+        self.pos[0] += (frame_movement[0] * 1.3)
 
         #collision for x axis
         entity_rect = self.rect()
