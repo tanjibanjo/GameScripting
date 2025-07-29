@@ -19,7 +19,7 @@ class PhysicsEntity:
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
-        self.speed_mod = 1.3
+        self.speed_mod = 1.4
 
         self.action = ''
         self.anim_offset = (-3, -3)
