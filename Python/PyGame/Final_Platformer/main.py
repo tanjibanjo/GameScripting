@@ -23,8 +23,10 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.screen = pygame.display.set_mode((640, 480)) #640, 480
-        self.display = pygame.Surface((320, 240)) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
+        self.screen = pygame.display.set_mode((1040, 880)) #640, 480
+        self.display = pygame.Surface((320, 240), pygame.SRCALPHA) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
+        #third display for effect stuff
+        self.display_2 = pygame.Surface((320, 240))
 
         icon = load_image('entities/player.png')
         pygame.display.set_caption("I41")
@@ -56,6 +58,21 @@ class Game:
             'gun': load_image('gun.png'),
             'projectile': load_image('projectile.png')
         }
+
+        #sound effects
+        self.sfx = {
+            'jump': pygame.mixer.Sound('data/sfx/jump.wav'),
+            'dash': pygame.mixer.Sound('data/sfx/dash.wav'),
+            'hit': pygame.mixer.Sound('data/sfx/hit.wav'),
+            'shoot': pygame.mixer.Sound('data/sfx/shoot.wav'),
+            'ambience': pygame.mixer.Sound('data/sfx/ambience.wav'),
+        }
+
+        self.sfx['ambience'].set_volume(0.2)
+        self.sfx['shoot'].set_volume(0.4)
+        self.sfx['hit'].set_volume(0.7)
+        self.sfx['dash'].set_volume(0.3)
+        self.sfx['jump'].set_volume(0.6)
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
@@ -109,9 +126,16 @@ class Game:
 
 
     def run(self):
+        #music - load and start ambience as well
+        pygame.mixer.music.load('data/music.wav')
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1) #-1 loops forever
+        self.sfx['ambience'].play(-1)
+
         while True:
             #fill background
-            self.display.blit(self.assets['background'], (0, 0))
+            self.display.fill((0, 0, 0, 0))
+            self.display_2.blit(self.assets['background'], (0, 0))
             #handle screenshake
             self.screenshake = max(0, self.screenshake - 1)
 
@@ -145,7 +169,7 @@ class Game:
 
             #render clouds behind tiles
             self.clouds.update()
-            self.clouds.render(self.display, offset=render_scroll)
+            self.clouds.render(self.display_2, offset=render_scroll)
 
             #render tile map behind the player
             self.tilemap.render(self.display, offset=render_scroll)
@@ -182,6 +206,7 @@ class Game:
                     if self.player.rect().collidepoint(projectile[0]):
                         self.projectiles.remove(projectile)
                         self.dead += 1
+                        self.sfx['hit'].play()
                         self.screenshake = max(16, self.screenshake)
                         for i in range(30): #spawn 30 sparks when player is hit
                             angle = random.random() * math.pi * 2 #random angle in a circle
@@ -195,6 +220,15 @@ class Game:
                 spark.render(self.display, offset=render_scroll)
                 if kill:
                     self.sparks.remove(spark)
+
+            #create display mask - to convert many colors to two
+            display_mask = pygame.mask.from_surface(self.display)
+            display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) #first argument is the color of the outlines (0000 is black)
+           
+
+            #blit the sillhouette, underneath other stuff
+            for offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]: #1 pixel in each direction gives outline
+                self.display_2.blit(display_sillhouette, offset)
             
             #handle particles
             for particle in self.particles.copy():
@@ -217,7 +251,8 @@ class Game:
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         self.movement[1] = True
                     if event.key == pygame.K_UP or event.key == pygame.K_SPACE:
-                        self.player.jump() #just set velocity to negative so player moves up, then physics system will bring the velocity back down
+                        if self.player.jump(): #just set velocity to negative so player moves up, then physics system will bring the velocity back down
+                            self.sfx['jump'].play()
                     if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
                         self.player.dash()
                 if event.type == pygame.KEYUP:
@@ -234,9 +269,12 @@ class Game:
                 self.display.blit(transition_surf, (0, 0))
 
 
+            #this adds the regular stuff back over the display -- take off for cool effect??
+            self.display_2.blit(self.display, (0, 0))
+
             screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
             #blit display onto screen, use scale to scale display to screen size
-            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (screenshake_offset))
+            self.screen.blit(pygame.transform.scale(self.display_2, self.screen.get_size()), (screenshake_offset))
 
             #update display, locked at 60 fps
             pygame.display.update()

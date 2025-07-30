@@ -128,10 +128,12 @@ class Enemy(PhysicsEntity):
                 dis = (self.game.player.pos[0] - self.pos[0], self.game.player.pos[1] - self.pos[1])
                 if (abs(dis[1]) < 16):
                     if (self.flip and dis[0] < 0): #player is to the left, and looking left
+                        self.game.sfx['shoot'].play()
                         self.game.projectiles.append([[self.rect().centerx - 7, self.rect().centery], -1.5, 0])
                         for i in range(4):
                             self.game.sparks.append(Spark(self.game.projectiles[-1][0], random.random() - 0.5 + math.pi, 2 + random.random()))
                     if (not self.flip and dis[1] > 0):
+                        self.game.sfx['shoot'].play()
                         self.game.projectiles.append([[self.rect().centerx + 7, self.rect().centery], 1.5, 0])
                         for i in range(4):
                             self.game.sparks.append(Spark(self.game.projectiles[-1][0], random.random() - 0.5, 2 + random.random()))
@@ -150,6 +152,7 @@ class Enemy(PhysicsEntity):
 
         if abs(self.game.player.dashing) >= 50: #we are in dashing mvmnt
             if self.rect().colliderect(self.game.player.rect()): #player hit during dash
+                self.game.sfx['hit'].play()
                 self.game.screenshake = max(16, self.game.screenshake)
                 for i in range(30): #spawn 30 sparks when player is hit
                     angle = random.random() * math.pi * 2 #random angle in a circle
@@ -199,6 +202,7 @@ class Player(PhysicsEntity): #inherit from entity
 
         if (self.collisions['right'] or self.collisions['left']) and self.air_time > 4: #hitting a wall on the side, and in air
             self.wall_slide = True
+            self.air_time = 5 #reset air time so that death doesn't trigger from wall bouncing
             self.velocity[1] = min(self.velocity[1], 0.5) #capping the downward velocity at 0.5
             if self.collisions['right']:
                 self.flip = False
@@ -274,6 +278,7 @@ class Player(PhysicsEntity): #inherit from entity
     def dash(self):
         #set the direction and length of dash, based on which way player is turned
         if not self.dashing:
+            self.game.sfx['dash'].play()
             if self.flip:
                 self.dashing = -60
             else:
