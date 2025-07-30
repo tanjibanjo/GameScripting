@@ -72,7 +72,7 @@ class Game:
         self.sfx['shoot'].set_volume(0.4)
         self.sfx['hit'].set_volume(0.7)
         self.sfx['dash'].set_volume(0.3)
-        self.sfx['jump'].set_volume(0.7)
+        self.sfx['jump'].set_volume(0.85)
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
@@ -83,9 +83,12 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
 
         #load level
-        self.number_levels = 1
+        self.number_levels = len(os.listdir('data/maps'))
         self.level = 0
         self.load_level(self.level)
+
+        #game stuff- title screen etc
+        self.scene = 1
 
         #for screenshake
         self.screenshake = 0
@@ -128,11 +131,11 @@ class Game:
     def run(self):
         #music - load and start ambience as well
         pygame.mixer.music.load('data/music2.wav')
-        pygame.mixer.music.set_volume(0.45)
+        pygame.mixer.music.set_volume(0.4)
         pygame.mixer.music.play(-1) #-1 loops forever
         self.sfx['ambience'].play(-1)
 
-        while True:
+        while self.scene == 1:
             #fill background
             self.display.fill((0, 0, 0, 0))
             self.display_2.blit(self.assets['background'], (0, 0))
@@ -142,8 +145,13 @@ class Game:
             if not len(self.enemies):
                 self.transition += 1
                 if self.transition > 30:
-                    self.level = min(self.level + 1, len(os.listdir('data/maps')) - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
-                    self.load_level(self.level)
+                    #check if last level is finished
+                    if self.level + 2 < self.number_levels: #level is not the last one
+                        self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
+                        self.load_level(self.level)
+                    else: #equal 
+                        self.load_level('game_over')
+                        self.scene = 2
             if self.transition < 0:
                 self.transition +=1
 
@@ -170,6 +178,7 @@ class Game:
             #render clouds behind tiles
             self.clouds.update()
             self.clouds.render(self.display_2, offset=render_scroll)
+
 
             #render tile map behind the player
             self.tilemap.render(self.display, offset=render_scroll)
@@ -224,7 +233,7 @@ class Game:
             #create display mask - to convert many colors to two
             display_mask = pygame.mask.from_surface(self.display)
             display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) #first argument is the color of the outlines (0000 is black)
-           
+        
 
             #blit the sillhouette, underneath other stuff
             for offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]: #1 pixel in each direction gives outline
@@ -279,5 +288,57 @@ class Game:
             #update display, locked at 60 fps
             pygame.display.update()
             self.clock.tick(60)
+
+        while self.scene == 2: #game over screen
+            
+            #fill background
+            self.display.fill((0, 0, 0, 0))
+            self.display_2.blit(self.assets['background'], (0, 0))
+
+            #camera focus on player
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 15
+            render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+
+            #spawn particle
+            for rect in self.leaf_spawners:
+                #multiply by large number so that it doesn't always fire - don't want leaves every frame
+                if random.random() * 49999 < rect.width * rect.height: # the amount of leaves spawned should be proportional to how large the tree is
+                    pos = (rect.x + random.random() * rect.width, rect.y + random.random() * rect.height)
+                    self.particles.append(Particle(self, 'leaf', pos, velocity=[-0.1, 0.3], frame=random.randint(0,20))) #random frame to spawn into
+
+
+            #render clouds behind tiles
+            self.clouds.update()
+            self.clouds.render(self.display_2, offset=render_scroll)
+
+
+            #render tile map behind the player
+            self.tilemap.render(self.display, offset=render_scroll)
+
+            #update and render the player
+            #update the movement for left and right
+            self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
+            self.player.render(self.display, offset=render_scroll)
+
+            #handle events - left and right movement
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            
+
+            #display stuff
+            #this adds the regular stuff back over the display -- take off for cool effect??
+            self.display_2.blit(self.display, (0, 0))
+
+            screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
+            #blit display onto screen, use scale to scale display to screen size
+            self.screen.blit(pygame.transform.scale(self.display_2, self.screen.get_size()), (screenshake_offset))
+
+            #update display, locked at 60 fps
+            pygame.display.update()
+            self.clock.tick(60)
+
 
 Game().run() #initalizes a Game object, then calls run in same line
