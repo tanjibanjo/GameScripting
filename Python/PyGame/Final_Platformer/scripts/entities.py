@@ -19,7 +19,7 @@ class PhysicsEntity:
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
-        self.speed_mod = 1.4
+        self.speed_mod = 1.7
 
         self.action = ''
         self.anim_offset = (-3, -3)
@@ -227,9 +227,9 @@ class Player(PhysicsEntity): #inherit from entity
         if self.dashing < 0:
             self.dashing = min(0, self.dashing + 1)
         #if we are in first 10 frames of dash, go fast left or right
-        #use absolute to remove the direction, keep the velocity - *8 to move faster
+        #use absolute to remove the direction, keep the velocity - *4 to move faster
         if abs(self.dashing) > 50:
-            self.velocity[0] = abs(self.dashing) / self.dashing * 5
+            self.velocity[0] = abs(self.dashing) / self.dashing * 4
             if abs(self.dashing) == 51:
                 self.velocity[0] *= 0.1 #lower velocity very quickly after dash is over
             pvelocity = [abs(self.dashing) / self.dashing * random.random() * 3, 0] #set velocity so that particles move with the dash (0-3)
@@ -252,14 +252,14 @@ class Player(PhysicsEntity): #inherit from entity
         #check wallslide first
         if self.wall_slide:
             if self.flip and self.last_movement[0] < 0: #checking if last mvmnt to left
-                self.velocity[0] = 3.5 #push you away from the wall right
-                self.velocity[1] = -2.5 #pushes you up
+                self.velocity[0] = 2.8 #push you away from the wall right
+                self.velocity[1] = -2.8 #pushes you up
                 self.air_time = 5 #for anim
                 self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
                 return True
             elif not self.flip and self.last_movement[0] > 0:
-                self.velocity[0] = -3.5 #push you away from the wall right
-                self.velocity[1] = -2.5 #pushes you up
+                self.velocity[0] = -2.8 #push you away from the wall right
+                self.velocity[1] = -2.8 #pushes you up
                 self.air_time = 5 #for anim
                 self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
                 return True
