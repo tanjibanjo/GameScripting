@@ -238,6 +238,7 @@ class Game:
                             self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
                             self.load_level(self.level)
                         else: #equal 
+                            self.movement[0] = 0
                             self.load_level('game_over')
                             self.scene = 2
                 if self.transition < 0:
