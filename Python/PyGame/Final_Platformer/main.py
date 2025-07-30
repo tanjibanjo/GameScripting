@@ -72,7 +72,7 @@ class Game:
         self.sfx['shoot'].set_volume(0.4)
         self.sfx['hit'].set_volume(0.7)
         self.sfx['dash'].set_volume(0.3)
-        self.sfx['jump'].set_volume(0.2)
+        self.sfx['jump'].set_volume(0.7)
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
@@ -127,8 +127,8 @@ class Game:
 
     def run(self):
         #music - load and start ambience as well
-        pygame.mixer.music.load('data/music.wav')
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.load('data/music2.wav')
+        pygame.mixer.music.set_volume(0.45)
         pygame.mixer.music.play(-1) #-1 loops forever
         self.sfx['ambience'].play(-1)
 
