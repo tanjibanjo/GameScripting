@@ -191,6 +191,14 @@ class Player(PhysicsEntity): #inherit from entity
         if self.air_time > 150:
             if not self.game.dead:
                 self.game.screenshake = max(16, self.game.screenshake)
+                self.game.sfx['hit'].play()
+                for i in range(30): #spawn 30 sparks when player is hit
+                    angle = random.random() * math.pi * 2 #random angle in a circle
+                    speed = random.random() * 5
+                    self.game.sparks.append(Spark(self.rect().center, angle, 2 + random.random()))
+                    self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
+                self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
+                self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
             self.game.dead += 1
 
         if self.collisions['down']:

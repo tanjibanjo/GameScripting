@@ -72,7 +72,7 @@ class Game:
         self.sfx['shoot'].set_volume(0.4)
         self.sfx['hit'].set_volume(0.7)
         self.sfx['dash'].set_volume(0.3)
-        self.sfx['jump'].set_volume(0.6)
+        self.sfx['jump'].set_volume(0.2)
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
 
@@ -155,8 +155,8 @@ class Game:
                     self.load_level(self.level)
 
             #camera focus on player
-            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 10
-            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 10
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 25
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 25
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
             #spawn particle
