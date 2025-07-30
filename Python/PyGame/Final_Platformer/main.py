@@ -155,8 +155,8 @@ class Game:
                     self.load_level(self.level)
 
             #camera focus on player
-            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 25
-            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 25
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 15
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
             #spawn particle
