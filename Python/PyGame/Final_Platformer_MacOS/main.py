@@ -207,7 +207,7 @@ class Game:
                         self.projectiles.remove(projectile)
                         self.dead += 1
                         self.sfx['hit'].play()
-                        self.screenshake = max(16, self.screenshake)
+                        self.screenshake = max(25, self.screenshake)
                         for i in range(30): #spawn 30 sparks when player is hit
                             angle = random.random() * math.pi * 2 #random angle in a circle
                             speed = random.random() * 5
