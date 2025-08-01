@@ -26,6 +26,7 @@ class PhysicsEntity:
         self.flip = False
         self.set_action('idle')
         #gravity is universal so we can add to the entity, which the player entity will inherit from
+        self.gravity = .1
 
         #set last movement
         self.last_movement = [0, 0]
@@ -91,7 +92,7 @@ class PhysicsEntity:
         self.last_movement = movement
 
         #min function takes the lesser of the values, so addds .1 then effectively caps the terminal velocity at 5
-        self.velocity[1] = min(5, self.velocity[1] + 0.1)
+        self.velocity[1] = min(5, self.velocity[1] + self.gravity)
 
         if self.collisions['down'] or self.collisions['up']:
             self.velocity[1] = 0
@@ -182,6 +183,7 @@ class Player(PhysicsEntity): #inherit from entity
         self.jumps = 2 # two jumps before must hit the ground
         self.wall_slide = False
         self.dashing = 0
+        self.grounded = False
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
@@ -204,6 +206,9 @@ class Player(PhysicsEntity): #inherit from entity
         if self.collisions['down']:
             self.air_time = 0
             self.jumps = 2
+            if not self.grounded:
+                self.jump(False)
+
 
         #reset wallslide every frame - has to be made true
         self.wall_slide = False
@@ -259,28 +264,39 @@ class Player(PhysicsEntity): #inherit from entity
         if abs(self.dashing) <= 50:
             super().render(surf, offset=offset) #makes player invisible if frames of anim are higher than 50
 
-    #function to jump
-    def jump(self):
-        #check wallslide first
-        if self.wall_slide:
-            if self.flip and self.last_movement[0] < 0: #checking if last mvmnt to left
-                self.velocity[0] = 2.8 #push you away from the wall right
-                self.velocity[1] = -2.8 #pushes you up
-                self.air_time = 5 #for anim
-                self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
-                return True
-            elif not self.flip and self.last_movement[0] > 0:
-                self.velocity[0] = -2.8 #push you away from the wall right
-                self.velocity[1] = -2.8 #pushes you up
-                self.air_time = 5 #for anim
-                self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
-                return True
+    #function to jump - active jump will be true if the button is held down, like in mario
+    def jump(self, active_jump):
+        if active_jump:
+            #update grounded
+            self.grounded = False
 
-        elif self.jumps:
-            self.velocity[1] = -3
-            self.jumps -= 1 #decrements to 0, which ends loop bc it registers as false
-            self.air_time = 5 #force to transition to in air animation immediately
-            return True
+            #check wallslide first
+            if self.wall_slide:
+                if self.flip and self.last_movement[0] < 0: #checking if last mvmnt to left
+                    self.gravity = .09 #make gravity less if the jump button is being held down
+                    self.velocity[0] = 2.8 #push you away from the wall right
+                    self.velocity[1] = -2.8 #pushes you up
+                    self.air_time = 5 #for anim
+                    self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
+                    return True
+                elif not self.flip and self.last_movement[0] > 0:
+                    self.gravity = .09 #make gravity less if the jump button is being held down
+                    self.velocity[0] = -2.8 #push you away from the wall right
+                    self.velocity[1] = -2.8 #pushes you up
+                    self.air_time = 5 #for anim
+                    self.jumps = max(0, self.jumps - 1) #min value is 0 - only use jump if have one left
+                    return True
+            #jumping logic
+            elif self.jumps:
+                self.gravity = .09 #make gravity less if the jump button is being held down
+                self.velocity[1] = -3 #change velocity to move upward
+                self.jumps -= 1 #decrements to 0, which ends loop bc it registers as false
+                self.air_time = 5 #force to transition to in air animation immediately
+                return True
+            
+        else: #called when release the jump button
+            self.gravity = .15
+            self.grounded = True
 
     #function for dash
     def dash(self):

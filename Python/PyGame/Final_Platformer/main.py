@@ -23,12 +23,13 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.width = 1040
-        self.height = 880
+        self.width = 640 #1040
+        self.height = 480 #880
         self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
         self.display = pygame.Surface((320, 240), pygame.SRCALPHA) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
         #third display for effect stuff
         self.display_2 = pygame.Surface((320, 240))
+        self.screen_rect = pygame.Rect(0, 0, 320, 340)
 
         icon = load_image('entities/player.png')
         pygame.display.set_caption("I41")
@@ -95,11 +96,13 @@ class Game:
 
         #load level
         self.number_levels = len(os.listdir('data/maps'))
-        self.level = 'start'
+        self.level = 1
         self.load_level(self.level)
 
         #game stuff- title screen etc
-        self.scene = 0
+        self.scene = 1
+        #check for if input in the main loop should even be taken
+        self.block_input = False
 
         #for screenshake
         self.screenshake = 0
@@ -150,7 +153,7 @@ class Game:
         self.sfx['ambience'].play(-1)
 
         while self.running:
-            while self.scene == 0:
+            while self.scene == 0: #start screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
@@ -208,8 +211,8 @@ class Game:
                             sys.exit()
 
                 #render the title
-                self.display.blit(self.start_title, (self.width/5 - self.game_over_title.get_width()/1.5, self.titley))
-                self.display.blit(self.start_title_options,(self.width/5.5 - self.game_over_title.get_width(), self.titley + 18) )
+                self.display.blit(self.start_title, (self.screen_rect.centerx - self.start_title.get_width()/2, self.titley))
+                self.display.blit(self.start_title_options,(self.screen_rect.centerx - self.start_title_options.get_width()/2, self.titley + 18) )
 
                 #display stuff
                 #this adds the regular stuff back over the display -- take off for cool effect??
@@ -238,9 +241,10 @@ class Game:
                             self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
                             self.load_level(self.level)
                         else: #equal 
-                            self.movement[0] = 0
-                            self.load_level('game_over')
+                            self.block_input = True
                             self.scene = 2
+                            self.load_level('game_over')
+                            self.movement[0] = False
                 if self.transition < 0:
                     self.transition +=1
 
@@ -294,7 +298,7 @@ class Game:
                     img = self.assets['projectile']
 
                     self.display.blit(img, (projectile[0][0] - img.get_width() / 2 - render_scroll[0], projectile[0][1] - img.get_height() / 2 - render_scroll[1]))
-                    if self.tilemap.solid_check(projectile[0]):
+                    if self.tilemap.solid_check(projectile[0]): #hits something solid
                         self.projectiles.remove(projectile)
                         for i in range(4):
                             self.sparks.append(Spark(projectile[0], random.random() - 0.5 + (math.pi if projectile[1] > 0 else 0), 2 + random.random()))
@@ -342,26 +346,30 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-                    #movement inputs for up and down - uses keyboard keys
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                            self.movement[0] = True
-                        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                            self.movement[1] = True
-                        if event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
-                            if self.player.jump(): #just set velocity to negative so player moves up, then physics system will bring the velocity back down
-                                self.sfx['jump'].play()
-                        if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
-                            self.player.dash()
-                        if event.key == pygame.K_ESCAPE:
-                            self.running = False
-                            pygame.quit()
-                            sys.exit()
-                    if event.type == pygame.KEYUP:
+                    if not self.block_input:
+                        #movement inputs for up and down - uses keyboard keys
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                                self.movement[0] = True
+                            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                                self.movement[1] = True
+                            if event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
+                                if self.player.jump(True): #just set velocity to negative so player moves up, then physics system will bring the velocity back down
+                                    self.sfx['jump'].play()
+                            if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
+                                self.player.dash()
+                            if event.key == pygame.K_ESCAPE:
+                                self.running = False
+                                pygame.quit()
+                                sys.exit()
+                    if event.type == pygame.KEYUP: #release key
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             self.movement[0] = False
                         if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                             self.movement[1] = False
+                        if event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
+                            if not self.player.grounded:
+                                self.player.jump(False) #passing false means the jump button is disengaged, and brings gravity back
 
                 #only when transitioning
                 if self.transition:
@@ -383,7 +391,6 @@ class Game:
                 self.clock.tick(60)
 
             while self.scene == 2: #game over screen
-                
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
@@ -414,6 +421,13 @@ class Game:
                 self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
                 self.player.render(self.display, offset=render_scroll)
 
+                if self.dead:
+                    self.dead += 1
+                    if self.dead == 10:
+                        self.transition = min(30, self.transition + 1)
+                    if self.dead > 40:
+                        self.load_level('game_over')
+
                 #handle particles
                 for particle in self.particles.copy():
                     kill = particle.update()
@@ -422,6 +436,8 @@ class Game:
                         particle.pos[0] += math.sin(particle.animation.frame * 0.035) * 0.3 #sin function gives number between -1 and 1. more natural movement
                     if kill:
                         self.particles.remove(particle)
+
+                
 
                 #handle events - left and right movement
                 for event in pygame.event.get():
@@ -439,6 +455,14 @@ class Game:
                             self.running = False
                             pygame.quit()
                             sys.exit()
+                    if event.type == pygame.KEYUP: #release key
+                        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                            self.movement[0] = False
+                        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                            self.movement[1] = False
+                        if event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
+                            if not self.player.grounded:
+                                self.player.jump(False) #passing false means the jump button is disengaged, and brings gravity back
 
                 #render the title
                 self.display.blit(self.game_over_title, (self.width/4 - self.game_over_title.get_width()/1.5, self.titley))

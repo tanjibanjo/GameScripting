@@ -19,7 +19,7 @@ def load_image(path):
 #function will bacth load images
 def load_images(path):
     images = []
-    for img_name in os.listdir(BASE_IMG_PATH + path): # for all images in folder
+    for img_name in sorted(os.listdir(BASE_IMG_PATH + path)): # for all images in folder
         images.append(load_image(path + '/' + img_name)) # add the image name to the path- up to now its just directed to the folder
 
     #return list
