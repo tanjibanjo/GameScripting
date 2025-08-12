@@ -1,0 +1,3 @@
+([('main',
+   '/Users/lanepollock/Documents/Github/GameScripting/Python/PyGame/Final_Platformer/dist/main',
+   'EXECUTABLE')],)
