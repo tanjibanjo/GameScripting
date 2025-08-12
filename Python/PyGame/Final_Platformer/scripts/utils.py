@@ -5,21 +5,30 @@
 
 import os
 import pygame
+import re
 
 #this base path just navigates to the images folder, where all the sprites pngs are
-BASE_IMG_PATH = 'data/images/'
+#create a path to the script no matter where it is on computer - very important for mac
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+#remove the scripts from path file then add base image path back in
+SCRIPT_DIR = re.sub('scripts', '', SCRIPT_DIR)
+#now add the img path to the full path and use 
+BASE_IMG_PATH = SCRIPT_DIR + '/data/images/'
 
 #loads image, takes path to add to base, returns the loaded image
 def load_image(path):
     #convert internal representation of the image in pygame making it more efficient for rendering
-    img = pygame.image.load(BASE_IMG_PATH + path).convert()
+    full_path = os.path.abspath(BASE_IMG_PATH + path)
+    img = pygame.image.load(full_path).convert()
     img.set_colorkey((0, 0, 0)) #all our assets have a black background, so this takes black RGB and makes that invisible
+
     return img
 
 #function will bacth load images
 def load_images(path):
     images = []
-    for img_name in sorted(os.listdir(BASE_IMG_PATH + path)): # for all images in folder
+    full_path = os.path.abspath(BASE_IMG_PATH + path)
+    for img_name in sorted(os.listdir(full_path)): # for all images in folder
         images.append(load_image(path + '/' + img_name)) # add the image name to the path- up to now its just directed to the folder
 
     #return list
