@@ -464,6 +464,7 @@ class Game:
                             if not self.player.grounded:
                                 self.player.jump(False) #passing false means the jump button is disengaged, and brings gravity back
 
+
                 #render the title
                 self.display.blit(self.game_over_title, (self.width/4 - self.game_over_title.get_width()/1.5, self.titley))
                 self.display.blit(self.game_over_options,(self.width/4 - self.game_over_title.get_width(), self.titley + 18) )
