@@ -4,14 +4,15 @@
 #utility file 
 
 import os
+import sys
 import pygame
 import re
 
 #this base path just navigates to the images folder, where all the sprites pngs are
 #create a path to the script no matter where it is on computer - very important for mac
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR = os.path.realpath(__file__)
 #remove the scripts from path file then add base image path back in
-SCRIPT_DIR = re.sub('scripts', '', SCRIPT_DIR)
+SCRIPT_DIR = re.sub('/scripts/utils.py', '', SCRIPT_DIR)
 #now add the img path to the full path and use 
 BASE_IMG_PATH = SCRIPT_DIR + '/data/images/'
 
@@ -22,6 +23,7 @@ def load_image(path):
     img = pygame.image.load(full_path).convert()
     img.set_colorkey((0, 0, 0)) #all our assets have a black background, so this takes black RGB and makes that invisible
 
+    print(full_path)
     return img
 
 #function will bacth load images
