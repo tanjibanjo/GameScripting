@@ -96,11 +96,11 @@ class Game:
 
         #load level
         self.number_levels = len(os.listdir('data/maps'))
-        self.level = 1
+        self.level = 'start'
         self.load_level(self.level)
 
         #game stuff- title screen etc
-        self.scene = 1
+        self.scene = 0
         #check for if input in the main loop should even be taken
         self.block_input = False
 
