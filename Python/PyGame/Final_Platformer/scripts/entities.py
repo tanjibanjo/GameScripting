@@ -130,9 +130,14 @@ class Enemy(PhysicsEntity):
         self.walking = 0
         self.invincible = False
         self.invincible_timer = 0
-        #randomly choose if will be heavy enemy or not 1/4 chance rn
-        if(random.randint(0, 3) < 1):
-            self.heavy_enemy = True
+
+        #generate heavy enemy logic
+        if self.game.level == 2 or self.game.level == 3:
+            #randomly choose if will be heavy enemy or not 1/4 chance rn
+            if(random.randint(0, 3) < 1):
+                self.heavy_enemy = True
+            else:
+                self.heavy_enemy = False
         else:
             self.heavy_enemy = False
     
@@ -175,7 +180,7 @@ class Enemy(PhysicsEntity):
         else:
             self.set_action('idle')
 
-
+        #enemy hit logic - including 2 hit health logic
         if abs(self.game.player.dashing) >= 50: #we are in dashing mvmnt
             if self.rect().colliderect(self.game.player.rect()): #player hit during dash
                 if not self.heavy_enemy:
