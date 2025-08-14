@@ -11,7 +11,7 @@ import re
 #this base path just navigates to the images folder, where all the sprites pngs are
 #create a path to the script no matter where it is on computer - very important for mac
 SCRIPT_DIR = os.getcwd()
-print(SCRIPT_DIR)
+#print(SCRIPT_DIR)
 #remove the scripts from path file then add base image path back in
 #SCRIPT_DIR = re.sub('/scripts', '', SCRIPT_DIR)
 #now add the img path to the full path and use 

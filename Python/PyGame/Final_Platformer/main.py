@@ -98,11 +98,11 @@ class Game:
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
-        self.level = 'start'
+        self.level = 3
         self.load_level(self.level)
 
         #game stuff- title screen etc
-        self.scene = 0
+        self.scene = 1
         #check for if input in the main loop should even be taken
         self.block_input = False
 
@@ -475,7 +475,7 @@ class Game:
                 #this adds the regular stuff back over the display -- take off for cool effect??
                 self.display_2.blit(self.display, (0, 0))
 
-                screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
+                #screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
                 #blit display onto screen, use scale to scale display to screen size
                 self.screen.blit(pygame.transform.scale(self.display_2, self.screen.get_size()), (screenshake_offset))
 
