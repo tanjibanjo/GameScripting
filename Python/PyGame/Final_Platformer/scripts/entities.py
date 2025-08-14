@@ -100,8 +100,25 @@ class PhysicsEntity:
         self.animation.update()
 
     #render function, takes a surface
-    def render(self, surf, offset=(0, 0)):
+    def render(self, surf, offset=(0, 0), heavy_enemy=False):
+        heavy_enemy = heavy_enemy
+
+        #if heavy enemy, display the highlight
+        if heavy_enemy == True:
+            #create mask to highlight heavy enemies
+            enemy_mask = pygame.mask.from_surface(self.animation.img())
+            heavy_enemy_sillouette = enemy_mask.to_surface(setcolor=(200, 180, 50, 255), unsetcolor=(0, 0, 0, 0)) #first argument is color of highlight
+
+            #make highlight around the character behind them
+            for highlight_offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                surf.blit(heavy_enemy_sillouette, (self.pos[0] - highlight_offset[0] - offset[0] - 3, self.pos[1] - highlight_offset[1] - offset[1] - 3))
+
+
+        #display entity
         surf.blit(pygame.transform.flip(self.animation.img(), self.flip, False), (self.pos[0] - offset[0] + self.anim_offset[0], self.pos[1] - offset[1] + self.anim_offset[1]))
+        
+
+
 
 #class for enemy
 class Enemy(PhysicsEntity):
@@ -111,6 +128,13 @@ class Enemy(PhysicsEntity):
         #shoot only horizontally
         #timer for walking
         self.walking = 0
+        self.invincible = False
+        self.invincible_timer = 0
+        #randomly choose if will be heavy enemy or not 1/4 chance rn
+        if(random.randint(0, 3) < 1):
+            self.heavy_enemy = True
+        else:
+            self.heavy_enemy = False
     
     def update(self, tilemap, movement=(0, 0)):
         if self.walking:
@@ -151,22 +175,33 @@ class Enemy(PhysicsEntity):
         else:
             self.set_action('idle')
 
+
         if abs(self.game.player.dashing) >= 50: #we are in dashing mvmnt
             if self.rect().colliderect(self.game.player.rect()): #player hit during dash
-                self.game.sfx['hit'].play()
-                self.game.screenshake = max(25, self.game.screenshake)
-                for i in range(30): #spawn 30 sparks when player is hit
-                    angle = random.random() * math.pi * 2 #random angle in a circle
-                    speed = random.random() * 5
-                    self.game.sparks.append(Spark(self.rect().center, angle, 2 + random.random()))
-                    self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
-                self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
-                self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
-                return True #return true to remove enemy in main
+                if not self.heavy_enemy:
+                    if not self.invincible:
+                        self.game.sfx['hit'].play()
+                        self.game.screenshake = max(25, self.game.screenshake)
+                        for i in range(30): #spawn 30 sparks when enemy is hit
+                            angle = random.random() * math.pi * 2 #random angle in a circle
+                            speed = random.random() * 5
+                            self.game.sparks.append(Spark(self.rect().center, angle, 2 + random.random()))
+                            self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
+                        self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
+                        self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
+                        return True #return true to remove enemy in main
+                else:
+                    self.heavy_enemy = False
+                    self.invincible = True
+                    self.invincible_timer = 60
+        if(self.invincible):
+            self.invincible_timer = max(0, self.invincible_timer - 1)
+            if self.invincible_timer == 0:
+                self.invincible = False
 
     #modify render function to draw a gun for the enemies
     def render(self, surf, offset=(0, 0)):
-        super().render(surf,offset=offset)
+        super().render(surf,offset=offset,heavy_enemy=self.heavy_enemy)
 
         #gun
         if self.flip:
