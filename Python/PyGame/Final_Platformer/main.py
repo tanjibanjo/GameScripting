@@ -16,7 +16,7 @@ from scripts.clouds import Clouds
 from scripts.particle import Particle
 from scripts.spark import Spark
 
-BASE_PATH = os.path.realpath('.') + '/Desktop/dist/'
+BASE_PATH = os.getcwd()
 
 #game class - object oriented
 class Game:
@@ -97,7 +97,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
 
         #load level
-        self.number_levels = len(os.listdir(BASE_PATH + 'data/maps'))
+        self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
         self.level = 'start'
         self.load_level(self.level)
 
@@ -112,7 +112,7 @@ class Game:
 
     #function to load the map
     def load_level(self, map_id):
-        self.tilemap.load(BASE_PATH + 'data/maps/' + str(map_id) + '.json')
+        self.tilemap.load(BASE_PATH + '/data/maps/' + str(map_id) + '.json')
         #getting info like position from only tree assets - for spawning leaves
         self.leaf_spawners = []
         for tree in self.tilemap.extract([('large_decor', 2)], keep=True):
