@@ -242,6 +242,9 @@ class Game:
                 #handle screenshake
                 self.screenshake = max(0, self.screenshake - 1)
 
+                #set the timer
+                
+
                 #logic for game mode - clear the enemies then the level will progress
                 if not len(self.enemies):
                     self.transition += 1
