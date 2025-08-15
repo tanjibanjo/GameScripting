@@ -25,8 +25,8 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.width = 640 #1040
-        self.height = 480 #880
+        self.width = 1040 #1040
+        self.height = 880 #880
         self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
         self.display = pygame.Surface((320, 240), pygame.SRCALPHA) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
         #third display for effect stuff
