@@ -92,6 +92,10 @@ class Game:
 
         #define player!
         self.player = Player(self, (50, 50), (8, 15))
+        #variables to keep track of the player score and deaths - maybe set up for time to clear later
+        self.player_deaths = 0
+        self.player_level_score = 0 #for each level - if respawn on, reset the score since enemies reset
+        self.player_total_score = 0 #to keep track of score as you progress through levels, once cleared - add here
 
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
@@ -139,7 +143,10 @@ class Game:
         #camera stuff
         self.scroll = [0, 0]
         
+        #reset dead and level score
         self.dead = 0
+        self.player_level_score = 0
+
 
         #transition for between levels
         self.transition = -30
@@ -235,27 +242,39 @@ class Game:
                 #handle screenshake
                 self.screenshake = max(0, self.screenshake - 1)
 
+                #logic for game mode - clear the enemies then the level will progress
                 if not len(self.enemies):
                     self.transition += 1
                     if self.transition > 30:
                         #check if last level is finished
                         if self.level + 3 < self.number_levels: #level is not the last one - account for two extra levels in start and game over screens
                             self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
+                            #add score
+                            self.player_total_score += self.player_level_score
+                            print(self.player_total_score)
+                            #load new level
                             self.load_level(self.level)
                         else: #equal 
                             self.block_input = True
                             self.scene = 2
-                            self.load_level('game_over')
                             self.movement[0] = False
+                            #score
+                            self.player_total_score += self.player_level_score
+                            print(self.player_total_score)
+                            #game over
+                            self.load_level('game_over')
+
                 if self.transition < 0:
                     self.transition +=1
 
+                #PLAYER DEATH LOGIC
                 if self.dead:
                     self.dead += 1
                     if self.dead == 10:
                         self.transition = min(30, self.transition + 1)
                     if self.dead > 40:
                         self.load_level(self.level)
+                        self.player_deaths += 1
 
                 #camera focus on player
                 self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15

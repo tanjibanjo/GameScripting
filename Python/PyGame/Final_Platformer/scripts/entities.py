@@ -107,7 +107,7 @@ class PhysicsEntity:
         if heavy_enemy == True:
             #create mask to highlight heavy enemies
             enemy_mask = pygame.mask.from_surface(self.animation.img())
-            heavy_enemy_sillouette = enemy_mask.to_surface(setcolor=(200, 180, 50, 255), unsetcolor=(0, 0, 0, 0)) #first argument is color of highlight
+            heavy_enemy_sillouette = enemy_mask.to_surface(setcolor=(200, 180, 50, 180), unsetcolor=(0, 0, 0, 0)) #first argument is color of highlight
 
             #make highlight around the character behind them
             for highlight_offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
@@ -132,14 +132,18 @@ class Enemy(PhysicsEntity):
         self.invincible_timer = 0
 
         #generate heavy enemy logic
-        if self.game.level == 2 or self.game.level == 3:
-            #randomly choose if will be heavy enemy or not 1/4 chance rn
-            if(random.randint(0, 3) < 1):
-                self.heavy_enemy = True
+        if self.game.level != 'start' or self.game.level != 'game_over':
+            if self.game.level >= 2:
+                #randomly choose if will be heavy enemy or not 1/4 chance rn
+                if(random.randint(0, 3) < 1):
+                    self.heavy_enemy = True
+                    self.was_heavy = True
+                else:
+                    self.heavy_enemy = False
+                    self.was_heavy = False
             else:
                 self.heavy_enemy = False
-        else:
-            self.heavy_enemy = False
+                self.was_heavy = False
     
     def update(self, tilemap, movement=(0, 0)):
         if self.walking:
@@ -194,6 +198,7 @@ class Enemy(PhysicsEntity):
                             self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
                         self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
                         self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
+                        self.game.player_level_score += (75 if self.was_heavy else 50)
                         return True #return true to remove enemy in main
                 else:
                     self.heavy_enemy = False
