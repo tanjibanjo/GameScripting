@@ -15,6 +15,7 @@ from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
 from scripts.spark import Spark
+from scripts.screens import ControlScreen
 
 BASE_PATH = os.getcwd()
 
@@ -25,19 +26,23 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.width = 1040 #1040
-        self.height = 880 #880
+        self.width = 640 #1040
+        self.height = 480 #880
         self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
         self.display = pygame.Surface((320, 240), pygame.SRCALPHA) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
         #third display for effect stuff
         self.display_2 = pygame.Surface((320, 240))
         self.screen_rect = pygame.Rect(0, 0, 320, 340)
+        #variables for setting screen size
+        self.large_screen = False
 
         icon = load_image('entities/player.png')
         pygame.display.set_caption("I41")
         pygame.display.set_icon(icon)
 
+        #clock stuff - going to be used to give the player a score that factors in how long it took them to finish the game
         self.clock = pygame.time.Clock()
+        self.start_point = pygame.time.get_ticks() #set it here but it will be changed to start when the first level begins
 
         #Title and game over stuff
         self.titley = 30
@@ -99,6 +104,9 @@ class Game:
 
         #tile map
         self.tilemap = Tilemap(self, tile_size=16)
+
+        #controls screen
+        self.control_screen = ControlScreen()
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
@@ -214,6 +222,9 @@ class Game:
                             self.level = 0
                             self.load_level(self.level)
                             self.scene = 1
+                            self.start_point = pygame.time.get_ticks()
+                        if event.key == pygame.K_TAB:
+                            self.scene = 9
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
                             pygame.quit()
@@ -254,7 +265,6 @@ class Game:
                             self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
                             #add score
                             self.player_total_score += self.player_level_score
-                            print(self.player_total_score)
                             #load new level
                             self.load_level(self.level)
                         else: #equal 
@@ -263,7 +273,6 @@ class Game:
                             self.movement[0] = False
                             #score
                             self.player_total_score += self.player_level_score
-                            print(self.player_total_score)
                             #game over
                             self.load_level('game_over')
 
@@ -292,7 +301,7 @@ class Game:
                         self.particles.append(Particle(self, 'leaf', pos, velocity=[-0.1, 0.3], frame=random.randint(0,20))) #random frame to spawn into
 
 
-                #render clouds behind tiles
+                #render clouds behind tiles - passing display_2 so it doesnt get an outline
                 self.clouds.update()
                 self.clouds.render(self.display_2, offset=render_scroll)
 
@@ -414,10 +423,20 @@ class Game:
                 pygame.display.update()
                 self.clock.tick(60)
 
+                #count the time passed 
+                self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
+
+                print(self.seconds_passed)
+
             while self.scene == 2: #game over screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
+
+
+                print(self.player_total_score + ((180 - self.seconds_passed) * self.player_deaths))
+
+
 
                 #camera focus on player
                 self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
@@ -504,6 +523,55 @@ class Game:
                 #update display, locked at 60 fps
                 pygame.display.update()
                 self.clock.tick(60)
+
+            while self.scene == 9: #control screen
+                #fill background
+                self.display.fill((0, 0, 0, 0))
+                self.display_2.blit(self.assets['background'], (0, 0))
+
+                #render clouds behind tiles
+                self.clouds.update()
+                self.clouds.render(self.display_2)
+
+                #handle events - left and right movement
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN:
+                            #reset
+                            self.level = 0
+                            self.load_level(self.level)
+                            self.scene = 1
+                            self.start_point = pygame.time.get_ticks()
+                        if event.key == pygame.K_TAB:
+                            #reset
+                            self.level = 'start'
+                            self.load_level(self.level)
+                            self.scene = 0
+                        if event.key == pygame.K_ESCAPE:
+                            self.running = False
+                            pygame.quit()
+                            sys.exit()
+
+
+
+                self.control_screen.render(self.display, self)
+
+                #display stuff
+                #this adds the regular stuff back over the display -- take off for cool effect??
+                self.display_2.blit(self.display, (0, 0))
+
+                screenshake_offset = (random.random() * self.screenshake - self.screenshake / 2, random.random() * self.screenshake - self.screenshake / 2)
+                #blit display onto screen, use scale to scale display to screen size
+                self.screen.blit(pygame.transform.scale(self.display_2, self.screen.get_size()), (screenshake_offset))
+
+                #update display, locked at 60 fps
+                pygame.display.update()
+                self.clock.tick(60)
+        
 
 
 Game().run() #initalizes a Game object, then calls run in same line
