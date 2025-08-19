@@ -15,7 +15,7 @@ from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
 from scripts.spark import Spark
-from scripts.screens import ControlScreen
+from scripts.screens import Screens
 
 BASE_PATH = os.getcwd()
 
@@ -34,7 +34,7 @@ class Game:
         self.display_2 = pygame.Surface((320, 240))
         self.screen_rect = pygame.Rect(0, 0, 320, 340)
         #variables for setting screen size
-        self.large_screen = False
+        self.large_screen = 0
 
         icon = load_image('entities/player.png')
         pygame.display.set_caption("I41")
@@ -106,7 +106,8 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
 
         #controls screen
-        self.control_screen = ControlScreen()
+        self.control_screen = Screens('controls')
+        
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
@@ -201,6 +202,9 @@ class Game:
                 self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
                 self.player.render(self.display, offset=render_scroll)
 
+                #update and render the play and control buttons
+
+
                 #handle particles
                 for particle in self.particles.copy():
                     kill = particle.update()
@@ -225,6 +229,17 @@ class Game:
                             self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_TAB:
                             self.scene = 9
+                        if event.key == pygame.K_l: # L makes screen change size for now
+                            if not self.large_screen:
+                                self.width = 1040 #1040
+                                self.height = 880 #880
+                                self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
+                                self.large_screen += 1
+                            else:
+                                self.width = 640 #1040
+                                self.height = 480 #880
+                                self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
+                                self.large_screen -= 1
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
                             pygame.quit()
@@ -533,6 +548,10 @@ class Game:
                 self.clouds.update()
                 self.clouds.render(self.display_2)
 
+                #render the control screen
+                self.control_screen.render(self.display, self)
+
+
                 #handle events - left and right movement
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -556,11 +575,9 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-                self.control_screen.render(self.display, self)
-
-                #create display mask - to convert many colors to two
-                display_mask = pygame.mask.from_surface(self.display)
-                display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) #first argument is the color of the outlines (0000 is black)
+                #create display mask - to convert many colors to two - not in use at the moment
+                #display_mask = pygame.mask.from_surface(self.display)
+                #display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) #first argument is the color of the outlines (0000 is black)
 
 
 
