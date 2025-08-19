@@ -25,6 +25,11 @@ class Screens:
             self.desc_dash = self.desc_font.render("X or LSHIFT - Dash through enemies to eliminate them.", False, WHITE)
             self.desc_move = self.desc_font.render('A/D or ARROW KEYS - Use to wallslide while in air.', False, WHITE)
             self.desc_jump = self.desc_font.render('SPACE or W - You have two jumps.', False, WHITE)
+            #button words
+            self.play_button = self.control_font.render('PLAY', False, WHITE)
+            self.exit_button = self.control_font.render('EXIT', False, WHITE)
+            self.exit_button_color = LAVENDER
+            self.play_button_color = LAVENDER
 
     
     def update(self):
@@ -44,6 +49,10 @@ class Screens:
             surf.blit(self.desc_dash, (game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height())))
             surf.blit(self.desc_move, (game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3)))
             surf.blit(self.desc_jump, (game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5)))
-            #draw 
+            #draw rectangles
+            button_margin = 10
+            pygame.draw.rect(surf, self.exit_button_color, (game.width/4 - self.play_button.get_width()/2 - 100 - button_margin, game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin), 0)
+            
+
 
         
