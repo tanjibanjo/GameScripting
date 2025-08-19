@@ -509,6 +509,7 @@ class Game:
                             self.level = 0
                             self.load_level(self.level)
                             self.scene = 1
+                            self.block_input = False
                             self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
