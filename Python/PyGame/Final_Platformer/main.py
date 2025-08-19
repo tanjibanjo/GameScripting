@@ -449,7 +449,7 @@ class Game:
                 self.display_2.blit(self.assets['background'], (0, 0))
 
 
-                print(self.player_total_score + ((180 - self.seconds_passed) * self.player_deaths))
+                print(self.player_total_score + ((180 - self.seconds_passed) * 5) - self.player_deaths * 14)
 
 
 
@@ -509,6 +509,7 @@ class Game:
                             self.level = 0
                             self.load_level(self.level)
                             self.scene = 1
+                            self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
                             pygame.quit()
