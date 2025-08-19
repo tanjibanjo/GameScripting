@@ -48,9 +48,9 @@ class Game:
         self.titley = 30
         self.title_font = pygame.font.SysFont("Arial", 20)
         self.options_font = pygame.font.SysFont("Arial", 10)
-        self.start_title = self.title_font.render("2d.samurai", False, (0, 0, 0))
+        self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
         self.start_title_options = self.options_font.render("[press enter to begin, clear all enemies to advance]", False, (255, 255, 255))
-        self.game_over_title = self.title_font.render("To be contined...", False, (0, 0, 0))
+        self.game_over_title = self.title_font.render("To be contined...", False, (150, 120, 182))
         self.game_over_options = self.options_font.render("[press enter to replay, or escape to exit]", False, (255, 255, 255))
 
         #movement attribute
@@ -556,9 +556,13 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-
-
                 self.control_screen.render(self.display, self)
+
+                #create display mask - to convert many colors to two
+                display_mask = pygame.mask.from_surface(self.display)
+                display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) #first argument is the color of the outlines (0000 is black)
+
+
 
                 #display stuff
                 #this adds the regular stuff back over the display -- take off for cool effect??
