@@ -231,8 +231,8 @@ class Game:
                             self.scene = 9
                         if event.key == pygame.K_l: # L makes screen change size for now
                             if not self.large_screen:
-                                self.width = 1040 #1040
-                                self.height = 880 #880
+                                self.width = 940 #1040
+                                self.height = 780 #880
                                 self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
                                 self.large_screen += 1
                             else:
@@ -267,9 +267,6 @@ class Game:
                 self.display_2.blit(self.assets['background'], (0, 0))
                 #handle screenshake
                 self.screenshake = max(0, self.screenshake - 1)
-
-                #set the timer
-                
 
                 #logic for game mode - clear the enemies then the level will progress
                 if not len(self.enemies):
@@ -441,8 +438,6 @@ class Game:
                 #count the time passed 
                 self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
 
-                print(self.seconds_passed)
-
             while self.scene == 2: #game over screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
@@ -550,7 +545,11 @@ class Game:
                 self.clouds.update()
                 self.clouds.render(self.display_2)
 
+                #get mouse coords for button interactions
+                coords = pygame.mouse.get_pos
+
                 #render the control screen
+                self.control_screen.update(coords)
                 self.control_screen.render(self.display, self)
 
 
