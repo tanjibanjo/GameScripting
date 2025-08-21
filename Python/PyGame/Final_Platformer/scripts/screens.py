@@ -7,8 +7,9 @@ WHITE = (255, 255, 255)
 LAVENDER = (150, 120, 182)
 
 class Screens:
-    def __init__(self, designation):
+    def __init__(self, designation, game):
         self.designation = designation
+        self.game = game
 
         #handle designation
         if self.designation == 'controls':
@@ -26,40 +27,62 @@ class Screens:
             self.desc_move = self.desc_font.render('A/D or ARROW KEYS - Use to wallslide while in air.', False, WHITE)
             self.desc_jump = self.desc_font.render('SPACE or W - You have two jumps.', False, WHITE)
             #button words
-            self.play_button_color = LAVENDER
-            self.exit_button_color = LAVENDER
-            self.play_button = self.control_font.render('PLAY', False, self.play_button_color)
-            self.exit_button = self.control_font.render('EXIT', False, self.exit_button_color)
+            self.play_button = self.control_font.render('PLAY', False, LAVENDER)
+            self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
+            self.left_button_rect = pygame.Rect(1, 1, 1, 1)
+            self.right_button_rect = pygame.Rect(2, 2, 2, 2)
 
     
-    def update(self, mouse_pos):
-        pass
+    def update(self, mouse_pos, clicked=False):
+        if self.designation == 'controls':
+            coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+            #change colors if the player is hovering over the button
+            if pygame.Rect.collidepoint(self.left_button_rect, coords): 
+                self.exit_button = self.control_font.render('EXIT', False, WHITE)
+                #handle clicking on button
+                if clicked:
+                    self.game.scene = 0
+            else: #not hovering
+                self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
+            #play button
+            if pygame.Rect.collidepoint(self.right_button_rect, coords):
+                self.play_button = self.control_font.render('PLAY', False, WHITE)
+                if clicked:
+                    #reset
+                    self.game.level = 0
+                    self.game.load_level(self.game.level)
+                    self.game.scene = 1
+                    self.game.start_point = pygame.time.get_ticks()
+            else:
+                self.play_button = self.control_font.render('PLAY', False, LAVENDER)
+
+        
         
 
-    def render(self, surf, game):
+    def render(self, surf):
         if self.designation == 'controls':
             button_margin = 10
-            left_button_rect = pygame.Rect(surf.get_width()/4 - self.play_button.get_width()/2 - button_margin, surf.get_height() - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            right_button_rect = pygame.Rect(surf.get_width() - self.play_button.get_width() * 2 - button_margin, surf.get_height() - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.left_button_rect = pygame.Rect(surf.get_width()/4 - self.play_button.get_width()/2 - button_margin, surf.get_height() - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.right_button_rect = pygame.Rect(surf.get_width() - self.play_button.get_width() * 2 - button_margin, surf.get_height() - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
             #display stuff
             #screen title
-            game.display_2.blit(self.control_screen_title, (game.screen_rect.centerx - self.control_screen_title.get_width()/2, 10))
+            self.game.display_2.blit(self.control_screen_title, (self.game.screen_rect.centerx - self.control_screen_title.get_width()/2, 10))
             #main controls
-            surf.blit(self.dash, (game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height())))
-            surf.blit(self.move, (game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 2)))
-            surf.blit(self.jump, (game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 4)))
+            surf.blit(self.dash, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height())))
+            surf.blit(self.move, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 2)))
+            surf.blit(self.jump, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 4)))
             #descriptions
-            surf.blit(self.desc_dash, (game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height())))
-            surf.blit(self.desc_move, (game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3)))
-            surf.blit(self.desc_jump, (game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5)))
+            surf.blit(self.desc_dash, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height())))
+            surf.blit(self.desc_move, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3)))
+            surf.blit(self.desc_jump, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5)))
             #draw rectangles
             #left button
-            pygame.draw.rect(surf, (150, 120, 182, 50), left_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 0), self.left_button_rect, 0)
             #right button
-            pygame.draw.rect(surf, (150, 120, 182, 50), right_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 0), self.right_button_rect, 0)
             #draw the words
-            surf.blit(self.exit_button, (left_button_rect.centerx - self.exit_button.get_width()/2, left_button_rect.centery - self.exit_button.get_height()/2))
-            surf.blit(self.play_button, (right_button_rect.centerx - self.play_button.get_width()/2, right_button_rect.centery - self.play_button.get_height()/2))
+            surf.blit(self.exit_button, (self.left_button_rect.centerx - self.exit_button.get_width()/2, self.left_button_rect.centery - self.exit_button.get_height()/2))
+            surf.blit(self.play_button, (self.right_button_rect.centerx - self.play_button.get_width()/2, self.right_button_rect.centery - self.play_button.get_height()/2))
 
 
 

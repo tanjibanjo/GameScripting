@@ -106,7 +106,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
 
         #controls screen
-        self.control_screen = Screens('controls')
+        self.control_screen = Screens('controls', self)
         
 
         #load level
@@ -546,11 +546,14 @@ class Game:
                 self.clouds.render(self.display_2)
 
                 #get mouse coords for button interactions
-                coords = pygame.mouse.get_pos
+                coords = pygame.mouse.get_pos()
+                clicked = False
+                if pygame.mouse.get_pressed()[0]:
+                    clicked = True #left mouse button
 
                 #render the control screen
-                self.control_screen.update(coords)
-                self.control_screen.render(self.display, self)
+                self.control_screen.update(coords, clicked=clicked)
+                self.control_screen.render(self.display)
 
 
                 #handle events - left and right movement
@@ -568,8 +571,6 @@ class Game:
                             self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_TAB:
                             #reset
-                            self.level = 'start'
-                            self.load_level(self.level)
                             self.scene = 0
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
