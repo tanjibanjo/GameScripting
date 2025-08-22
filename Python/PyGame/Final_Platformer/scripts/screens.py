@@ -17,6 +17,7 @@ class Screens:
             self.title_font = pygame.font.SysFont('Arial', 25)
             self.control_font = pygame.font.SysFont('Arial', 20)
             self.desc_font = pygame.font.SysFont('Arial', 10)
+
             #main controls
             self.control_screen_title = self.title_font.render('CONTROLS', False, (LAVENDER))
             self.dash = self.control_font.render('DASH', False, LAVENDER)
@@ -31,6 +32,18 @@ class Screens:
             self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
             self.left_button_rect = pygame.Rect(1, 1, 1, 1)
             self.right_button_rect = pygame.Rect(2, 2, 2, 2)
+       
+        if self.designation == 'start':
+            #fonts
+            self.title_font = pygame.font.SysFont("Arial", 25)
+            self.control_font = pygame.font.SysFont("Arial", 20)
+            #title and button words
+            self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
+            self.play_button = self.control_font.render("PLAY", False, LAVENDER)
+            self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
+            self.controls_button = self.control_font.render('CONTROLS', False, LAVENDER)
+            self.options_button = self.control_font.render('OPTIONS', False, LAVENDER)
+            #rects for buttons
 
     
     def update(self, mouse_pos, clicked=False):
@@ -84,6 +97,9 @@ class Screens:
             surf.blit(self.exit_button, (self.left_button_rect.centerx - self.exit_button.get_width()/2, self.left_button_rect.centery - self.exit_button.get_height()/2))
             surf.blit(self.play_button, (self.right_button_rect.centerx - self.play_button.get_width()/2, self.right_button_rect.centery - self.play_button.get_height()/2))
 
+        if self.designation == 'start':
+            #render title
+            surf.blit(self.start_title, (self.game.screen_rect.centerx - self.start_title.get_width()/2, 30))
 
 
 

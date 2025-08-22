@@ -107,6 +107,7 @@ class Game:
 
         #controls screen
         self.control_screen = Screens('controls', self)
+        self.start_screen = Screens('start', self)
         
 
         #load level
@@ -214,6 +215,16 @@ class Game:
                     if kill:
                         self.particles.remove(particle)
 
+                #get mouse coords for button interactions
+                coords = pygame.mouse.get_pos()
+                clicked = False
+                if pygame.mouse.get_pressed()[0]:
+                    clicked = True #left mouse button
+
+                #render the title
+                self.start_screen.update(coords, clicked=clicked)
+                self.start_screen.render(self.display)
+
                 #handle events - left and right movement
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -245,9 +256,6 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-                #render the title
-                self.display.blit(self.start_title, (self.screen_rect.centerx - self.start_title.get_width()/2, self.titley))
-                self.display.blit(self.start_title_options,(self.screen_rect.centerx - self.start_title_options.get_width()/2, self.titley + 18) )
 
                 #display stuff
                 #this adds the regular stuff back over the display -- take off for cool effect??
@@ -564,7 +572,7 @@ class Game:
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_RETURN:
-                            #reset
+                            #reset  
                             self.level = 0
                             self.load_level(self.level)
                             self.scene = 1
