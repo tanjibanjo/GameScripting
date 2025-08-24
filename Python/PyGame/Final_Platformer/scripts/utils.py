@@ -7,6 +7,7 @@ import os
 import sys
 import pygame
 import re
+from scripts.screens import Screens
 
 #this base path just navigates to the images folder, where all the sprites pngs are
 #create a path to the script no matter where it is on computer - very important for mac
@@ -35,6 +36,10 @@ def load_images(path):
 
     #return list
     return images
+
+#function will take a designation and return the correct screen for use in the main loop - so we dont have extra screens just made and not used
+def load_screen(designation, game):
+    return Screens(designation, game)
 
 #define animation class
 class Animation:
@@ -65,3 +70,4 @@ class Animation:
     def img(self):
         return self.images[int(self.frame / self.img_duration)]
 
+    

@@ -10,7 +10,7 @@ import math
 import sys
 import os
 from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, Animation
+from scripts.utils import load_image, load_images, Animation, load_screen
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -108,6 +108,7 @@ class Game:
         #controls screen
         self.control_screen = Screens('controls', self)
         self.start_screen = Screens('start', self)
+        self.user_interface = load_screen('start', self)
         
 
         #load level
