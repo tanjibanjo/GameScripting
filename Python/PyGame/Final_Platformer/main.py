@@ -15,7 +15,7 @@ from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
 from scripts.spark import Spark
-from scripts.screens import Screens
+from scripts.screens import Screens, ScreenType
 
 BASE_PATH = os.getcwd()
 
@@ -106,9 +106,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
 
         #controls screen
-        self.control_screen = Screens('controls', self)
-        self.start_screen = Screens('start', self)
-        self.user_interface = load_screen('start', self)
+        self.user_interface = load_screen(ScreenType.START, self)
         
 
         #load level
@@ -204,9 +202,6 @@ class Game:
                 self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
                 self.player.render(self.display, offset=render_scroll)
 
-                #update and render the play and control buttons
-
-
                 #handle particles
                 for particle in self.particles.copy():
                     kill = particle.update()
@@ -223,8 +218,8 @@ class Game:
                     clicked = True #left mouse button
 
                 #render the title
-                self.start_screen.update(coords, clicked=clicked)
-                self.start_screen.render(self.display)
+                self.user_interface.update(coords, clicked=clicked)
+                self.user_interface.render(self.display)
 
                 #handle events - left and right movement
                 for event in pygame.event.get():
@@ -240,18 +235,9 @@ class Game:
                             self.scene = 1
                             self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_TAB:
+                            #switch scene and UI for screen 
                             self.scene = 9
-                        if event.key == pygame.K_l: # L makes screen change size for now
-                            if not self.large_screen:
-                                self.width = 940 #1040
-                                self.height = 780 #880
-                                self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
-                                self.large_screen += 1
-                            else:
-                                self.width = 640 #1040
-                                self.height = 480 #880
-                                self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
-                                self.large_screen -= 1
+                            self.user_interface = load_screen(ScreenType.CONTROLS, self)
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
                             pygame.quit()
@@ -561,8 +547,10 @@ class Game:
                     clicked = True #left mouse button
 
                 #render the control screen
-                self.control_screen.update(coords, clicked=clicked)
-                self.control_screen.render(self.display)
+                #self.control_screen.update(coords, clicked=clicked)
+                #self.control_screen.render(self.display)
+                self.user_interface.update(coords, clicked=clicked)
+                self.user_interface.render(self.display)
 
 
                 #handle events - left and right movement
@@ -579,8 +567,9 @@ class Game:
                             self.scene = 1
                             self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_TAB:
-                            #reset
+                            #reset to start
                             self.scene = 0
+                            self.user_interface = load_screen(ScreenType.START, self)
                         if event.key == pygame.K_ESCAPE:
                             self.running = False
                             pygame.quit()

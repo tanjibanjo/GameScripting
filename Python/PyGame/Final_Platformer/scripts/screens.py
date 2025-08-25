@@ -2,17 +2,24 @@
 
 import pygame
 import sys
+from enum import IntEnum
 
 WHITE = (255, 255, 255)
 LAVENDER = (150, 120, 182)
 
+
+#enums for screen type
+class ScreenType(IntEnum):
+    START = 0
+    CONTROLS = 1
+
 class Screens:
-    def __init__(self, designation, game):
-        self.designation = designation
+    def __init__(self, type, game):
+        self.type = type
         self.game = game
 
         #handle designation
-        if self.designation == 'controls':
+        if self.type == ScreenType.CONTROLS:
             #fonts
             self.title_font = pygame.font.SysFont('Arial', 25)
             self.control_font = pygame.font.SysFont('Arial', 20)
@@ -30,10 +37,12 @@ class Screens:
             #button words
             self.play_button = self.control_font.render('PLAY', False, LAVENDER)
             self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
-            self.left_button_rect = pygame.Rect(1, 1, 1, 1)
-            self.right_button_rect = pygame.Rect(2, 2, 2, 2)
+            
+            button_margin = 10
+            self.left_button_rect = pygame.Rect(self.game.width/8 - self.play_button.get_width()/2 - button_margin, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.right_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() * 2 - button_margin, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
        
-        if self.designation == 'start':
+        if self.type == ScreenType.START:
             #fonts
             self.title_font = pygame.font.SysFont("Arial", 25)
             self.control_font = pygame.font.SysFont("Arial", 20)
@@ -44,10 +53,16 @@ class Screens:
             self.controls_button = self.control_font.render('CONTROLS', False, LAVENDER)
             self.options_button = self.control_font.render('OPTIONS', False, LAVENDER)
             #rects for buttons
+            button_margin = 10
+            self.exit_button_rect = pygame.Rect(self.game.width/8 - self.play_button.get_width() - button_margin * 2.4, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.options_button_rect = pygame.Rect(self.game.width/4 - self.play_button.get_width() - button_margin * 3, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.controls_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() * 3 + button_margin - button_margin * 3, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.play_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() - button_margin * 4.5, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+        
 
     
     def update(self, mouse_pos, clicked=False):
-        if self.designation == 'controls':
+        if self.type == ScreenType.CONTROLS:
             coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
             #change colors if the player is hovering over the button
             if pygame.Rect.collidepoint(self.left_button_rect, coords): 
@@ -69,14 +84,12 @@ class Screens:
             else:
                 self.play_button = self.control_font.render('PLAY', False, LAVENDER)
 
-        
-        
+        if self.type == ScreenType.START:
+            #update the stuff
+            pass
 
     def render(self, surf):
-        if self.designation == 'controls':
-            button_margin = 10
-            self.left_button_rect = pygame.Rect(surf.get_width()/4 - self.play_button.get_width()/2 - button_margin, surf.get_height() - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            self.right_button_rect = pygame.Rect(surf.get_width() - self.play_button.get_width() * 2 - button_margin, surf.get_height() - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+        if self.type == ScreenType.CONTROLS:
             #display stuff
             #screen title
             self.game.display_2.blit(self.control_screen_title, (self.game.screen_rect.centerx - self.control_screen_title.get_width()/2, 10))
@@ -97,9 +110,20 @@ class Screens:
             surf.blit(self.exit_button, (self.left_button_rect.centerx - self.exit_button.get_width()/2, self.left_button_rect.centery - self.exit_button.get_height()/2))
             surf.blit(self.play_button, (self.right_button_rect.centerx - self.play_button.get_width()/2, self.right_button_rect.centery - self.play_button.get_height()/2))
 
-        if self.designation == 'start':
+        if self.type == ScreenType.START:
+            button_margin = 10
             #render title
             surf.blit(self.start_title, (self.game.screen_rect.centerx - self.start_title.get_width()/2, 30))
+            #draw rects
+            pygame.draw.rect(surf, (150, 120, 182, 50), self.exit_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 50), self.options_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 50), self.controls_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 50), self.play_button_rect, 0)
+
+
+            #draw words
+
+
 
 
 
