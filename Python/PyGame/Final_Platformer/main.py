@@ -10,14 +10,16 @@ import math
 import sys
 import os
 from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, Animation
+from scripts.utils import load_image, load_images, Animation, SceneType
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
 from scripts.spark import Spark
 from scripts.screens import Screens, ScreenType
 
+
 BASE_PATH = os.getcwd()
+
 
 #game class - object oriented
 class Game:
@@ -115,7 +117,7 @@ class Game:
         self.load_level(self.level)
 
         #game stuff- title screen etc
-        self.scene = 0
+        self.scene = SceneType.START
         #check for if input in the main loop should even be taken
         self.block_input = False
 
@@ -181,7 +183,7 @@ class Game:
         self.sfx['ambience'].play(-1)
 
         while self.running:
-            while self.scene == 0: #start screen
+            while self.scene == SceneType.START: #start screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
@@ -266,7 +268,7 @@ class Game:
                 pygame.display.update()
                 self.clock.tick(60)
 
-            while self.scene == 1:
+            while self.scene == SceneType.GAMEPLAY:
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
@@ -286,7 +288,7 @@ class Game:
                             self.load_level(self.level)
                         else: #equal 
                             self.block_input = True
-                            self.scene = 2
+                            self.scene = SceneType.GAME_OVER
                             self.movement[0] = False
                             #score
                             self.player_total_score += self.player_level_score
@@ -441,7 +443,7 @@ class Game:
                 #count the time passed 
                 self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
 
-            while self.scene == 2: #game over screen
+            while self.scene == SceneType.GAME_OVER: #game over screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
@@ -537,7 +539,7 @@ class Game:
                 pygame.display.update()
                 self.clock.tick(60)
 
-            while self.scene == 9: #control screen
+            while self.scene == SceneType.CONTROLS: #control screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))

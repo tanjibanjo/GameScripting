@@ -3,6 +3,7 @@
 import pygame
 import sys
 from enum import IntEnum
+from scripts.utils import SceneType
 
 WHITE = (255, 255, 255)
 LAVENDER = (150, 120, 182)
@@ -70,7 +71,7 @@ class Screens:
                 self.exit_button = self.control_font.render('EXIT', False, WHITE)
                 #handle clicking on button
                 if clicked:
-                    self.game.scene = 0
+                    self.game.scene = SceneType.START
                     self.game.user_interface = self.game.load_screen(ScreenType.START)
             else: #not hovering
                 self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
@@ -81,7 +82,7 @@ class Screens:
                     #reset
                     self.game.level = 0
                     self.game.load_level(self.game.level)
-                    self.game.scene = 1
+                    self.game.scene = SceneType.GAMEPLAY
                     self.game.start_point = pygame.time.get_ticks()
             else:
                 self.play_button = self.control_font.render('PLAY', False, LAVENDER)
@@ -114,7 +115,7 @@ class Screens:
                 #handle clicking
                 if clicked:
                     #switch scene and UI for screen 
-                    self.game.scene = 9
+                    self.game.scene = SceneType.CONTROLS
                     self.game.user_interface = self.game.load_screen(ScreenType.CONTROLS)
             else:
                 self.controls_button = self.control_font.render('CONTROLS', False, LAVENDER)
@@ -126,7 +127,7 @@ class Screens:
                     #reset
                     self.game.level = 0
                     self.game.load_level(self.game.level)
-                    self.game.scene = 1
+                    self.game.scene = SceneType.GAMEPLAY
                     self.game.start_point = pygame.time.get_ticks()
             else:
                 self.play_button = self.control_font.render('PLAY', False, LAVENDER)

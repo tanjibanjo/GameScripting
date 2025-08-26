@@ -7,7 +7,7 @@ import os
 import sys
 import pygame
 import re
-from scripts.screens import Screens
+from enum import IntEnum
 
 #this base path just navigates to the images folder, where all the sprites pngs are
 #create a path to the script no matter where it is on computer - very important for mac
@@ -66,4 +66,9 @@ class Animation:
     def img(self):
         return self.images[int(self.frame / self.img_duration)]
 
-    
+#enum for scenes
+class SceneType(IntEnum):
+    START = 0
+    GAMEPLAY = 1
+    GAME_OVER = 2
+    CONTROLS = 3
