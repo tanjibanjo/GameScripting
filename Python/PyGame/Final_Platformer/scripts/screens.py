@@ -36,6 +36,7 @@ class Screens:
             self.desc_dash = self.desc_font.render("X or LSHIFT - Dash through enemies to eliminate them.", False, WHITE)
             self.desc_move = self.desc_font.render('A/D or ARROW KEYS - Use to wallslide while in air.', False, WHITE)
             self.desc_jump = self.desc_font.render('SPACE or W - You have two jumps.', False, WHITE)
+            self.objective = self.desc_font.render('Mission: Eliminate the enemies to clear the level.', False, WHITE)
             #button words
             self.play_button = self.control_font.render('PLAY', False, LAVENDER)
             self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
@@ -147,6 +148,8 @@ class Screens:
             surf.blit(self.desc_dash, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height())))
             surf.blit(self.desc_move, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3)))
             surf.blit(self.desc_jump, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5)))
+            surf.blit(self.objective, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 6)))
+
             #draw rectangles
             #left button
             pygame.draw.rect(surf, (150, 120, 182, 0), self.left_button_rect, 0)
