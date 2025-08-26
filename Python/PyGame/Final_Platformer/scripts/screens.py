@@ -12,6 +12,7 @@ LAVENDER = (150, 120, 182)
 class ScreenType(IntEnum):
     START = 0
     CONTROLS = 1
+    OPTIONS = 2
 
 class Screens:
     def __init__(self, type, game):
@@ -159,10 +160,10 @@ class Screens:
             #render title
             surf.blit(self.start_title, (self.game.screen_rect.centerx - self.start_title.get_width()/2, 30))
             #draw rects
-            pygame.draw.rect(surf, (150, 120, 182, 50), self.exit_button_rect, 0)
-            pygame.draw.rect(surf, (150, 120, 182, 50), self.options_button_rect, 0)
-            pygame.draw.rect(surf, (150, 120, 182, 50), self.controls_button_rect, 0)
-            pygame.draw.rect(surf, (150, 120, 182, 50), self.play_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 0), self.exit_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 0), self.options_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 0), self.controls_button_rect, 0)
+            pygame.draw.rect(surf, (150, 120, 182, 0), self.play_button_rect, 0)
 
             #draw words
             surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))

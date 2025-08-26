@@ -552,7 +552,6 @@ class Game:
                 self.count = max(self.count - 1, 0)
                 if pygame.mouse.get_pressed()[0] and self.count == 0:
                     clicked = True #left mouse button
-                    print('click')
                     self.count = 30
 
 
