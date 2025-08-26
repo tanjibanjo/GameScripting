@@ -93,7 +93,7 @@ class Game:
         self.sfx['dash'].set_volume(0.3)
         self.sfx['jump'].set_volume(0.85)
 
-        self.clouds = Clouds(self.assets['clouds'], count=16)
+        self.clouds = Clouds(self.assets['clouds'], count=10)
 
         #define player!
         self.player = Player(self, (50, 50), (8, 15))
