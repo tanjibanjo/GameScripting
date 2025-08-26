@@ -45,7 +45,7 @@ class Screens:
         if self.type == ScreenType.START:
             #fonts
             self.title_font = pygame.font.SysFont("Arial", 25)
-            self.control_font = pygame.font.SysFont("Arial", 20)
+            self.control_font = pygame.font.SysFont("Arial", 15)
             #title and button words
             self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
             self.play_button = self.control_font.render("PLAY", False, LAVENDER)
@@ -55,9 +55,9 @@ class Screens:
             #rects for buttons
             button_margin = 10
             self.exit_button_rect = pygame.Rect(self.game.width/8 - self.play_button.get_width() - button_margin * 2.4, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            self.options_button_rect = pygame.Rect(self.game.width/4 - self.play_button.get_width() - button_margin * 3, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            self.controls_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() * 3 + button_margin - button_margin * 3, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            self.play_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() - button_margin * 4.5, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.options_button_rect = pygame.Rect(self.game.width/4 - self.play_button.get_width() - button_margin * 2.5, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.controls_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() * 3 + button_margin - button_margin * 2, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.play_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() - button_margin * 3, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
         
 
     
@@ -120,9 +120,10 @@ class Screens:
             pygame.draw.rect(surf, (150, 120, 182, 50), self.controls_button_rect, 0)
             pygame.draw.rect(surf, (150, 120, 182, 50), self.play_button_rect, 0)
 
-
             #draw words
-
+            surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
+            surf.blit(self.options_button, (self.options_button_rect.centerx - self.options_button.get_width()/2, self.options_button_rect.centery - self.options_button.get_height()/2))
+            surf.blit(self.controls_button, (self.controls_button_rect.centerx - self.controls_button.get_width()/2, self.controls_button_rect.centery - self.controls_button.get_height()/2))
 
 
 
