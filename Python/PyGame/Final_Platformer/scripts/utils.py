@@ -37,10 +37,6 @@ def load_images(path):
     #return list
     return images
 
-#function will take a designation and return the correct screen for use in the main loop - so we dont have extra screens just made and not used
-def load_screen(designation, game):
-    return Screens(designation, game)
-
 #define animation class
 class Animation:
     #restricting ourselves to having the same duration for each frame/sprite

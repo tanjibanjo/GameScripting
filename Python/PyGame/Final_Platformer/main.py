@@ -10,7 +10,7 @@ import math
 import sys
 import os
 from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, Animation, load_screen
+from scripts.utils import load_image, load_images, Animation
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -106,7 +106,7 @@ class Game:
         self.tilemap = Tilemap(self, tile_size=16)
 
         #controls screen
-        self.user_interface = load_screen(ScreenType.START, self)
+        self.user_interface = self.load_screen(ScreenType.START)
         
 
         #load level
@@ -122,6 +122,9 @@ class Game:
         #for screenshake
         self.screenshake = 0
         self.running = True
+
+        #for mouse click timing
+        self.count = 0
 
     #function to load the map
     def load_level(self, map_id):
@@ -160,8 +163,15 @@ class Game:
         #transition for between levels
         self.transition = -30
 
+    #function to close the game
+    def close_game(self):
+        self.running = False
+        pygame.quit()
+        sys.exit()
 
-
+    #function will take a designation and return the correct screen for use in the main loop - so we dont have extra screens just made and not used
+    def load_screen(self, designation):
+        return Screens(designation, self)
 
     def run(self):
         #music - load and start ambience as well
@@ -214,8 +224,10 @@ class Game:
                 #get mouse coords for button interactions
                 coords = pygame.mouse.get_pos()
                 clicked = False
-                if pygame.mouse.get_pressed()[0]:
+                self.count = max(self.count - 1, 0)
+                if pygame.mouse.get_pressed()[0] and self.count == 0:
                     clicked = True #left mouse button
+                    self.count = 30
 
                 #render the title
                 self.user_interface.update(coords, clicked=clicked)
@@ -237,11 +249,9 @@ class Game:
                         if event.key == pygame.K_TAB:
                             #switch scene and UI for screen 
                             self.scene = 9
-                            self.user_interface = load_screen(ScreenType.CONTROLS, self)
+                            self.user_interface = self.load_screen(ScreenType.CONTROLS)
                         if event.key == pygame.K_ESCAPE:
-                            self.running = False
-                            pygame.quit()
-                            sys.exit()
+                            self.close_game()
 
 
                 #display stuff
@@ -399,9 +409,7 @@ class Game:
                             if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
                                 self.player.dash()
                             if event.key == pygame.K_ESCAPE:
-                                self.running = False
-                                pygame.quit()
-                                sys.exit()
+                                self.close_game()
                     if event.type == pygame.KEYUP: #release key
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             self.movement[0] = False
@@ -502,9 +510,7 @@ class Game:
                             self.block_input = False
                             self.start_point = pygame.time.get_ticks()
                         if event.key == pygame.K_ESCAPE:
-                            self.running = False
-                            pygame.quit()
-                            sys.exit()
+                            self.close_game()
                     if event.type == pygame.KEYUP: #release key
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             self.movement[0] = False
@@ -543,8 +549,12 @@ class Game:
                 #get mouse coords for button interactions
                 coords = pygame.mouse.get_pos()
                 clicked = False
-                if pygame.mouse.get_pressed()[0]:
+                self.count = max(self.count - 1, 0)
+                if pygame.mouse.get_pressed()[0] and self.count == 0:
                     clicked = True #left mouse button
+                    print('click')
+                    self.count = 30
+
 
                 #render the control screen
                 #self.control_screen.update(coords, clicked=clicked)
@@ -569,17 +579,9 @@ class Game:
                         if event.key == pygame.K_TAB:
                             #reset to start
                             self.scene = 0
-                            self.user_interface = load_screen(ScreenType.START, self)
+                            self.user_interface = self.load_screen(ScreenType.START)
                         if event.key == pygame.K_ESCAPE:
-                            self.running = False
-                            pygame.quit()
-                            sys.exit()
-
-                #create display mask - to convert many colors to two - not in use at the moment
-                #display_mask = pygame.mask.from_surface(self.display)
-                #display_sillhouette = display_mask.to_surface(setcolor=(0, 0, 0, 180), unsetcolor=(0, 0, 0, 0)) #first argument is the color of the outlines (0000 is black)
-
-
+                            self.close_game()
 
                 #display stuff
                 #this adds the regular stuff back over the display -- take off for cool effect??
