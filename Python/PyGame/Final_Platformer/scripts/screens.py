@@ -14,16 +14,17 @@ class ScreenType(IntEnum):
     START = 0
     CONTROLS = 1
     OPTIONS = 2
+    GAME_OVER = 3
 
 class Screens:
     def __init__(self, type, game):
         self.type = type
         self.game = game
+        self.title_font = pygame.font.SysFont('Arial', 25)
 
         #handle designation
         if self.type == ScreenType.CONTROLS:
             #fonts
-            self.title_font = pygame.font.SysFont('Arial', 25)
             self.control_font = pygame.font.SysFont('Arial', 20)
             self.desc_font = pygame.font.SysFont('Arial', 10)
 
@@ -47,7 +48,6 @@ class Screens:
        
         if self.type == ScreenType.START:
             #fonts
-            self.title_font = pygame.font.SysFont("Arial", 25)
             self.control_font = pygame.font.SysFont("Arial", 15)
             #title and button words
             self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
@@ -62,7 +62,9 @@ class Screens:
             self.controls_button_rect = pygame.Rect(self.game.width/2 - self.controls_button.get_width()*2, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.controls_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
             self.play_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() - button_margin * 3.5, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
         
-
+        if self.type == ScreenType.GAME_OVER:
+            #title 
+            self.end_title = self.title_font.render("Mission Passed", False, LAVENDER)
     
     def update(self, mouse_pos, clicked=False):
         if self.type == ScreenType.CONTROLS:

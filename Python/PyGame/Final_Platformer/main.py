@@ -46,15 +46,6 @@ class Game:
         self.clock = pygame.time.Clock()
         self.start_point = pygame.time.get_ticks() #set it here but it will be changed to start when the first level begins
 
-        #Title and game over stuff
-        self.titley = 30
-        self.title_font = pygame.font.SysFont("Arial", 20)
-        self.options_font = pygame.font.SysFont("Arial", 10)
-        self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
-        self.start_title_options = self.options_font.render("[press enter to begin, clear all enemies to advance]", False, (255, 255, 255))
-        self.game_over_title = self.title_font.render("To be contined...", False, (150, 120, 182))
-        self.game_over_options = self.options_font.render("[press enter to replay, or escape to exit]", False, (255, 255, 255))
-
         #movement attribute
         self.movement = [False, False]
         
