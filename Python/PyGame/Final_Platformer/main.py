@@ -195,7 +195,18 @@ class Game:
                 #render clouds behind tiles
                 self.clouds.update()
                 self.clouds.render(self.display_2, offset=render_scroll)
+                
+                #get mouse coords for button interactions
+                coords = pygame.mouse.get_pos()
+                clicked = False
+                self.count = max(self.count - 1, 0)
+                if pygame.mouse.get_pressed()[0] and self.count == 0:
+                    clicked = True #left mouse button
+                    self.count = 30
 
+                #render the title
+                self.user_interface.update(coords, clicked=clicked)
+                self.user_interface.render(self.display)
 
                 #render tile map behind the player
                 self.tilemap.render(self.display, offset=render_scroll)
@@ -213,18 +224,6 @@ class Game:
                         particle.pos[0] += math.sin(particle.animation.frame * 0.035) * 0.3 #sin function gives number between -1 and 1. more natural movement
                     if kill:
                         self.particles.remove(particle)
-
-                #get mouse coords for button interactions
-                coords = pygame.mouse.get_pos()
-                clicked = False
-                self.count = max(self.count - 1, 0)
-                if pygame.mouse.get_pressed()[0] and self.count == 0:
-                    clicked = True #left mouse button
-                    self.count = 30
-
-                #render the title
-                self.user_interface.update(coords, clicked=clicked)
-                self.user_interface.render(self.display)
 
                 #handle events - left and right movement
                 for event in pygame.event.get():
@@ -283,6 +282,8 @@ class Game:
                             self.movement[0] = False
                             #score
                             self.player_total_score += self.player_level_score
+                            #ui for game over
+                            self.user_interface = self.load_screen(ScreenType.GAME_OVER)
                             #game over
                             self.load_level('game_over')
 
@@ -439,8 +440,8 @@ class Game:
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
 
-
-                print(self.player_total_score + ((180 - self.seconds_passed) * 5) - self.player_deaths * 14)
+                #adjust for final score
+                self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 5) - self.player_deaths * 49)
 
 
 
@@ -486,7 +487,17 @@ class Game:
                     if kill:
                         self.particles.remove(particle)
 
-                
+                #get mouse coords for button interactions
+                coords = pygame.mouse.get_pos()
+                clicked = False
+                self.count = max(self.count - 1, 0)
+                if pygame.mouse.get_pressed()[0] and self.count == 0:
+                    clicked = True #left mouse button
+                    self.count = 30
+
+                #render and update the ui
+                self.user_interface.update(coords, clicked=clicked)
+                self.user_interface.render(self.display)
 
                 #handle events - left and right movement
                 for event in pygame.event.get():
@@ -512,11 +523,6 @@ class Game:
                         if event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
                             if not self.player.grounded:
                                 self.player.jump(False) #passing false means the jump button is disengaged, and brings gravity back
-
-
-                #render the title
-                self.display.blit(self.game_over_title, (self.width/4 - self.game_over_title.get_width()/1.5, self.titley))
-                self.display.blit(self.game_over_options,(self.width/4 - self.game_over_title.get_width(), self.titley + 18) )
 
                 #display stuff
                 #this adds the regular stuff back over the display -- take off for cool effect??
@@ -549,8 +555,6 @@ class Game:
 
 
                 #render the control screen
-                #self.control_screen.update(coords, clicked=clicked)
-                #self.control_screen.render(self.display)
                 self.user_interface.update(coords, clicked=clicked)
                 self.user_interface.render(self.display)
 

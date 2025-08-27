@@ -63,8 +63,10 @@ class Screens:
             self.play_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() - button_margin * 3.5, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
         
         if self.type == ScreenType.GAME_OVER:
-            #title 
-            self.end_title = self.title_font.render("Mission Passed", False, LAVENDER)
+            #title and stats stuff
+            self.title = self.title_font.render("Mission Passed", False, LAVENDER)
+            self.rank = self.title_font.render('RANK:', False, LAVENDER)
+
     
     def update(self, mouse_pos, clicked=False):
         if self.type == ScreenType.CONTROLS:
@@ -135,6 +137,8 @@ class Screens:
             else:
                 self.play_button = self.control_font.render('PLAY', False, LAVENDER)
 
+        if self.type == ScreenType.GAME_OVER:
+            pass
 
 
     def render(self, surf):
@@ -177,6 +181,9 @@ class Screens:
             surf.blit(self.controls_button, (self.controls_button_rect.centerx - self.controls_button.get_width()/2, self.controls_button_rect.centery - self.controls_button.get_height()/2))
             surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
 
-
+        if self.type == ScreenType.GAME_OVER:
+            #title and rank
+            surf.blit(self.title, (self.game.screen_rect.centerx / 4, (self.game.screen_rect.centery / 4)))
+            
 
         
