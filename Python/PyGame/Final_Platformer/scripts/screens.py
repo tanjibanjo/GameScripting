@@ -7,7 +7,7 @@ from scripts.utils import SceneType
 
 WHITE = (255, 255, 255)
 LAVENDER = (150, 120, 182)
-
+RED = (255, 20, 0)
 
 #enums for screen type
 class ScreenType(IntEnum):
@@ -37,14 +37,14 @@ class Screens:
             self.desc_dash = self.desc_font.render("X or LSHIFT - Dash through enemies to eliminate them.", False, WHITE)
             self.desc_move = self.desc_font.render('A/D or ARROW KEYS - Use to wallslide while in air.', False, WHITE)
             self.desc_jump = self.desc_font.render('SPACE or W - You have two jumps.', False, WHITE)
-            self.objective = self.desc_font.render('Mission: Eliminate the enemies to clear the level.', False, WHITE)
+            self.objective = self.desc_font.render('Mission: Eliminate the enemies to clear the level.', False, RED)
             #button words
             self.play_button = self.control_font.render('PLAY', False, LAVENDER)
-            self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
+            self.exit_button = self.control_font.render('BACK', False, LAVENDER)
             
             button_margin = 10
-            self.left_button_rect = pygame.Rect(self.game.width/8 - self.play_button.get_width()/2 - button_margin, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            self.right_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() * 2 - button_margin, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.left_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.right_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
        
         if self.type == ScreenType.START:
             #fonts
@@ -57,10 +57,10 @@ class Screens:
             self.options_button = self.control_font.render('OPTIONS', False, LAVENDER)
             #rects for buttons
             button_margin = 10
-            self.exit_button_rect = pygame.Rect(self.game.width/8 - self.play_button.get_width() - button_margin * 3, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            self.options_button_rect = pygame.Rect(self.game.width/4 - self.options_button.get_width() - button_margin *2, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.options_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
-            self.controls_button_rect = pygame.Rect(self.game.width/2 - self.controls_button.get_width()*2, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.controls_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
-            self.play_button_rect = pygame.Rect(self.game.width/2 - self.play_button.get_width() - button_margin * 3.5, self.game.height/2 - self.play_button.get_height() - button_margin * 2, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/8 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            self.options_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 + self.options_button.get_width()/2 - button_margin/2 , self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.options_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+            self.controls_button_rect = pygame.Rect(self.game.screen_rect.centerx - button_margin/2, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.controls_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+            self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + self.controls_button.get_width() + button_margin/2, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
         
         if self.type == ScreenType.GAME_OVER:
             #title and stats stuff
@@ -73,13 +73,13 @@ class Screens:
             coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
             #change colors if the player is hovering over the button
             if pygame.Rect.collidepoint(self.left_button_rect, coords): 
-                self.exit_button = self.control_font.render('EXIT', False, WHITE)
+                self.exit_button = self.control_font.render('BACK', False, WHITE)
                 #handle clicking on button
                 if clicked:
                     self.game.scene = SceneType.START
                     self.game.user_interface = self.game.load_screen(ScreenType.START)
             else: #not hovering
-                self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
+                self.exit_button = self.control_font.render('BACK', False, LAVENDER)
             #play button
             if pygame.Rect.collidepoint(self.right_button_rect, coords):
                 self.play_button = self.control_font.render('PLAY', False, WHITE)
@@ -183,7 +183,7 @@ class Screens:
 
         if self.type == ScreenType.GAME_OVER:
             #title and rank
-            surf.blit(self.title, (self.game.screen_rect.centerx / 4, (self.game.screen_rect.centery / 4)))
+            surf.blit(self.title, (self.game.screen_rect.centerx / 8, (self.game.screen_rect.centery / 6)))
             
 
         
