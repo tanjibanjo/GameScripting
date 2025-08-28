@@ -18,6 +18,18 @@ SCRIPT_DIR = os.getcwd()
 #now add the img path to the full path and use 
 BASE_IMG_PATH = SCRIPT_DIR + '/data/images/'
 
+#enum for scenes
+class SceneType(IntEnum):
+    START = 0
+    GAMEPLAY = 1
+    GAME_OVER = 2
+    CONTROLS = 3
+
+#function that takes the player score and returns a letter grade based on that score
+def get_rank(score):
+    pass
+
+
 #loads image, takes path to add to base, returns the loaded image
 def load_image(path):
     #convert internal representation of the image in pygame making it more efficient for rendering
@@ -36,6 +48,7 @@ def load_images(path):
 
     #return list
     return images
+
 
 #define animation class
 class Animation:
@@ -66,9 +79,3 @@ class Animation:
     def img(self):
         return self.images[int(self.frame / self.img_duration)]
 
-#enum for scenes
-class SceneType(IntEnum):
-    START = 0
-    GAMEPLAY = 1
-    GAME_OVER = 2
-    CONTROLS = 3

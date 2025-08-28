@@ -10,7 +10,7 @@ import math
 import sys
 import os
 from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, Animation, SceneType
+from scripts.utils import load_image, load_images, get_rank, Animation, SceneType
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -18,7 +18,7 @@ from scripts.spark import Spark
 from scripts.screens import Screens, ScreenType
 
 BASE_PATH = os.getcwd()
-#hello
+
 
 #game class - object oriented
 class Game:
