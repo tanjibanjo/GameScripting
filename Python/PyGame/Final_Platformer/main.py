@@ -17,9 +17,8 @@ from scripts.particle import Particle
 from scripts.spark import Spark
 from scripts.screens import Screens, ScreenType
 
-
 BASE_PATH = os.getcwd()
-
+#hello
 
 #game class - object oriented
 class Game:
