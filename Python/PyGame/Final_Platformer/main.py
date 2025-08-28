@@ -196,9 +196,10 @@ class Game:
                 self.clouds.render(self.display_2, offset=render_scroll)
                 
                 #get mouse coords for button interactions
+                self.count = max(self.count - 1, 0)
+
                 coords = pygame.mouse.get_pos()
                 clicked = False
-                self.count = max(self.count - 1, 0)
                 if pygame.mouse.get_pressed()[0] and self.count == 0:
                     clicked = True #left mouse button
                     self.count = 30
@@ -487,12 +488,13 @@ class Game:
                         self.particles.remove(particle)
 
                 #get mouse coords for button interactions
+                self.count = max(self.count - 1, 0)
+
                 coords = pygame.mouse.get_pos()
                 clicked = False
-                self.count = max(self.count - 1, 0)
                 if pygame.mouse.get_pressed()[0] and self.count == 0:
                     clicked = True #left mouse button
-                    self.count = 30
+                    self.count = 30 #stop the mouse from sending clicked 
 
                 #render and update the ui
                 self.user_interface.update(coords, clicked=clicked)
@@ -535,7 +537,7 @@ class Game:
                 pygame.display.update()
                 self.clock.tick(60)
 
-            while self.scene == SceneType.CONTROLS: #control screen
+            while self.scene == SceneType.CONTROLS: #this scene is for any other screens like options, controls, credits, etc
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
@@ -545,12 +547,12 @@ class Game:
                 self.clouds.render(self.display_2)
 
                 #get mouse coords for button interactions
+                self.count = max(self.count - 1, 0)
                 coords = pygame.mouse.get_pos()
                 clicked = False
-                self.count = max(self.count - 1, 0)
                 if pygame.mouse.get_pressed()[0] and self.count == 0:
                     clicked = True #left mouse button
-                    self.count = 30
+                    self.count = 30 #set count down for click again (rate)
 
 
                 #render the control screen
