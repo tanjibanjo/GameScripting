@@ -66,6 +66,7 @@ class Screens:
             #title and stats stuff
             self.title = self.title_font.render("Mission Passed", False, LAVENDER)
             self.rank = self.title_font.render('RANK:', False, LAVENDER)
+            
 
     
     def update(self, mouse_pos, clicked=False):
@@ -184,6 +185,8 @@ class Screens:
         if self.type == ScreenType.GAME_OVER:
             #title and rank
             surf.blit(self.title, (self.game.screen_rect.centerx / 8, (self.game.screen_rect.centery / 6)))
+            surf.blit(self.rank, (self.game.screen_rect.centerx + self.rank.get_width(), self.game.screen_rect.centery/4))
+            
             
 
         
