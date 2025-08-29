@@ -155,6 +155,10 @@ class Game:
         #transition for between levels
         self.transition = -30
 
+    def save_game(self):
+        pass
+
+        
     #function to close the game
     def close_game(self):
         self.running = False

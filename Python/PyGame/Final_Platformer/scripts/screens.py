@@ -186,7 +186,7 @@ class Screens:
             #title and rank
             surf.blit(self.title, (self.game.screen_rect.centerx / 8, (self.game.screen_rect.centery / 6)))
             surf.blit(self.rank, (self.game.screen_rect.centerx + self.rank.get_width()/2, self.game.screen_rect.centery/2))
-            surf.blit(self.title_font.render(self.game.get_rank(), False, WHITE), (self.game.screen_rect.centerx + self.rank.get_width() * 2, self.game.screen_rect.centery/2)) 
+            surf.blit(self.title_font.render(self.game.get_rank(), False, RED), (self.game.screen_rect.centerx + self.rank.get_width() *1.5, self.game.screen_rect.centery/2)) 
             
             
 

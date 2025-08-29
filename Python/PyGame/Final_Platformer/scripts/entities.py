@@ -19,7 +19,7 @@ class PhysicsEntity:
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
-        self.speed_mod = 1.7
+        self.speed_mod = 2.2
 
         self.action = ''
         self.anim_offset = (-3, -3)
@@ -203,7 +203,7 @@ class Enemy(PhysicsEntity):
                 else:
                     self.heavy_enemy = False
                     self.invincible = True
-                    self.invincible_timer = 60
+                    self.invincible_timer = 15
         if(self.invincible):
             self.invincible_timer = max(0, self.invincible_timer - 1)
             if self.invincible_timer == 0:
@@ -348,8 +348,9 @@ class Player(PhysicsEntity): #inherit from entity
     def dash(self):
         #set the direction and length of dash, based on which way player is turned
         if not self.dashing:
-            self.game.sfx['dash'].play()
-            if self.flip:
-                self.dashing = -60
-            else:
-                self.dashing = 60
+            pass
+        self.game.sfx['dash'].play()
+        if self.flip:
+            self.dashing = -55
+        else:
+            self.dashing = 55
