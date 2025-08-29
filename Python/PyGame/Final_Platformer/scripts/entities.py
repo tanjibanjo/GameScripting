@@ -276,8 +276,9 @@ class Player(PhysicsEntity): #inherit from entity
                 self.set_action('run')
             else:
                 self.set_action('idle')
+
         if abs(self.dashing) in {60, 50}: #at start or end of dash
-            for i in range(20): #create 20 particles with random angles and speeds
+            for i in range(15): #create 15 particles with random angles and speeds
                 angle = random.random() * math.pi * 2
                 speed = random.random() * 0.5 + 0.5 #.5 to 1
                 pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed] #convert into cartesian coordinates for velocity
@@ -293,7 +294,7 @@ class Player(PhysicsEntity): #inherit from entity
         if abs(self.dashing) > 50:
             self.velocity[0] = abs(self.dashing) / self.dashing * 4
             if abs(self.dashing) == 51:
-                self.velocity[0] *= 0.1 #lower velocity very quickly after dash is over
+                self.velocity[0] *= 0.1#lower velocity very quickly after dash is over
             pvelocity = [abs(self.dashing) / self.dashing * random.random() * 3, 0] #set velocity so that particles move with the dash (0-3)
             self.game.particles.append(Particle(self.game, 'particle', self.rect().center, velocity=pvelocity, frame= random.randint(0, 7)))
             

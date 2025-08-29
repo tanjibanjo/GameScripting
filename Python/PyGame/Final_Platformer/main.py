@@ -10,7 +10,7 @@ import math
 import sys
 import os
 from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, get_rank, Animation, SceneType
+from scripts.utils import load_image, load_images, Animation, SceneType
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -165,6 +165,21 @@ class Game:
     def load_screen(self, designation):
         return Screens(designation, self)
 
+    #function that takes the player score and returns a letter grade based on that score
+    def get_rank(self):
+        if self.player_total_score > 2000:
+            return 'S'
+        elif self.player_total_score > 1700:
+            return 'A'
+        elif self.player_total_score > 1400:
+            return 'B'
+        elif self.player_total_score > 1200:
+            return 'C'
+        elif self.player_total_score > 950:
+            return 'D'
+        else:
+            return 'F'
+
     def run(self):
         #music - load and start ambience as well
         pygame.mixer.music.load('data/music2.wav')
@@ -286,6 +301,11 @@ class Game:
                             self.user_interface = self.load_screen(ScreenType.GAME_OVER)
                             #game over
                             self.load_level('game_over')
+                            print(self.player_total_score)
+                            self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49)
+                            print(self.player_total_score)
+
+
 
                 if self.transition < 0:
                     self.transition +=1
@@ -439,10 +459,6 @@ class Game:
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
-
-                #adjust for final score
-                self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 5) - self.player_deaths * 49)
-
 
 
                 #camera focus on player

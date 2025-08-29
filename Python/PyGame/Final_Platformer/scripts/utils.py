@@ -25,10 +25,6 @@ class SceneType(IntEnum):
     GAME_OVER = 2
     CONTROLS = 3
 
-#function that takes the player score and returns a letter grade based on that score
-def get_rank(score):
-    pass
-
 
 #loads image, takes path to add to base, returns the loaded image
 def load_image(path):
