@@ -68,7 +68,17 @@ class Screens:
             self.title = self.title_font.render("Mission Passed", False, LAVENDER)
             self.rank = self.title_font.render('RANK:', False, LAVENDER)
             self.stats = ['TIME:', 'DEATHS:', 'SCORE:']
-            
+            #buttons for play again and exit
+            self.play_button = self.small_font.render('PLAY AGAIN', False, LAVENDER)
+            self.exit_button = self.small_font.render('EXIT', False, LAVENDER)
+            self.credits_button = self.small_font.render('CREDITS', False, LAVENDER)
+            #rects
+            button_margin = 10
+            self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx/4, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+            self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin*2 + self.credits_button.get_width(), self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.exit_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+            self.credits_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 + self.play_button.get_width() + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.credits_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+
+
 
     
     def update(self, mouse_pos, clicked=False):
@@ -141,7 +151,33 @@ class Screens:
                 self.play_button = self.control_font.render('PLAY', False, LAVENDER)
 
         if self.type == ScreenType.GAME_OVER:
-            pass
+            coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+            #play again button
+            if pygame.Rect.collidepoint(self.play_button_rect, coords):
+                self.play_button = self.small_font.render('PLAY AGAIN', False, WHITE)
+                if clicked:
+                    self.game.level = 0
+                    self.game.load_level(self.game.level)
+                    self.game.scene = SceneType.GAMEPLAY
+                    self.game.start_point = pygame.time.get_ticks()
+            else:
+                self.play_button = self.small_font.render('PLAY AGAIN', False, LAVENDER)
+
+            #credits button
+            if pygame.Rect.collidepoint(self.credits_button_rect, coords):
+                self.credits_button = self.small_font.render('CREDITS', False, WHITE)
+                if clicked:
+                    pass
+            else:
+                self.credits_button = self.small_font.render('CREDITS', False, LAVENDER)
+
+            #exit button
+            if pygame.Rect.collidepoint(self.exit_button_rect, coords):
+                self.exit_button = self.small_font.render('EXIT', False, WHITE)
+                if clicked:
+                    self.game.close_game()
+            else:
+                self.exit_button = self.small_font.render('EXIT', False, LAVENDER)
 
 
     def render(self, surf):
@@ -158,12 +194,6 @@ class Screens:
             surf.blit(self.desc_move, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3)))
             surf.blit(self.desc_jump, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5)))
             surf.blit(self.objective, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 6)))
-
-            #draw rectangles
-            #left button
-            pygame.draw.rect(surf, (150, 120, 182, 0), self.left_button_rect, 0)
-            #right button
-            pygame.draw.rect(surf, (150, 120, 182, 0), self.right_button_rect, 0)
             #draw the words
             surf.blit(self.exit_button, (self.left_button_rect.centerx - self.exit_button.get_width()/2, self.left_button_rect.centery - self.exit_button.get_height()/2))
             surf.blit(self.play_button, (self.right_button_rect.centerx - self.play_button.get_width()/2, self.right_button_rect.centery - self.play_button.get_height()/2))
@@ -172,11 +202,6 @@ class Screens:
             button_margin = 10
             #render title
             surf.blit(self.start_title, (self.game.screen_rect.centerx - self.start_title.get_width()/2, 30))
-            #draw rects
-            pygame.draw.rect(surf, (150, 120, 182, 0), self.exit_button_rect, 0)
-            pygame.draw.rect(surf, (150, 120, 182, 0), self.options_button_rect, 0)
-            pygame.draw.rect(surf, (150, 120, 182, 0), self.controls_button_rect, 0)
-            pygame.draw.rect(surf, (150, 120, 182, 0), self.play_button_rect, 0)
 
             #draw words
             surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
@@ -196,8 +221,11 @@ class Screens:
                 surf.blit(self.small_font.render(stat, False, WHITE), (self.game.screen_rect.centerx + self.rank.get_width()/2, self.game.screen_rect.centery/2 + self.title.get_height() * i))
             #now render actual stats
             surf.blit(self.small_font.render(str(int(self.game.seconds_passed)), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()))
-            surf.blit(self.small_font.render(str(self.game.player_deaths), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height() * 2))
+            surf.blit(self.small_font.render(str(self.game.player_deaths), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width() + 10, self.game.screen_rect.centery/2 + self.title.get_height() * 2))
             surf.blit(self.small_font.render(str(self.game.player_total_score), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()* 3))
             
-
+            #buttons
+            surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
+            surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
+            surf.blit(self.credits_button, (self.credits_button_rect.centerx - self.credits_button.get_width()/2, self.credits_button_rect.centery - self.play_button.get_height()/2))
         

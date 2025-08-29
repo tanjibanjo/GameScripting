@@ -103,11 +103,11 @@ class Game:
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
-        self.level = 'start'
+        self.level = 3
         self.load_level(self.level)
 
         #game stuff- title screen etc
-        self.scene = SceneType.START
+        self.scene = SceneType.GAMEPLAY
         #check for if input in the main loop should even be taken
         self.block_input = False
 
