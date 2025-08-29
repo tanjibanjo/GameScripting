@@ -63,9 +63,11 @@ class Screens:
             self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + self.controls_button.get_width() + button_margin/2, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
         
         if self.type == ScreenType.GAME_OVER:
+            self.small_font = pygame.font.SysFont('Arial', 20)
             #title and stats stuff
             self.title = self.title_font.render("Mission Passed", False, LAVENDER)
             self.rank = self.title_font.render('RANK:', False, LAVENDER)
+            self.stats = ['TIME:', 'DEATHS:', 'SCORE:']
             
 
     
@@ -187,7 +189,15 @@ class Screens:
             surf.blit(self.title, (self.game.screen_rect.centerx / 8, (self.game.screen_rect.centery / 6)))
             surf.blit(self.rank, (self.game.screen_rect.centerx + self.rank.get_width()/2, self.game.screen_rect.centery/2))
             surf.blit(self.title_font.render(self.game.get_rank(), False, RED), (self.game.screen_rect.centerx + self.rank.get_width() *1.5, self.game.screen_rect.centery/2)) 
-            
+            #stat titles rendered in a for for ease
+            i = 0
+            for stat in self.stats:
+                i+=1 #increment multiplier for height
+                surf.blit(self.small_font.render(stat, False, WHITE), (self.game.screen_rect.centerx + self.rank.get_width()/2, self.game.screen_rect.centery/2 + self.title.get_height() * i))
+            #now render actual stats
+            surf.blit(self.small_font.render(str(int(self.game.seconds_passed)), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()))
+            surf.blit(self.small_font.render(str(self.game.player_deaths), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height() * 2))
+            surf.blit(self.small_font.render(str(self.game.player_total_score), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()* 3))
             
 
         

@@ -309,8 +309,6 @@ class Game:
                             self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49)
                             print(self.player_total_score)
 
-
-
                 if self.transition < 0:
                     self.transition +=1
 
@@ -458,6 +456,8 @@ class Game:
 
                 #count the time passed 
                 self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
+
+
 
             while self.scene == SceneType.GAME_OVER: #game over screen
                 #fill background
