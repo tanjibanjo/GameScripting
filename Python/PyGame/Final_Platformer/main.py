@@ -48,7 +48,7 @@ class Game:
         #movement attribute
         self.movement = [False, False]
         
-        #definte assets
+        #define assets
         self.assets = {
             'decor': load_images('tiles/decor'),
             'grass': load_images('tiles/grass'),
@@ -100,6 +100,8 @@ class Game:
         #controls screen
         self.user_interface = self.load_screen(ScreenType.START)
         
+        #declare save data container
+        self.save_data = {}
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
@@ -156,6 +158,8 @@ class Game:
         self.transition = -30
 
     def save_game(self):
+        #save the data to the dictionary in order
+        #deaths, time passed, score
         pass
 
         
@@ -305,7 +309,9 @@ class Game:
                             self.user_interface = self.load_screen(ScreenType.GAME_OVER)
                             #game over
                             self.load_level('game_over')
+                            #score bfore computing
                             print(self.player_total_score)
+                            #add buffs and stuff
                             self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49)
                             print(self.player_total_score)
 

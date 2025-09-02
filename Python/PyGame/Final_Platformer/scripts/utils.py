@@ -75,3 +75,9 @@ class Animation:
     def img(self):
         return self.images[int(self.frame / self.img_duration)]
 
+#Data class to hold save game info and provide help for save and load game
+class Data:
+    def __init__(self, deaths=0, time=0, score=0):
+        self.deaths = deaths
+        self.time = time
+        self.score = score
