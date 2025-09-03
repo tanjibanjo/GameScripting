@@ -9,8 +9,8 @@ import random
 import math
 import sys
 import os
-from scripts.entities import PhysicsEntity, Player, Enemy
-from scripts.utils import load_image, load_images, Animation, SceneType
+from scripts.entities import PhysicsEntity, Player, Enemy, PlayerType
+from scripts.utils import load_image, load_images, Animation, SceneType, GameData
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -100,8 +100,8 @@ class Game:
         #controls screen
         self.user_interface = self.load_screen(ScreenType.START)
         
-        #declare save data container
-        self.save_data = {}
+        #declare save data container - list of GameData types
+        self.save_data = []
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))

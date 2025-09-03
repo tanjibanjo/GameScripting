@@ -25,7 +25,6 @@ class SceneType(IntEnum):
     GAME_OVER = 2
     CONTROLS = 3
 
-
 #loads image, takes path to add to base, returns the loaded image
 def load_image(path):
     #convert internal representation of the image in pygame making it more efficient for rendering
@@ -76,7 +75,7 @@ class Animation:
         return self.images[int(self.frame / self.img_duration)]
 
 #Data class to hold save game info and provide help for save and load game
-class Data:
+class GameData:
     def __init__(self, deaths=0, time=0, score=0):
         self.deaths = deaths
         self.time = time

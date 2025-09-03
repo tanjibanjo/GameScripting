@@ -8,7 +8,12 @@ import math
 import random
 from scripts.particle import Particle
 from scripts.spark import Spark
+from enum import IntEnum
 
+#enum for player type
+class PlayerType(IntEnum):
+    ROGUE = 0
+    ASSASSIN = 1
 
 #class will handle physics later, takes the game, entity type, position to spawn, and size for entity
 class PhysicsEntity:
@@ -19,7 +24,7 @@ class PhysicsEntity:
         self.size = size
         self.velocity =[0, 0] # the derivative of position is velocity, and the derivative of velocity is acceleration
         self.collisions = {'up': False, 'down': False, 'right': False, 'left': False}
-        self.speed_mod = 2.2
+        self.speed_mod = 1.6
 
         self.action = ''
         self.anim_offset = (-3, -3)
@@ -222,13 +227,17 @@ class Enemy(PhysicsEntity):
 
 #player class
 class Player(PhysicsEntity): #inherit from entity
-    def __init__(self, game, pos, size):
+    def __init__(self, game, pos, size, type=PlayerType.ASSASSIN):
         super().__init__(game, 'player', pos, size)
         self.air_time = 0 #to keep track if in air
         self.jumps = 2 # two jumps before must hit the ground
         self.wall_slide = False
         self.dashing = 0
         self.grounded = False
+        self.type = type
+
+        self.speed_mod = 2.2 if self.type == PlayerType.ASSASSIN else 1.6
+
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
@@ -351,6 +360,6 @@ class Player(PhysicsEntity): #inherit from entity
             pass
         self.game.sfx['dash'].play()
         if self.flip:
-            self.dashing = -55
+            self.dashing = (-55 if self.type == PlayerType.ASSASSIN else -62)
         else:
-            self.dashing = 55
+            self.dashing = (55 if self.type == PlayerType.ASSASSIN else 62)
