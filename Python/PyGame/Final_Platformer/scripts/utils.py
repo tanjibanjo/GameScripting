@@ -23,7 +23,7 @@ class SceneType(IntEnum):
     START = 0
     GAMEPLAY = 1
     GAME_OVER = 2
-    CONTROLS = 3
+    UTILITY = 3
 
 #loads image, takes path to add to base, returns the loaded image
 def load_image(path):

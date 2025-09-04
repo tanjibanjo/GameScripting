@@ -178,7 +178,6 @@ class Game:
         try:
             with open('save_game_data.txt', 'r') as file:
                 while True:
-                    print('reading from the file for verification')
                     #try and except only for the first line to control the loop
                     try:
                         deaths = int(file.readline().strip())
@@ -187,11 +186,6 @@ class Game:
                     time = int(file.readline().strip())
                     score = int(file.readline().strip())
                     rank = file.readline().strip()
-
-                    print(deaths)
-                    print(time)
-                    print(score)
-                    print(rank)
 
                     #make GameData
                     save = GameData(deaths, time, score, rank)
@@ -204,8 +198,11 @@ class Game:
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
         #append the list
-        #deaths, time passed, score, rank
-        self.save_data.append(GameData(self.player_deaths, self.seconds_passed, self.player_total_score, self.get_rank()))
+        try:
+            #deaths, time passed, score, rank
+            self.save_data.append(GameData(self.player_deaths, self.seconds_passed, self.player_total_score, self.get_rank()))
+        except AttributeError: #raised if the values needed to instantiate GameData are not present(dont exist)
+            print('no GameData appended')
 
         #get the file set up to write 
         try:
@@ -218,15 +215,15 @@ class Game:
                     file.write(str(int(save.score)) + '\n')
                     file.write(save.rank + '\n')
         except:
-            print('error with appending to the file')
+            print('error with writing save to the file')
 
-        print('reading from the file for verification')
-        with open('save_game_data.txt', 'r') as file:
-            while True:
-                line = file.readline()
-                if not line:
-                   break
-                print(line.strip())
+        #print('reading from the file for verification')
+        #with open('save_game_data.txt', 'r') as file:
+        #    while True:
+        #        line = file.readline()
+        #        if not line:
+        #           break
+        #        print(line.strip())
         
     #function to close the game - this includes save game
     def close_game(self):
@@ -262,12 +259,6 @@ class Game:
         self.sfx['ambience'].play(-1)
 
         self.load_game()
-        print('reading from self.save_data')
-        for save in self.save_data:
-            print(save.deaths)
-            print(save.time)
-            print(save.score)
-            print(save.rank)
 
         while self.running:
             while self.scene == SceneType.START: #start screen
@@ -621,7 +612,7 @@ class Game:
                 pygame.display.update()
                 self.clock.tick(60)
 
-            while self.scene == SceneType.CONTROLS: #this scene is for any other screens like options, controls, credits, etc
+            while self.scene == SceneType.UTILITY: #this scene is for any other screens like options, controls, credits, etc
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))

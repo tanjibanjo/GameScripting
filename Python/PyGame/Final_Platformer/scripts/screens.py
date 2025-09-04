@@ -15,67 +15,95 @@ class ScreenType(IntEnum):
     CONTROLS = 1
     OPTIONS = 2
     GAME_OVER = 3
+    LEADERBOARD = 4
+    CREDITS = 5
 
 class Screens:
     def __init__(self, type, game):
         self.type = type
         self.game = game
+
         self.title_font = pygame.font.SysFont('Arial', 25)
+        self.med_font = pygame.font.SysFont('Arial', 20)
+        self.small_font = pygame.font.SysFont('Arial', 15)
+
 
         #handle designation
         match(self.type):
             case ScreenType.CONTROLS:
                 #fonts
-                self.control_font = pygame.font.SysFont('Arial', 20)
                 self.desc_font = pygame.font.SysFont('Arial', 10)
 
                 #main controls
-                self.control_screen_title = self.title_font.render('CONTROLS', False, (LAVENDER))
-                self.dash = self.control_font.render('DASH', False, LAVENDER)
-                self.move = self.control_font.render('MOVE', False, LAVENDER)
-                self.jump = self.control_font.render('JUMP', False, LAVENDER)
+                self.control_screen_title = self.title_font.render('controls', False, (LAVENDER))
+                self.dash = self.med_font.render('dash', False, LAVENDER)
+                self.move = self.med_font.render('move', False, LAVENDER)
+                self.jump = self.med_font.render('jump', False, LAVENDER)
                 #descriptions
-                self.desc_dash = self.desc_font.render("X or LSHIFT - Dash through enemies to eliminate them.", False, WHITE)
-                self.desc_move = self.desc_font.render('A/D or ARROW KEYS - Use to wallslide while in air.', False, WHITE)
-                self.desc_jump = self.desc_font.render('SPACE or W - You have two jumps.', False, WHITE)
-                self.objective = self.desc_font.render('Mission: Eliminate the enemies to clear the level.', False, RED)
+                self.desc_dash = self.desc_font.render("X or LSHIFT - dash through enemies to eliminate them.", False, WHITE)
+                self.desc_move = self.desc_font.render('A/D or ARROW KEYS - use to wallslide while in air.', False, WHITE)
+                self.desc_jump = self.desc_font.render('SPACE or W - you have two jumps.', False, WHITE)
+                self.objective = self.desc_font.render('mission: eliminate the enemies to clear the level.', False, RED)
                 #button words
-                self.play_button = self.control_font.render('PLAY', False, LAVENDER)
-                self.exit_button = self.control_font.render('BACK', False, LAVENDER)
+                self.play_button = self.med_font.render('play', False, LAVENDER)
+                self.exit_button = self.med_font.render('back', False, LAVENDER)
                 
                 button_margin = 10
                 self.left_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
                 self.right_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
             case ScreenType.START:
-                #fonts
-                self.control_font = pygame.font.SysFont("Arial", 15)
                 #title and button words
                 self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
-                self.play_button = self.control_font.render("PLAY", False, LAVENDER)
-                self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
-                self.controls_button = self.control_font.render('CONTROLS', False, LAVENDER)
-                self.options_button = self.control_font.render('OPTIONS', False, LAVENDER)
+                self.play_button = self.small_font.render("play", False, LAVENDER)
+                self.exit_button = self.small_font.render('exit', False, LAVENDER)
+                self.controls_button = self.small_font.render('controls', False, LAVENDER)
+                self.options_button = self.small_font.render('leaderboard', False, LAVENDER)
                 #rects for buttons
                 button_margin = 10
                 self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/8 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
                 self.options_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 + self.options_button.get_width()/2 - button_margin/2 , self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.options_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
-                self.controls_button_rect = pygame.Rect(self.game.screen_rect.centerx - button_margin/2, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.controls_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
-                self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + self.controls_button.get_width() + button_margin/2, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+                self.controls_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.controls_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+                self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + self.controls_button.get_width() + button_margin*3, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
             case ScreenType.GAME_OVER:
-                self.small_font = pygame.font.SysFont('Arial', 20)
                 #title and stats stuff
-                self.title = self.title_font.render("Mission Passed", False, LAVENDER)
-                self.rank = self.title_font.render('RANK:', False, LAVENDER)
-                self.stats = ['TIME:', 'DEATHS:', 'SCORE:']
+                self.title = self.title_font.render("mission passes", False, RED)
+                self.rank = self.title_font.render('rank:', False, LAVENDER)
+                self.stats = ['time:', 'deaths:', 'score:']
                 #buttons for play again and exit
-                self.play_button = self.small_font.render('PLAY AGAIN', False, LAVENDER)
-                self.exit_button = self.small_font.render('EXIT', False, LAVENDER)
-                self.credits_button = self.small_font.render('CREDITS', False, LAVENDER)
+                self.play_button = self.med_font.render('play again', False, LAVENDER)
+                self.exit_button = self.med_font.render('exit', False, LAVENDER)
+                self.credits_button = self.med_font.render('credits', False, LAVENDER)
                 #rects
                 button_margin = 10
                 self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx/4, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
                 self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin*2 + self.credits_button.get_width(), self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.exit_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
-                self.credits_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 + self.play_button.get_width() + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.credits_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+                self.credits_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 + self.play_button.get_width() + button_margin*3, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.credits_button.get_width() + button_margin, self.play_button.get_height() + button_margin)
+            case ScreenType.LEADERBOARD:
+                self.title = self.title_font.render('leaderboard', False, LAVENDER)
+
+                #play and back buttons
+                self.play_button = self.med_font.render('play', False, LAVENDER)
+                self.exit_button = self.med_font.render('back', False, LAVENDER)
+
+                #rects for play and back
+                button_margin = 10
+                self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+                self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            case ScreenType.CREDITS:
+                
+
+                self.med_font = pygame.font.SysFont('Arial', 20)
+                self.small_font = pygame.font.SysFont('Arial', 15)
+
+                #play and back buttons
+                self.play_button = self.med_font.render('play', False, LAVENDER)
+                self.exit_button = self.med_font.render('back', False, LAVENDER)
+
+                #rects for play and back
+                button_margin = 10
+                self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+                self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
+            
             case _:
                 pass
 
@@ -98,11 +126,7 @@ class Screens:
                 if pygame.Rect.collidepoint(self.right_button_rect, coords):
                     self.play_button = self.control_font.render('play', False, WHITE)
                     if clicked:
-                        #reset
-                        self.game.level = 0
-                        self.game.load_level(self.game.level)
-                        self.game.scene = SceneType.GAMEPLAY
-                        self.game.start_point = pygame.time.get_ticks()
+                        self.game.reset_run()
                 else:
                     self.play_button = self.control_font.render('play', False, LAVENDER)
             case ScreenType.START:
@@ -123,7 +147,9 @@ class Screens:
                     self.options_button = self.control_font.render('leaderboard', False, WHITE)
                     #handle clicking
                     if clicked:
-                        pass
+                        #switch scene to utility and ui to leaderboard
+                        self.game.scene = SceneType.UTILITY
+                        self.game.user_interface = self.game.load_screen(ScreenType.LEADERBOARD)
                 else:
                     self.options_button = self.control_font.render('leaderboard', False, LAVENDER)
                 
@@ -133,7 +159,7 @@ class Screens:
                     #handle clicking
                     if clicked:
                         #switch scene and UI for screen 
-                        self.game.scene = SceneType.CONTROLS
+                        self.game.scene = SceneType.UTILITY
                         self.game.user_interface = self.game.load_screen(ScreenType.CONTROLS)
                 else:
                     self.controls_button = self.control_font.render('controls', False, LAVENDER)
@@ -143,10 +169,7 @@ class Screens:
                     self.play_button = self.control_font.render('play', False, WHITE)
                     if clicked:
                         #reset
-                        self.game.level = 0
-                        self.game.load_level(self.game.level)
-                        self.game.scene = SceneType.GAMEPLAY
-                        self.game.start_point = pygame.time.get_ticks()
+                        self.game.reset_run()
                 else:
                     self.play_button = self.control_font.render('play', False, LAVENDER)
             case ScreenType.GAME_OVER:
@@ -165,7 +188,9 @@ class Screens:
                 if pygame.Rect.collidepoint(self.credits_button_rect, coords):
                     self.credits_button = self.small_font.render('credits', False, WHITE)
                     if clicked:
-                        pass
+                        #switch scene to utility and ui to credits
+                        self.game.scene = SceneType.UTILITY
+                        self.game.user_interface = self.game.load_screen(ScreenType.CREDITS)
                 else:
                     self.credits_button = self.small_font.render('credits', False, LAVENDER)
 
@@ -177,6 +202,46 @@ class Screens:
                         self.game.close_game()
                 else:
                     self.exit_button = self.small_font.render('exit', False, LAVENDER)
+            case ScreenType.LEADERBOARD:
+                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+
+                #handle color change for mouse hover
+                if pygame.Rect.collidepoint(self.exit_button_rect, coords):
+                    self.exit_button = self.med_font.render('back', False, WHITE)
+                    #handle clicking
+                    if clicked:
+                        self.game.scene = SceneType.START
+                        self.game.user_interface = self.game.load_screen(ScreenType.START)
+                else:
+                    self.exit_button = self.med_font.render('back', False, LAVENDER)
+            #play button
+                if pygame.Rect.collidepoint(self.play_button_rect, coords):
+                    self.play_button = self.med_font.render('play', False, WHITE)
+                    #clicking
+                    if clicked:
+                        self.game.reset_run()
+                else:
+                    self.play_button = self.med_font.render('play', False, LAVENDER)
+            case ScreenType.CREDITS:
+                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+
+                #handle color change for mouse hover
+                if pygame.Rect.collidepoint(self.exit_button_rect, coords):
+                    self.exit_button = self.med_font.render('back', False, WHITE)
+                    #handle clicking
+                    if clicked:
+                        self.game.scene = SceneType.GAME_OVER
+                        self.game.user_interface = self.game.load_screen(ScreenType.GAME_OVER)
+                else:
+                    self.exit_button = self.med_font.render('back', False, LAVENDER)
+                #play button
+                if pygame.Rect.collidepoint(self.play_button_rect, coords):
+                    self.play_button = self.med_font.render('play', False, WHITE)
+                    #clicking
+                    if clicked:
+                        self.game.reset_run()
+                else:
+                    self.play_button = self.med_font.render('play', False, LAVENDER)
             case _:
                 pass
 
@@ -185,7 +250,7 @@ class Screens:
             case ScreenType.CONTROLS:
                 #display stuff
                 #screen title
-                self.game.display_2.blit(self.control_screen_title, (self.game.screen_rect.centerx - self.control_screen_title.get_width()/2, 10))
+                self.game.display_2.blit(self.control_screen_title, (self.game.screen_rect.centerx - self.control_screen_title.get_width()/2, self.control_screen_title.get_height()))
                 #main controls
                 surf.blit(self.dash, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height())))
                 surf.blit(self.move, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 2)))
@@ -229,5 +294,19 @@ class Screens:
                 surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
                 surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
                 surf.blit(self.credits_button, (self.credits_button_rect.centerx - self.credits_button.get_width()/2, self.credits_button_rect.centery - self.play_button.get_height()/2))
+            
+            case ScreenType.LEADERBOARD:
+                surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()))
+
+                #draw the words
+                surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
+                surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
+
+            case ScreenType.CREDITS:
+                #draw the words
+                surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
+                surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
+
+
             case _:
                 pass
