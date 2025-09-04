@@ -85,7 +85,7 @@ class Game:
         self.sfx['dash'].set_volume(0.3)
         self.sfx['jump'].set_volume(0.85)
 
-        self.clouds = Clouds(self.assets['clouds'], count=10)
+        self.clouds = Clouds(self.assets['clouds'], count=8)
 
         #define player!
         self.player = Player(self, (50, 50), (8, 15), PlayerType.ASSASSIN)
@@ -172,17 +172,63 @@ class Game:
         self.player_level_score = 0
         self.player_total_score = 0
 
+    #the load game function should read the file (if exists) and then add GameData objects to the saveData in main
+    def load_game(self):
+        #try to open the file
+        try:
+            with open('save_game_data.txt', 'r') as file:
+                while True:
+                    print('reading from the file for verification')
+                    #try and except only for the first line to control the loop
+                    try:
+                        deaths = int(file.readline().strip())
+                    except ValueError:
+                        break
+                    time = int(file.readline().strip())
+                    score = int(file.readline().strip())
+                    rank = file.readline().strip()
+
+                    print(deaths)
+                    print(time)
+                    print(score)
+                    print(rank)
+
+                    #make GameData
+                    save = GameData(deaths, time, score, rank)
+
+                    #add to list
+                    self.save_data.append(save)
+        except FileNotFoundError:
+            print('No save data found.')
+
+
+
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
         #append the list
         #deaths, time passed, score, rank
         self.save_data.append(GameData(self.player_deaths, self.seconds_passed, self.player_total_score, self.get_rank()))
-        for save in self.save_data:
-            print(save.deaths)
-            print(save.time)
-            print(save.score)
-            print(save.rank)
 
+        #get the file set up to write 
+        try:
+            #using with automatically closes the file
+            with open('save_game_data.txt', 'w') as file:
+                for save in self.save_data:
+                    #have to convert to str to write to a txt file
+                    file.write(str(save.deaths) + '\n')
+                    file.write(str(int(save.time)) + '\n')
+                    file.write(str(int(save.score)) + '\n')
+                    file.write(save.rank + '\n')
+        except:
+            print('error with appending to the file')
+
+        print('reading from the file for verification')
+        with open('save_game_data.txt', 'r') as file:
+            while True:
+                line = file.readline()
+                if not line:
+                   break
+                print(line.strip())
         
     #function to close the game - this includes save game
     def close_game(self):
@@ -216,6 +262,14 @@ class Game:
         pygame.mixer.music.set_volume(0.4)
         pygame.mixer.music.play(-1) #-1 loops forever
         self.sfx['ambience'].play(-1)
+
+        self.load_game()
+        print('reading from self.save_data')
+        for save in self.save_data:
+            print(save.deaths)
+            print(save.time)
+            print(save.score)
+            print(save.rank)
 
         while self.running:
             while self.scene == SceneType.START: #start screen
@@ -331,11 +385,8 @@ class Game:
                             self.user_interface = self.load_screen(ScreenType.GAME_OVER)
                             #game over
                             self.load_level('game_over')
-                            #score bfore computing
-                            print(self.player_total_score)
-                            #add buffs and stuff
+                            #add buffs and account for deaths
                             self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49)
-                            print(self.player_total_score)
 
                 if self.transition < 0:
                     self.transition +=1
@@ -629,4 +680,4 @@ class Game:
         
 
 
-Game().run() #initalizes a Game object, then calls run in same line
+Game().run() #initalizes a Game object, then calls run in same linw
