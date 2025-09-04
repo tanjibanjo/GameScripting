@@ -116,7 +116,8 @@ class PhysicsEntity:
 
             #make highlight around the character behind them
             for highlight_offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                surf.blit(heavy_enemy_sillouette, (self.pos[0] - highlight_offset[0] - offset[0] - 3, self.pos[1] - highlight_offset[1] - offset[1] - 3))
+                surf.blit(heavy_enemy_sillouette, (self.pos[0] - highlight_offset[0] - offset[0] - 2, self.pos[1] - highlight_offset[1] - offset[1] - 2))
+                #surf.blit(heavy_enemy_sillouette, (offset))
 
 
         #display entity
@@ -200,10 +201,10 @@ class Enemy(PhysicsEntity):
                             angle = random.random() * math.pi * 2 #random angle in a circle
                             speed = random.random() * 5
                             self.game.sparks.append(Spark(self.rect().center, angle, 2 + random.random(), color=(255, 0, 0)))
-                            self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
-                        self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
-                        self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
-                        self.game.player_level_score += (75 if self.was_heavy else 50)
+                            #self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
+                        #self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
+                        #self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
+                        #self.game.player_level_score += (75 if self.was_heavy else 50)
                         return True #return true to remove enemy in main
                 else:
                     self.heavy_enemy = False

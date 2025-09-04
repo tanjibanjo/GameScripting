@@ -183,7 +183,7 @@ class Game:
                         deaths = int(file.readline().strip())
                     except ValueError:
                         break
-                    time = int(file.readline().strip())
+                    time = float(file.readline().strip())
                     score = int(file.readline().strip())
                     rank = file.readline().strip()
 
@@ -211,8 +211,8 @@ class Game:
                 for save in self.save_data:
                     #have to convert to str to write to a txt file
                     file.write(str(save.deaths) + '\n')
-                    file.write(str(int(save.time)) + '\n')
-                    file.write(str(int(save.score)) + '\n')
+                    file.write(str(save.time) + '\n')
+                    file.write(str(save.score) + '\n')
                     file.write(save.rank + '\n')
         except:
             print('error with writing save to the file')
@@ -225,9 +225,8 @@ class Game:
         #           break
         #        print(line.strip())
         
-    #function to close the game - this includes save game
+    #function to close the game - this does not include save game
     def close_game(self):
-        self.save_game()
         self.running = False
         pygame.quit()
         sys.exit()
@@ -376,6 +375,7 @@ class Game:
                             self.load_level('game_over')
                             #add buffs and account for deaths
                             self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49)
+                            self.save_game()
 
                 if self.transition < 0:
                     self.transition +=1
@@ -510,6 +510,10 @@ class Game:
                     transition_surf.set_colorkey((255, 255, 255))
                     self.display.blit(transition_surf, (0, 0))
 
+                
+                #count the time passed 
+                self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
+
 
                 #this adds the regular stuff back over the display -- take off for cool effect??
                 self.display_2.blit(self.display, (0, 0))
@@ -522,8 +526,6 @@ class Game:
                 pygame.display.update()
                 self.clock.tick(60)
 
-                #count the time passed 
-                self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
 
             while self.scene == SceneType.GAME_OVER: #game over screen
                 #fill background
