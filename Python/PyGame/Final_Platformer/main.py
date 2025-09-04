@@ -157,9 +157,25 @@ class Game:
         #transition for between levels
         self.transition = -30
 
+    #function to reset to the beginning of the run
+    def reset_run(self):
+        #level
+        self.level = 0
+        self.load_level(self.level)
+        #scene back to gameplay
+        self.scene = SceneType.GAMEPLAY
+        self.block_input = False
+        #reset timer
+        self.start_point = pygame.time.get_ticks()
+        #player stats
+        self.player_deaths = 0
+        self.player_level_score = 0
+        self.player_total_score = 0
+
+    #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
-        #save the data to the dictionary in order
-        #deaths, time passed, score
+        #save the data to the list 
+        #deaths, time passed, score, rank
         pass
 
         
@@ -463,8 +479,6 @@ class Game:
                 #count the time passed 
                 self.seconds_passed = (pygame.time.get_ticks() - self.start_point) / 1000
 
-
-
             while self.scene == SceneType.GAME_OVER: #game over screen
                 #fill background
                 self.display.fill((0, 0, 0, 0))
@@ -534,12 +548,9 @@ class Game:
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_RETURN:
-                            #reset
-                            self.level = 0
-                            self.load_level(self.level)
-                            self.scene = 1
-                            self.block_input = False
-                            self.start_point = pygame.time.get_ticks()
+                            #save the data, then reset
+                            self.save_game()
+                            self.reset_run()
                         if event.key == pygame.K_ESCAPE:
                             self.close_game()
                     if event.type == pygame.KEYUP: #release key
