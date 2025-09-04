@@ -227,16 +227,16 @@ class Enemy(PhysicsEntity):
 
 #player class
 class Player(PhysicsEntity): #inherit from entity
-    def __init__(self, game, pos, size, type=PlayerType.ASSASSIN):
+    def __init__(self, game, pos, size, playerClass=PlayerType.ASSASSIN):
         super().__init__(game, 'player', pos, size)
         self.air_time = 0 #to keep track if in air
         self.jumps = 2 # two jumps before must hit the ground
         self.wall_slide = False
         self.dashing = 0
         self.grounded = False
-        self.type = type
+        self.player_class = playerClass
 
-        self.speed_mod = 2.2 if self.type == PlayerType.ASSASSIN else 1.6
+        self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.6
 
 
     def update(self, tilemap, movement=(0, 0)):
@@ -360,6 +360,6 @@ class Player(PhysicsEntity): #inherit from entity
             pass
         self.game.sfx['dash'].play()
         if self.flip:
-            self.dashing = (-55 if self.type == PlayerType.ASSASSIN else -62)
+            self.dashing = (-55 if self.player_class == PlayerType.ASSASSIN else -62)
         else:
-            self.dashing = (55 if self.type == PlayerType.ASSASSIN else 62)
+            self.dashing = (55 if self.player_class == PlayerType.ASSASSIN else 62)
