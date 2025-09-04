@@ -184,8 +184,9 @@ class Game:
             print(save.rank)
 
         
-    #function to close the game
+    #function to close the game - this includes save game
     def close_game(self):
+        self.save_game()
         self.running = False
         pygame.quit()
         sys.exit()
@@ -550,14 +551,6 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_RETURN:
-                            #save the data, then reset
-                            self.save_game()
-                            self.reset_run()
-                        if event.key == pygame.K_ESCAPE:
-                            self.close_game()
                     if event.type == pygame.KEYUP: #release key
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             self.movement[0] = False
