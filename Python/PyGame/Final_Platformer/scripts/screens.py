@@ -155,10 +155,9 @@ class Screens:
                 if pygame.Rect.collidepoint(self.play_button_rect, coords):
                     self.play_button = self.small_font.render('PLAY AGAIN', False, WHITE)
                     if clicked:
-                        self.game.level = 0
-                        self.game.load_level(self.game.level)
-                        self.game.scene = SceneType.GAMEPLAY
-                        self.game.start_point = pygame.time.get_ticks()
+                        #save the run and then reset to start again
+                        self.game.save_game()
+                        self.game.reset_run()
                 else:
                     self.play_button = self.small_font.render('PLAY AGAIN', False, LAVENDER)
 
@@ -174,6 +173,7 @@ class Screens:
                 if pygame.Rect.collidepoint(self.exit_button_rect, coords):
                     self.exit_button = self.small_font.render('EXIT', False, WHITE)
                     if clicked:
+                        #close the game, which includes save game
                         self.game.close_game()
                 else:
                     self.exit_button = self.small_font.render('EXIT', False, LAVENDER)
