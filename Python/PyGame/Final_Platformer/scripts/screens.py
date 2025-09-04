@@ -105,7 +105,7 @@ class Screens:
                         self.game.start_point = pygame.time.get_ticks()
                 else:
                     self.play_button = self.control_font.render('PLAY', False, LAVENDER)
-            case SceneType.START:
+            case ScreenType.START:
                 coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
 
@@ -149,7 +149,7 @@ class Screens:
                         self.game.start_point = pygame.time.get_ticks()
                 else:
                     self.play_button = self.control_font.render('PLAY', False, LAVENDER)
-            case SceneType.GAME_OVER:
+            case ScreenType.GAME_OVER:
                 coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #play again button
                 if pygame.Rect.collidepoint(self.play_button_rect, coords):
