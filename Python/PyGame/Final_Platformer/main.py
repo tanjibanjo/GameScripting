@@ -88,7 +88,7 @@ class Game:
         self.clouds = Clouds(self.assets['clouds'], count=10)
 
         #define player!
-        self.player = Player(self, (50, 50), (8, 15))
+        self.player = Player(self, (50, 50), (8, 15), PlayerType.ASSASSIN)
         #variables to keep track of the player score and deaths - maybe set up for time to clear later
         self.player_deaths = 0
         self.player_level_score = 0 #for each level - if respawn on, reset the score since enemies reset
@@ -174,9 +174,14 @@ class Game:
 
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
-        #save the data to the list 
+        #append the list
         #deaths, time passed, score, rank
-        pass
+        self.save_data.append(GameData(self.player_deaths, self.seconds_passed, self.player_total_score, self.get_rank()))
+        for save in self.save_data:
+            print(save.deaths)
+            print(save.time)
+            print(save.score)
+            print(save.rank)
 
         
     #function to close the game

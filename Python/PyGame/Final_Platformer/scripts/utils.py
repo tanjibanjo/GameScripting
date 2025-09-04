@@ -76,7 +76,8 @@ class Animation:
 
 #Data class to hold save game info and provide help for save and load game
 class GameData:
-    def __init__(self, deaths=0, time=0, score=0):
+    def __init__(self, deaths=0, time=0, score=0, rank='X'):
         self.deaths = deaths
         self.time = time
         self.score = score
+        self.rank = rank
