@@ -87,16 +87,16 @@ class Screens:
                 coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
                 if pygame.Rect.collidepoint(self.left_button_rect, coords): 
-                    self.exit_button = self.control_font.render('BACK', False, WHITE)
+                    self.exit_button = self.control_font.render('back', False, WHITE)
                     #handle clicking on button
                     if clicked:
                         self.game.scene = SceneType.START
                         self.game.user_interface = self.game.load_screen(ScreenType.START)
                 else: #not hovering
-                    self.exit_button = self.control_font.render('BACK', False, LAVENDER)
+                    self.exit_button = self.control_font.render('back', False, LAVENDER)
                 #play button
                 if pygame.Rect.collidepoint(self.right_button_rect, coords):
-                    self.play_button = self.control_font.render('PLAY', False, WHITE)
+                    self.play_button = self.control_font.render('play', False, WHITE)
                     if clicked:
                         #reset
                         self.game.level = 0
@@ -104,43 +104,43 @@ class Screens:
                         self.game.scene = SceneType.GAMEPLAY
                         self.game.start_point = pygame.time.get_ticks()
                 else:
-                    self.play_button = self.control_font.render('PLAY', False, LAVENDER)
+                    self.play_button = self.control_font.render('play', False, LAVENDER)
             case ScreenType.START:
                 coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
 
                 #exit button
                 if pygame.Rect.collidepoint(self.exit_button_rect, coords):
-                    self.exit_button = self.control_font.render('EXIT', False, WHITE)
+                    self.exit_button = self.control_font.render('exit', False, WHITE)
                     #handle clicking
                     if clicked:
                         self.game.close_game()
                 else:
-                    self.exit_button = self.control_font.render('EXIT', False, LAVENDER)
+                    self.exit_button = self.control_font.render('exit', False, LAVENDER)
 
                 #options button
                 if pygame.Rect.collidepoint(self.options_button_rect, coords):
-                    self.options_button = self.control_font.render('OPTIONS', False, WHITE)
+                    self.options_button = self.control_font.render('leaderboard', False, WHITE)
                     #handle clicking
                     if clicked:
                         pass
                 else:
-                    self.options_button = self.control_font.render('OPTIONS', False, LAVENDER)
+                    self.options_button = self.control_font.render('leaderboard', False, LAVENDER)
                 
                 #controls button
                 if pygame.Rect.collidepoint(self.controls_button_rect, coords):
-                    self.controls_button = self.control_font.render('CONTROLS', False, WHITE)
+                    self.controls_button = self.control_font.render('controls', False, WHITE)
                     #handle clicking
                     if clicked:
                         #switch scene and UI for screen 
                         self.game.scene = SceneType.CONTROLS
                         self.game.user_interface = self.game.load_screen(ScreenType.CONTROLS)
                 else:
-                    self.controls_button = self.control_font.render('CONTROLS', False, LAVENDER)
+                    self.controls_button = self.control_font.render('controls', False, LAVENDER)
 
                 #play button
                 if pygame.Rect.collidepoint(self.play_button_rect, coords):
-                    self.play_button = self.control_font.render('PLAY', False, WHITE)
+                    self.play_button = self.control_font.render('play', False, WHITE)
                     if clicked:
                         #reset
                         self.game.level = 0
@@ -148,35 +148,35 @@ class Screens:
                         self.game.scene = SceneType.GAMEPLAY
                         self.game.start_point = pygame.time.get_ticks()
                 else:
-                    self.play_button = self.control_font.render('PLAY', False, LAVENDER)
+                    self.play_button = self.control_font.render('play', False, LAVENDER)
             case ScreenType.GAME_OVER:
                 coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #play again button
                 if pygame.Rect.collidepoint(self.play_button_rect, coords):
-                    self.play_button = self.small_font.render('PLAY AGAIN', False, WHITE)
+                    self.play_button = self.small_font.render('play again', False, WHITE)
                     if clicked:
                         #save the run and then reset to start again
                         self.game.save_game()
                         self.game.reset_run()
                 else:
-                    self.play_button = self.small_font.render('PLAY AGAIN', False, LAVENDER)
+                    self.play_button = self.small_font.render('play again', False, LAVENDER)
 
                 #credits button
                 if pygame.Rect.collidepoint(self.credits_button_rect, coords):
-                    self.credits_button = self.small_font.render('CREDITS', False, WHITE)
+                    self.credits_button = self.small_font.render('credits', False, WHITE)
                     if clicked:
                         pass
                 else:
-                    self.credits_button = self.small_font.render('CREDITS', False, LAVENDER)
+                    self.credits_button = self.small_font.render('credits', False, LAVENDER)
 
                 #exit button
                 if pygame.Rect.collidepoint(self.exit_button_rect, coords):
-                    self.exit_button = self.small_font.render('EXIT', False, WHITE)
+                    self.exit_button = self.small_font.render('exit', False, WHITE)
                     if clicked:
                         #close the game, which includes save game
                         self.game.close_game()
                 else:
-                    self.exit_button = self.small_font.render('EXIT', False, LAVENDER)
+                    self.exit_button = self.small_font.render('exit', False, LAVENDER)
             case _:
                 pass
 

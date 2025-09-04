@@ -105,11 +105,11 @@ class Game:
 
         #load level
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
-        self.level = 3
+        self.level = 'start'
         self.load_level(self.level)
 
         #game stuff- title screen etc
-        self.scene = SceneType.GAMEPLAY
+        self.scene = SceneType.START
         #check for if input in the main loop should even be taken
         self.block_input = False
 
@@ -200,8 +200,6 @@ class Game:
                     self.save_data.append(save)
         except FileNotFoundError:
             print('No save data found.')
-
-
 
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
