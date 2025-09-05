@@ -120,6 +120,20 @@ class Game:
         #for mouse click timing
         self.count = 0
 
+    #function to change the screen size
+    def change_screen_size(self):
+        if not self.large_screen:
+            self.large_screen += 1
+            self.width = 960 #1280
+            self.height = 720 #960
+            self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
+        else:
+            self.large_screen -= 1
+            self.width = 640 #1280
+            self.height = 480 #960
+            self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
+        
+
     #function to load the map
     def load_level(self, map_id):
         self.tilemap.load(BASE_PATH + '/data/maps/' + str(map_id) + '.json')
@@ -338,6 +352,9 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_TAB:
+                            self.change_screen_size()
 
 
                 #display stuff

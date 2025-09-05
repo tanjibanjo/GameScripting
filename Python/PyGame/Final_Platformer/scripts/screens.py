@@ -120,7 +120,7 @@ class Screens:
         match(self.type):
             case ScreenType.CONTROLS:
                 if self.game.large_screen:
-                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                    coords = (mouse_pos[0] / 3, mouse_pos[1] / 3)
                 else:
                     coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
@@ -141,7 +141,7 @@ class Screens:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.START:
                 if self.game.large_screen:
-                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                    coords = (mouse_pos[0] / 3, mouse_pos[1] / 3)
                 else:
                     coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
@@ -187,7 +187,7 @@ class Screens:
                     self.play_button = self.small_font.render('play', False, LAVENDER)
             case ScreenType.GAME_OVER:
                 if self.game.large_screen:
-                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                    coords = (mouse_pos[0] / 3, mouse_pos[1] / 3)
                 else:
                     coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #play again button
@@ -219,7 +219,7 @@ class Screens:
                     self.exit_button = self.med_font.render('menu', False, LAVENDER)
             case ScreenType.LEADERBOARD:
                 if self.game.large_screen:
-                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                    coords = (mouse_pos[0] / 3, mouse_pos[1] / 3)
                 else:
                     coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
 
@@ -242,7 +242,7 @@ class Screens:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.CREDITS:
                 if self.game.large_screen:
-                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                    coords = (mouse_pos[0] / 3, mouse_pos[1] / 3)
                 else:
                     coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
 
