@@ -71,7 +71,7 @@ class Screens:
                 self.stats = ['time:', 'deaths:', 'score:']
                 #buttons for play again and exit
                 self.play_button = self.med_font.render('play again', False, LAVENDER)
-                self.exit_button = self.med_font.render('exit', False, LAVENDER)
+                self.exit_button = self.med_font.render('menu', False, LAVENDER)
                 self.credits_button = self.med_font.render('credits', False, LAVENDER)
                 #rects
                 button_margin = 10
@@ -81,7 +81,7 @@ class Screens:
             case ScreenType.LEADERBOARD:
 
                 self.stats = []
-                self.title = self.title_font.render('leaderboard', False, LAVENDER)
+                self.title = self.title_font.render('recent runs', False, LAVENDER)
 
                 #play and back buttons
                 self.play_button = self.med_font.render('play', False, LAVENDER)
@@ -115,8 +115,6 @@ class Screens:
             
             case _:
                 pass
-
-
     
     def update(self, mouse_pos, clicked=False):
         match(self.type):
@@ -204,12 +202,12 @@ class Screens:
 
                 #exit button
                 if pygame.Rect.collidepoint(self.exit_button_rect, coords):
-                    self.exit_button = self.med_font.render('exit', False, WHITE)
+                    self.exit_button = self.med_font.render('menu', False, WHITE)
                     if clicked:
                         #close the game
                         self.game.close_game()
                 else:
-                    self.exit_button = self.med_font.render('exit', False, LAVENDER)
+                    self.exit_button = self.med_font.render('menu', False, LAVENDER)
             case ScreenType.LEADERBOARD:
                 coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
 
@@ -304,16 +302,27 @@ class Screens:
                 surf.blit(self.credits_button, (self.credits_button_rect.centerx - self.credits_button.get_width()/2, self.credits_button_rect.centery - self.play_button.get_height()/2))
             
             case ScreenType.LEADERBOARD:
+                button_margin=10
                 surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()))
 
-                #draw the words
+                xt_small = pygame.font.SysFont('Arial', 12)
+
+                #draw the play and exit words
                 surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
                 surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
+                #to use for spacing
                 sm_btn = self.small_font.render('run 1', False, LAVENDER)
+                
+                #blit the stat header, (deaths, time(sec), score, Rank)
+                header = ['deaths', 'time', 'score', 'rank']
+                j = 0
+                for heading in header:
+                    surf.blit(xt_small.render(heading, False, WHITE), (self.game.screen_rect.centerx/2 - button_margin + (self.exit_button.get_width() + button_margin) * j, self.title.get_height() + sm_btn.get_height() + button_margin))
+                    j+=1
                 #blit the stats for the previous runs, if any
-                button_margin=10
+                
                 j= -1 #to keep track of how many elements in each row
-                i=1 #for the height
+                i=2 #for the height
                 r=0 #for which run
                 for stat in self.stats:
                     r+=1
@@ -321,8 +330,8 @@ class Screens:
                     if (j%4) == 0: # will be true when j = multiples of 4, how many stats we have
                         i+=1 #increment to the next row down
                         j = 0 #reset the column location
-                    surf.blit(self.small_font.render(stat, False, RED), (self.game.screen_rect.centerx/2 + button_margin + self.exit_button.get_width() * j, self.title.get_height() + sm_btn.get_height() * i))
-
+                    surf.blit(self.small_font.render(stat, False, RED), (self.game.screen_rect.centerx/2 - button_margin + (self.exit_button.get_width() + button_margin) * j, self.title.get_height() + sm_btn.get_height() * i))
+                    
             case ScreenType.CREDITS:
                 surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()))
 
