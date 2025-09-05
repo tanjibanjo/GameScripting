@@ -116,7 +116,7 @@ class PhysicsEntity:
 
             #make highlight around the character behind them
             for highlight_offset in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                surf.blit(heavy_enemy_sillouette, (self.pos[0] - highlight_offset[0] - offset[0] - 2, self.pos[1] - highlight_offset[1] - offset[1] - 2))
+                surf.blit(heavy_enemy_sillouette, (self.pos[0] - highlight_offset[0] - offset[0] - 3, self.pos[1] - highlight_offset[1] - offset[1] - 3))
                 #surf.blit(heavy_enemy_sillouette, (offset))
 
 

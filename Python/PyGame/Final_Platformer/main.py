@@ -88,7 +88,7 @@ class Game:
         self.clouds = Clouds(self.assets['clouds'], count=8)
 
         #define player!
-        self.player = Player(self, (50, 50), (8, 15), PlayerType.ROGUE)
+        self.player = Player(self, (50, 50), (8, 15), PlayerType.ASSASSIN)
         #variables to keep track of the player score and deaths - maybe set up for time to clear later
         self.player_deaths = 0
         self.player_level_score = 0 #for each level - if respawn on, reset the score since enemies reset
@@ -268,10 +268,14 @@ class Game:
             return 'F'
 
     def run(self):
+
+        
         #music - load and start ambience as well
-        pygame.mixer.music.load('data/music2.wav')
+        pygame.mixer.music.load('data/rogue.wav' if self.player.player_class == PlayerType.ROGUE else 'data/assassin.wav')
         pygame.mixer.music.set_volume(0.4)
         pygame.mixer.music.play(-1) #-1 loops forever
+
+
         self.sfx['ambience'].play(-1)
 
         self.load_game()
@@ -334,21 +338,6 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_RETURN:
-                            #reset
-                            self.level = 0
-                            self.load_level(self.level)
-                            self.scene = 1
-                            self.start_point = pygame.time.get_ticks()
-                        if event.key == pygame.K_TAB:
-                            #switch scene and UI for screen 
-                            self.scene = 9
-                            self.user_interface = self.load_screen(ScreenType.CONTROLS)
-                        if event.key == pygame.K_ESCAPE:
-                            self.close_game()
-
 
                 #display stuff
                 #this adds the regular stuff back over the display -- take off for cool effect??
@@ -507,8 +496,6 @@ class Game:
                                     self.sfx['jump'].play()
                             if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
                                 self.player.dash()
-                            if event.key == pygame.K_ESCAPE:
-                                self.close_game()
                     if event.type == pygame.KEYUP: #release key
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             self.movement[0] = False
