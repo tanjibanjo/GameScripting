@@ -133,7 +133,7 @@ class Screens:
                 if pygame.Rect.collidepoint(self.right_button_rect, coords):
                     self.play_button = self.med_font.render('play', False, WHITE)
                     if clicked:
-                        self.game.reset_run()
+                        self.game.reset(new_run=True)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.START:
@@ -176,7 +176,7 @@ class Screens:
                     self.play_button = self.small_font.render('play', False, WHITE)
                     if clicked:
                         #reset
-                        self.game.reset_run()
+                        self.game.reset(new_run=True)
                 else:
                     self.play_button = self.small_font.render('play', False, LAVENDER)
             case ScreenType.GAME_OVER:
@@ -205,7 +205,7 @@ class Screens:
                     self.exit_button = self.med_font.render('menu', False, WHITE)
                     if clicked:
                         #close the game
-                        self.game.close_game()
+                        self.game.reset(new_run=False)
                 else:
                     self.exit_button = self.med_font.render('menu', False, LAVENDER)
             case ScreenType.LEADERBOARD:

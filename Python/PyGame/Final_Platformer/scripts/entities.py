@@ -231,13 +231,12 @@ class Player(PhysicsEntity): #inherit from entity
     def __init__(self, game, pos, size, playerClass=PlayerType.ASSASSIN):
         super().__init__(game, 'player', pos, size)
         self.air_time = 0 #to keep track if in air
-        self.jumps = 2 # two jumps before must hit the ground
         self.wall_slide = False
         self.dashing = 0
         self.grounded = False
         self.player_class = playerClass
-
-        self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.6
+        self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3 # two jumps before must hit the ground
+        self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.7
 
 
     def update(self, tilemap, movement=(0, 0)):
@@ -260,7 +259,7 @@ class Player(PhysicsEntity): #inherit from entity
 
         if self.collisions['down']:
             self.air_time = 0
-            self.jumps = 2
+            self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3
             if not self.grounded:
                 self.jump(False)
 
@@ -357,10 +356,19 @@ class Player(PhysicsEntity): #inherit from entity
     #function for dash
     def dash(self):
         #set the direction and length of dash, based on which way player is turned
-        if not self.dashing:
-            pass
-        self.game.sfx['dash'].play()
-        if self.flip:
-            self.dashing = (-55 if self.player_class == PlayerType.ASSASSIN else -62)
-        else:
-            self.dashing = (55 if self.player_class == PlayerType.ASSASSIN else 62)
+        match(self.player_class):
+            case PlayerType.ROGUE:
+                if not self.dashing:
+                    self.game.sfx['dash'].play()
+                    if self.flip:
+                        self.dashing = -62
+                    else:
+                        self.dashing = 62
+            case PlayerType.ASSASSIN:
+                self.game.sfx['dash'].play()
+                if self.flip:
+                    self.dashing = -55
+                else:
+                    self.dashing = 55
+            case _:
+                [print('SOMETHING WENT WRONG')]

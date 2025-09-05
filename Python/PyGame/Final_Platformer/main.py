@@ -88,7 +88,7 @@ class Game:
         self.clouds = Clouds(self.assets['clouds'], count=8)
 
         #define player!
-        self.player = Player(self, (50, 50), (8, 15), PlayerType.ASSASSIN)
+        self.player = Player(self, (50, 50), (8, 15), PlayerType.ROGUE)
         #variables to keep track of the player score and deaths - maybe set up for time to clear later
         self.player_deaths = 0
         self.player_level_score = 0 #for each level - if respawn on, reset the score since enemies reset
@@ -158,19 +158,32 @@ class Game:
         self.transition = -30
 
     #function to reset to the beginning of the run
-    def reset_run(self):
-        #level
-        self.level = 0
-        self.load_level(self.level)
-        #scene back to gameplay
-        self.scene = SceneType.GAMEPLAY
-        self.block_input = False
-        #reset timer
-        self.start_point = pygame.time.get_ticks()
-        #player stats
-        self.player_deaths = 0
-        self.player_level_score = 0
-        self.player_total_score = 0
+    def reset(self, new_run=False):
+        if new_run: # (true is passed, new run will start)
+            #level
+            self.level = 0
+            self.load_level(self.level)
+            #scene back to gameplay
+            self.scene = SceneType.GAMEPLAY
+            self.block_input = False
+            #reset timer
+            self.start_point = pygame.time.get_ticks()
+            #player stats
+            self.player_deaths = 0
+            self.player_level_score = 0
+            self.player_total_score = 0
+        else:
+            self.level = 'start'
+            self.load_level(self.level)
+            #revert scene
+            self.scene = SceneType.START
+            self.user_interface = self.load_screen(ScreenType.START)
+            self.block_input = False
+            #timer does not need to be reset
+            #stats
+            self.player_deaths = 0
+            self.player_level_score = 0
+            self.player_total_score = 0
 
     #the load game function should read the file (if exists) and then add GameData objects to the saveData in main
     def load_game(self):
