@@ -119,7 +119,10 @@ class Screens:
     def update(self, mouse_pos, clicked=False):
         match(self.type):
             case ScreenType.CONTROLS:
-                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+                if self.game.large_screen:
+                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                else:
+                    coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
                 if pygame.Rect.collidepoint(self.left_button_rect, coords): 
                     self.exit_button = self.med_font.render('back', False, WHITE)
@@ -137,7 +140,10 @@ class Screens:
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.START:
-                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+                if self.game.large_screen:
+                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                else:
+                    coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #change colors if the player is hovering over the button
 
                 #exit button
@@ -180,7 +186,10 @@ class Screens:
                 else:
                     self.play_button = self.small_font.render('play', False, LAVENDER)
             case ScreenType.GAME_OVER:
-                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+                if self.game.large_screen:
+                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                else:
+                    coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
                 #play again button
                 if pygame.Rect.collidepoint(self.play_button_rect, coords):
                     self.play_button = self.med_font.render('play again', False, WHITE)
@@ -209,7 +218,10 @@ class Screens:
                 else:
                     self.exit_button = self.med_font.render('menu', False, LAVENDER)
             case ScreenType.LEADERBOARD:
-                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+                if self.game.large_screen:
+                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                else:
+                    coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
 
                 #handle color change for mouse hover
                 if pygame.Rect.collidepoint(self.exit_button_rect, coords):
@@ -229,7 +241,10 @@ class Screens:
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.CREDITS:
-                coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+                if self.game.large_screen:
+                    coords = (mouse_pos[0] / 4, mouse_pos[1] / 4)
+                else:
+                    coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
 
                 #handle color change for mouse hover
                 if pygame.Rect.collidepoint(self.exit_button_rect, coords):
