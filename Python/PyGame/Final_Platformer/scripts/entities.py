@@ -204,7 +204,7 @@ class Enemy(PhysicsEntity):
                             #self.game.particles.append(Particle(self.game, 'particle', self.game.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * .5, math.sin(angle + math.pi) * speed * .5], frame=random.randint(0, 7)))
                         #self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
                         #self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
-                        #self.game.player_level_score += (75 if self.was_heavy else 50)
+                        self.game.player_level_score += (75 if self.was_heavy else 50)
                         return True #return true to remove enemy in main
                 else:
                     self.heavy_enemy = False

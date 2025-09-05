@@ -197,6 +197,10 @@ class Game:
 
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
+        #handle time, for now just round to 1 dec place
+        self.seconds_passed = round(self.seconds_passed, 1)
+        self.player_total_score = max((self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49), 0)
+
         #append the list
         try:
             #deaths, time passed, score, rank
@@ -369,13 +373,11 @@ class Game:
                             self.movement[0] = False
                             #score
                             self.player_total_score += self.player_level_score
-                            #ui for game over
-                            self.user_interface = self.load_screen(ScreenType.GAME_OVER)
                             #game over
                             self.load_level('game_over')
-                            #add buffs and account for deaths
-                            self.player_total_score = (self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49)
                             self.save_game()
+                            #ui for game over
+                            self.user_interface = self.load_screen(ScreenType.GAME_OVER)
 
                 if self.transition < 0:
                     self.transition +=1

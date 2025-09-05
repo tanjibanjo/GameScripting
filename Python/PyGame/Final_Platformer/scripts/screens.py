@@ -294,9 +294,9 @@ class Screens:
                     i+=1 #increment multiplier for height
                     surf.blit(self.small_font.render(stat, False, WHITE), (self.game.screen_rect.centerx + self.rank.get_width()/2, self.game.screen_rect.centery/2 + self.title.get_height() * i))
                 #now render actual stats
-                surf.blit(self.small_font.render(str(self.game.save_data.time)), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height())
-                surf.blit(self.small_font.render(str(self.game.save_data.deaths), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width() + 10, self.game.screen_rect.centery/2 + self.title.get_height() * 2))
-                surf.blit(self.small_font.render(str(int(self.game.save_data.score)), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()* 3))
+                surf.blit(self.small_font.render(str(self.game.seconds_passed), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()))
+                surf.blit(self.small_font.render(str(self.game.player_deaths), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width() + 10, self.game.screen_rect.centery/2 + self.title.get_height() * 2))
+                surf.blit(self.small_font.render(str(int(self.game.player_total_score)), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()* 3))
                 
                 #buttons
                 surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
@@ -309,17 +309,19 @@ class Screens:
                 #draw the words
                 surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
                 surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
-
+                sm_btn = self.small_font.render('run 1', False, LAVENDER)
                 #blit the stats for the previous runs, if any
+                button_margin=10
                 j= -1 #to keep track of how many elements in each row
-                i=0 #for the height
+                i=1 #for the height
+                r=0 #for which run
                 for stat in self.stats:
+                    r+=1
                     j+=1 #0 to start
                     if (j%4) == 0: # will be true when j = multiples of 4, how many stats we have
                         i+=1 #increment to the next row down
-                        j = -1 #reset the column location
-                    pass
-
+                        j = 0 #reset the column location
+                    surf.blit(self.small_font.render(stat, False, RED), (self.game.screen_rect.centerx/2 + button_margin + self.exit_button.get_width() * j, self.title.get_height() + sm_btn.get_height() * i))
 
             case ScreenType.CREDITS:
                 surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()))
