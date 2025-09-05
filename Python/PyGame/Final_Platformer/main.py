@@ -27,15 +27,15 @@ class Game:
         pygame.init()
 
         #handle window, clock, and icon
-        self.width = 1280 #1280
-        self.height = 960 #960
+        self.width = 640 #1280
+        self.height = 480 #960
         self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
         self.display = pygame.Surface((320, 240), pygame.SRCALPHA) #second surface we use for rendering - render on small screen and scale up to create pixel art effect #320, 240
         #third display for effect stuff
         self.display_2 = pygame.Surface((320, 240))
         self.screen_rect = pygame.Rect(0, 0, 320, 340)
         #variables for setting screen size
-        self.large_screen = 1
+        self.large_screen = 0
 
         icon = load_image('entities/player.png')
         pygame.display.set_caption("I41")
