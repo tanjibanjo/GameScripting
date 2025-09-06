@@ -171,7 +171,7 @@ class Game:
         #transition for between levels
         self.transition = -30
 
-    #function to reset to the beginning of the run
+    #function to reset the ui state - passing false resets to menu, true resets a new run
     def reset(self, new_run=False):
         if new_run: # (true is passed, new run will start)
             #level

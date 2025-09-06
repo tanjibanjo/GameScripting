@@ -195,7 +195,7 @@ class Screens:
                     self.play_button = self.med_font.render('play again', False, WHITE)
                     if clicked:
                         #save the run and then reset to start again, game is saved before this screen
-                        self.game.reset_run()
+                        self.game.reset(True)
                 else:
                     self.play_button = self.med_font.render('play again', False, LAVENDER)
 
@@ -237,7 +237,7 @@ class Screens:
                     self.play_button = self.med_font.render('play', False, WHITE)
                     #clicking
                     if clicked:
-                        self.game.reset_run()
+                        self.game.reset(True)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.CREDITS:
@@ -260,7 +260,7 @@ class Screens:
                     self.play_button = self.med_font.render('play', False, WHITE)
                     #clicking
                     if clicked:
-                        self.game.reset_run()
+                        self.game.reset(True)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case _:
