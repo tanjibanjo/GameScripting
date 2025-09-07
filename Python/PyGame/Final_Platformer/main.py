@@ -10,7 +10,7 @@ import math
 import sys
 import os
 from scripts.entities import PhysicsEntity, Player, Enemy, PlayerType
-from scripts.utils import load_image, load_images, Animation, SceneType, GameData
+from scripts.utils import load_image, load_images, Animation, SceneType, GameData, convert_time
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
 from scripts.particle import Particle
@@ -163,7 +163,7 @@ class Game:
         #camera stuff
         self.scroll = [0, 0]
         
-        #reset dead and level score
+        #reset dead and level score, as well as speed mod
         self.dead = 0
         self.player_level_score = 0
 
@@ -224,9 +224,10 @@ class Game:
 
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
-        #handle time, for now just round to 1 dec place
+        #handle time, for now just round
         self.seconds_passed = round(self.seconds_passed, 1)
         self.player_total_score = max((self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49), 0)
+
 
         #append the list
         try:
@@ -268,15 +269,15 @@ class Game:
 
     #function that takes the player score and returns a letter grade based on that score
     def get_rank(self):
-        if self.player_total_score > 2000:
+        if self.player_total_score > 2700:
             return 'S'
-        elif self.player_total_score > 1700:
+        elif self.player_total_score > 2200:
             return 'A'
-        elif self.player_total_score > 1400:
+        elif self.player_total_score > 1500:
             return 'B'
-        elif self.player_total_score > 1200:
+        elif self.player_total_score > 1100:
             return 'C'
-        elif self.player_total_score > 950:
+        elif self.player_total_score > 900:
             return 'D'
         else:
             return 'F'
@@ -299,6 +300,9 @@ class Game:
                 #fill background
                 self.display.fill((0, 0, 0, 0))
                 self.display_2.blit(self.assets['background'], (0, 0))
+
+                #handle screenshake
+                self.screenshake = max(0, self.screenshake - 1)
 
                 #camera focus on player
                 self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
@@ -397,6 +401,8 @@ class Game:
                             self.load_level('game_over')
                             self.save_game()
                             #ui for game over
+                            self.formatted_time = convert_time(self.seconds_passed)
+
                             self.user_interface = self.load_screen(ScreenType.GAME_OVER)
 
                 if self.transition < 0:
@@ -410,6 +416,7 @@ class Game:
                     if self.dead > 40:
                         self.load_level(self.level)
                         self.player_deaths += 1
+                        self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
 
                 #camera focus on player
                 self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15

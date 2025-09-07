@@ -205,6 +205,11 @@ class Enemy(PhysicsEntity):
                         #self.game.sparks.append(Spark(self.rect().center, 0, 5 + random.random()))
                         #self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
                         self.game.player_level_score += (75 if self.was_heavy else 50)
+                        #add to speed mod? reset when death
+                        if self.game.player.player_class == PlayerType.ASSASSIN:
+                            self.game.player.speed_mod += .025
+                        else:
+                            self.game.player.dash_mod += .25
                         return True #return true to remove enemy in main
                 else:
                     self.heavy_enemy = False
@@ -237,6 +242,7 @@ class Player(PhysicsEntity): #inherit from entity
         self.player_class = playerClass
         self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3 # two jumps before must hit the ground
         self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.7
+        self.dash_mod = 4
 
 
     def update(self, tilemap, movement=(0, 0)):
@@ -301,7 +307,7 @@ class Player(PhysicsEntity): #inherit from entity
         #if we are in first 10 frames of dash, go fast left or right
         #use absolute to remove the direction, keep the velocity - *4 to move faster
         if abs(self.dashing) > 50:
-            self.velocity[0] = abs(self.dashing) / self.dashing * 4
+            self.velocity[0] = abs(self.dashing) / self.dashing * self.dash_mod
             if abs(self.dashing) == 51:
                 self.velocity[0] *= 0.1#lower velocity very quickly after dash is over
             pvelocity = [abs(self.dashing) / self.dashing * random.random() * 3, 0] #set velocity so that particles move with the dash (0-3)
@@ -367,8 +373,8 @@ class Player(PhysicsEntity): #inherit from entity
             case PlayerType.ASSASSIN:
                 self.game.sfx['dash'].play()
                 if self.flip:
-                    self.dashing = -55
+                    self.dashing = -53
                 else:
-                    self.dashing = 55
+                    self.dashing = 53
             case _:
                 [print('SOMETHING WENT WRONG')]

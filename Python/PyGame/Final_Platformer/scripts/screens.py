@@ -307,7 +307,7 @@ class Screens:
                     i+=1 #increment multiplier for height
                     surf.blit(self.small_font.render(stat, False, WHITE), (self.game.screen_rect.centerx + self.rank.get_width()/2, self.game.screen_rect.centery/2 + self.title.get_height() * i))
                 #now render actual stats
-                surf.blit(self.small_font.render(str(self.game.seconds_passed), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()))
+                surf.blit(self.small_font.render((self.game.formatted_time), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()))
                 surf.blit(self.small_font.render(str(self.game.player_deaths), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width() + 10, self.game.screen_rect.centery/2 + self.title.get_height() * 2))
                 surf.blit(self.small_font.render(str(int(self.game.player_total_score)), False, RED), (self.game.screen_rect.centerx + self.rank.get_width()/2 + self.rank.get_width(), self.game.screen_rect.centery/2 + self.title.get_height()* 3))
                 

@@ -44,6 +44,13 @@ def load_images(path):
     #return list
     return images
 
+#function will take the time in seconds and convert it to minutes/seconds format returning the string value
+def convert_time(seconds):
+    total_seconds = round(seconds)
+    seconds = total_seconds % 60 #get seconds left over
+    minutes = int(total_seconds / 60) #get minutes
+
+    return (str(minutes) + ':' + str(seconds))
 
 #define animation class
 class Animation:
