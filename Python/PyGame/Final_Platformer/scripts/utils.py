@@ -48,6 +48,9 @@ def load_images(path):
 def convert_time(seconds):
     total_seconds = round(seconds)
     seconds = total_seconds % 60 #get seconds left over
+    if len(str(seconds)) == 1: #if returns 1, it is implicitly converted to bool, true
+        seconds = str(seconds) + '0'
+
     minutes = int(total_seconds / 60) #get minutes
 
     return (str(minutes) + ':' + str(seconds))
@@ -85,6 +88,9 @@ class Animation:
 class GameData:
     def __init__(self, deaths=0, time=0, score=0, rank='X'):
         self.deaths = int(deaths)
-        self.time = float(time)
+        self.time = time
         self.score = int(score)
         self.rank = rank
+
+
+print(convert_time(180))

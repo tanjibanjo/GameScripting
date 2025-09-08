@@ -207,9 +207,9 @@ class Enemy(PhysicsEntity):
                         self.game.player_level_score += (75 if self.was_heavy else 50)
                         #add to speed mod? reset when death
                         if self.game.player.player_class == PlayerType.ASSASSIN:
-                            self.game.player.speed_mod += .025
+                            self.game.player.speed_mod += .05
                         else:
-                            self.game.player.dash_mod += .25
+                            self.game.player.dash_mod += .05
                         return True #return true to remove enemy in main
                 else:
                     self.heavy_enemy = False

@@ -186,6 +186,7 @@ class Game:
             self.player_deaths = 0
             self.player_level_score = 0
             self.player_total_score = 0
+            self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
         else:
             self.level = 'start'
             self.load_level(self.level)
@@ -198,6 +199,7 @@ class Game:
             self.player_deaths = 0
             self.player_level_score = 0
             self.player_total_score = 0
+            self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
 
     #the load game function should read the file (if exists) and then add GameData objects to the saveData in main
     def load_game(self):
@@ -210,7 +212,7 @@ class Game:
                         deaths = int(file.readline().strip())
                     except ValueError:
                         break
-                    time = float(file.readline().strip())
+                    time = file.readline().strip()
                     score = int(file.readline().strip())
                     rank = file.readline().strip()
 
@@ -224,15 +226,17 @@ class Game:
 
     #the save game function should add the current run stats to the list of GameData, then write to the save file
     def save_game(self):
-        #handle time, for now just round
+        #handle time
         self.seconds_passed = round(self.seconds_passed, 1)
+        self.formatted_time = convert_time(self.seconds_passed)
+
         self.player_total_score = max((self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49), 0)
 
 
         #append the list
         try:
             #deaths, time passed, score, rank
-            self.save_data.append(GameData(self.player_deaths, self.seconds_passed, self.player_total_score, self.get_rank()))
+            self.save_data.append(GameData(self.player_deaths, self.formatted_time, self.player_total_score, self.get_rank()))
         except AttributeError: #raised if the values needed to instantiate GameData are not present(dont exist)
             print('no GameData appended')
 
@@ -243,7 +247,7 @@ class Game:
                 for save in self.save_data:
                     #have to convert to str to write to a txt file
                     file.write(str(save.deaths) + '\n')
-                    file.write(str(save.time) + '\n')
+                    file.write(save.time + '\n')
                     file.write(str(save.score) + '\n')
                     file.write(save.rank + '\n')
         except:
@@ -401,7 +405,6 @@ class Game:
                             self.load_level('game_over')
                             self.save_game()
                             #ui for game over
-                            self.formatted_time = convert_time(self.seconds_passed)
 
                             self.user_interface = self.load_screen(ScreenType.GAME_OVER)
 
