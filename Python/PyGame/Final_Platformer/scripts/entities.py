@@ -206,10 +206,8 @@ class Enemy(PhysicsEntity):
                         #self.game.sparks.append(Spark(self.rect().center, math.pi, 5 + random.random()))
                         self.game.player_level_score += (75 if self.was_heavy else 50)
                         #add to speed mod? reset when death
-                        if self.game.player.player_class == PlayerType.ASSASSIN:
-                            self.game.player.speed_mod += .05
-                        else:
-                            self.game.player.dash_mod += .05
+                        self.game.player.add_buff()
+
                         return True #return true to remove enemy in main
                 else:
                     self.heavy_enemy = False
@@ -243,7 +241,13 @@ class Player(PhysicsEntity): #inherit from entity
         self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3 # two jumps before must hit the ground
         self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.7
         self.dash_mod = 4
-
+    #function handles adding a speed mod or dash mod to player as they get on a roll
+    def add_buff(self):
+        #add bufffs
+        if self.type == PlayerType.ASSASSIN:
+            self.speed_mod = min(self.speed_mod + .5, 3)
+        else:
+            self.dash_mod += .05
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)

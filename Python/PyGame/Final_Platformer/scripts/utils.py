@@ -93,4 +93,3 @@ class GameData:
         self.rank = rank
 
 
-print(convert_time(180))
