@@ -17,6 +17,7 @@ class ScreenType(IntEnum):
     GAME_OVER = 3
     LEADERBOARD = 4
     CREDITS = 5
+    PLAYER_SELECT = 6
 
 class Screens:
     def __init__(self, type, game):
@@ -100,7 +101,6 @@ class Screens:
                         self.stats.append(str(save.rank))
                 else:
                     self.stats = ['no previous runs recorded']
-
             case ScreenType.CREDITS:
                 self.title = self.title_font.render('credits', False, WHITE)
 
@@ -112,7 +112,12 @@ class Screens:
                 button_margin = 10
                 self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
                 self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-            
+            case ScreenType.PLAYER_SELECT:
+                self.title = self.title_font.render('choose skillset')
+
+                
+
+
             case _:
                 pass
     
