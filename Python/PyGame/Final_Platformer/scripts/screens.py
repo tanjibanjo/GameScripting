@@ -4,6 +4,7 @@ import pygame
 import sys
 from enum import IntEnum
 from scripts.utils import SceneType
+from scripts.entities import PlayerType
 
 WHITE = (255, 255, 255)
 LAVENDER = (150, 120, 182)
@@ -113,10 +114,24 @@ class Screens:
                 self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
                 self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
             case ScreenType.PLAYER_SELECT:
-                self.title = self.title_font.render('choose skillset')
+                self.xt_small = pygame.font.SysFont('Arial', 10)
 
+                self.title = self.title_font.render('choose skillset', False, LAVENDER)
+                self.desc = self.xt_small.render('status is increased when enemies are eliminated without dying', False, WHITE)
+
+                self.player_btn1 = self.med_font.render('rogue', False, LAVENDER)
+
+                self.player_btn2 = self.med_font.render('assassin', False, LAVENDER)
+
+                self.descriptions = ['methodical and percise', 'slower movement, three jumps', 'builds momentum - dash length grows', 'fast and ferocious', 'quicker movement, short attack', 'builds intensity - speed increases']
+
+                button_margin = 10
                 
+                self.rogue_rect = pygame.Rect(self.game.screen_rect.centerx/4 + button_margin, self.game.screen_rect.centery/4 + self.player_btn1.get_height() - button_margin, self.player_btn1.get_width() + button_margin, self.player_btn1.get_height() + button_margin)
+                self.assassin_rect = pygame.Rect(self.game.screen_rect.centerx + (self.game.screen_rect.centerx/3) - button_margin, self.game.screen_rect.centery/4 + self.player_btn1.get_height() - button_margin, self.player_btn1.get_width() + button_margin, self.player_btn1.get_height() + button_margin)
 
+                self.r = False
+                self.a = False #these are for the player selection descriptions
 
             case _:
                 pass
@@ -187,7 +202,9 @@ class Screens:
                     self.play_button = self.small_font.render('play', False, WHITE)
                     if clicked:
                         #reset
-                        self.game.reset(new_run=True)
+                        #self.game.reset(new_run=True)
+                        self.game.scene = SceneType.UTILITY
+                        self.game.user_interface = self.game.load_screen(ScreenType.PLAYER_SELECT)
                 else:
                     self.play_button = self.small_font.render('play', False, LAVENDER)
             case ScreenType.GAME_OVER:
@@ -268,6 +285,32 @@ class Screens:
                         self.game.reset(True)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
+            case ScreenType.PLAYER_SELECT:
+                if self.game.large_screen:
+                    coords = (mouse_pos[0] / 3, mouse_pos[1] / 3)
+                else:
+                    coords = (mouse_pos[0] / 2, mouse_pos[1] / 2)
+
+                if pygame.Rect.collidepoint(self.rogue_rect, coords):
+                    self.player_btn1 = self.med_font.render('rogue', False, WHITE)
+                    self.r = True
+                    if clicked:
+                        self.game.player.player_class = PlayerType.ROGUE
+                        self.game.reset(True)
+                else:
+                    self.player_btn1 = self.med_font.render('rogue', False, LAVENDER)
+                    self.r = False
+
+                if pygame.Rect.collidepoint(self.assassin_rect, coords):
+                    self.player_btn2 = self.med_font.render('assassin', False, WHITE)
+                    self.a = True
+                    if clicked:
+                        self.game.player.player_class = PlayerType.ASSASSIN
+                        self.game.reset(True)
+                else:
+                    self.player_btn2 = self.med_font.render('assassin', False, LAVENDER)
+                    self.a = False
+
             case _:
                 pass
 
@@ -323,7 +366,7 @@ class Screens:
             
             case ScreenType.LEADERBOARD:
                 button_margin=10
-                surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()))
+                surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()/2))
 
                 xt_small = pygame.font.SysFont('Arial', 12)
 
@@ -343,9 +386,9 @@ class Screens:
                 
                 j= -1 #to keep track of how many elements in each row
                 i=2 #for the height
-                r=0 #for which run
+
                 for stat in self.stats:
-                    r+=1
+
                     j+=1 #0 to start
                     if (j%4) == 0: # will be true when j = multiples of 4, how many stats we have
                         i+=1 #increment to the next row down
@@ -353,12 +396,47 @@ class Screens:
                     surf.blit(self.small_font.render(stat, False, RED), (self.game.screen_rect.centerx/2 - button_margin + (self.exit_button.get_width() + button_margin) * j, self.title.get_height() + sm_btn.get_height() * i))
                     
             case ScreenType.CREDITS:
-                surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()))
+                surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()/2))
 
                 #draw the words
                 surf.blit(self.exit_button, (self.exit_button_rect.centerx - self.exit_button.get_width()/2, self.exit_button_rect.centery - self.exit_button.get_height()/2))
                 surf.blit(self.play_button, (self.play_button_rect.centerx - self.play_button.get_width()/2, self.play_button_rect.centery - self.play_button.get_height()/2))
 
+            case ScreenType.PLAYER_SELECT:
+                #title
+                surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()/2))
+
+                surf.blit(self.desc, (self.game.screen_rect.centerx - self.desc.get_width()/2, self.title.get_height()/2 + self.title.get_height()))
+                
+                #choices
+                surf.blit(self.player_btn1, (self.rogue_rect.centerx - self.player_btn1.get_width()/2, self.rogue_rect.centery - self.player_btn1.get_height()/2))
+                surf.blit(self.player_btn2, (self.assassin_rect.centerx - self.player_btn2.get_width()/2, self.assassin_rect.centery - self.player_btn2.get_height()/2))
+
+                #descriptions - three for each 
+                i = 0 #keep track of which item in list
+                j = 0 #for the spacing
+
+                button_margin = 10
+
+                for desc in self.descriptions:
+                    surface = self.small_font.render(desc, False, WHITE)
+
+                    #blit the item to underneath the skillset
+                    if self.a:
+                        if i < 3:
+                            surf.blit(surface, (self.game.screen_rect.centerx - surface.get_width()/2, self.rogue_rect.centery + self.player_btn1.get_height() + (self.player_btn1.get_height() * j)))
+                        else:
+                            pass
+                    elif self.r:
+                        if i > 2:
+                            surf.blit(surface, (self.game.screen_rect.centerx - surface.get_width()/2, self.assassin_rect.centery + self.player_btn1.get_height() + (self.player_btn2.get_height() * j)))
+                        else:
+                            pass
+                    i+=1 #increment i for height of descs to increment as well'
+                    j+=1
+                    if(i == 3):
+                        j = 0
+                
 
             case _:
                 pass
