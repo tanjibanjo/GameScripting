@@ -241,6 +241,7 @@ class Player(PhysicsEntity): #inherit from entity
         self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3 # two jumps before must hit the ground
         self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.7
         self.dash_mod = 4
+        
     #function handles adding a speed mod or dash mod to player as they get on a roll
     def add_buff(self):
         #add bufffs
