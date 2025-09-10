@@ -93,7 +93,9 @@ class Screens:
                 button_margin = 10
                 self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
                 self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-                i=0
+                i = len(self.game.save_data) - 1
+
+
                 #recent runs need to be capped at 6 + best run to keep from words going off the screen
                 if len(self.game.save_data) > 0 and len(self.game.save_data) < 7:
                     #get best run and save those stats first
@@ -122,9 +124,9 @@ class Screens:
                             self.stats.append(str(save.time))
                             self.stats.append(str(save.score))
                             self.stats.append(str(save.rank))
-                            i+=1
                         else:
                             pass
+                        i-=1
 
                 else: #0 data
                     self.stats = ['no previous runs recorded']
