@@ -93,14 +93,40 @@ class Screens:
                 button_margin = 10
                 self.exit_button_rect = pygame.Rect(self.game.screen_rect.centerx/4 - button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
                 self.play_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
-
-                if len(self.game.save_data) > 0:
+                i=0
+                #recent runs need to be capped at 6 + best run to keep from words going off the screen
+                if len(self.game.save_data) > 0 and len(self.game.save_data) < 7:
+                    #get best run and save those stats first
+                    best_run = self.get_best_run()
+                    self.stats.append(str(best_run.deaths))
+                    self.stats.append(str(best_run.time))
+                    self.stats.append(str(best_run.score))
+                    self.stats.append(str(best_run.rank))
+                    #now save the rest
                     for save in self.game.save_data:
                         self.stats.append(str(save.deaths))
                         self.stats.append(str(save.time))
                         self.stats.append(str(save.score))
                         self.stats.append(str(save.rank))
-                else:
+                elif len(self.game.save_data) > 6:
+                    #get best run and save those stats first
+                    best_run = self.get_best_run()
+                    self.stats.append(str(best_run.deaths))
+                    self.stats.append(str(best_run.time))
+                    self.stats.append(str(best_run.score))
+                    self.stats.append(str(best_run.rank))
+                    #now get the most recent 6 runs - only append those
+                    for save in self.game.save_data:
+                        if i < 6:
+                            self.stats.append(str(save.deaths))
+                            self.stats.append(str(save.time))
+                            self.stats.append(str(save.score))
+                            self.stats.append(str(save.rank))
+                            i+=1
+                        else:
+                            pass
+
+                else: #0 data
                     self.stats = ['no previous runs recorded']
             case ScreenType.CREDITS:
                 self.title = self.title_font.render('credits', False, WHITE)
@@ -136,6 +162,20 @@ class Screens:
             case _:
                 pass
     
+    def get_best_run(self):
+        stats = []
+        i=0
+        for save in self.game.save_data:
+            stats.append(save.score)
+            i+=1 #lcv, and key to serve as the index as well
+        #sort stats in descending order, first element will be the highest score
+        stats = sorted(stats, reverse=True)
+        best_score = stats[0]
+
+        for save in self.game.save_data:
+            if best_score == save.score:
+                return save
+
     def update(self, mouse_pos, clicked=False):
         match(self.type):
             case ScreenType.CONTROLS:
@@ -394,7 +434,10 @@ class Screens:
                     if (j%4) == 0: # will be true when j = multiples of 4, how many stats we have
                         i+=1 #increment to the next row down
                         j = 0 #reset the column location
-                    surf.blit(self.small_font.render(stat, False, RED), (self.game.screen_rect.centerx/2 - button_margin + (self.exit_button.get_width() + button_margin) * j, self.title.get_height() + sm_btn.get_height() * i))
+                    if i < 4:
+                        surf.blit(self.small_font.render(stat, False, RED), (self.game.screen_rect.centerx/2 - button_margin + (self.exit_button.get_width() + button_margin) * j, self.title.get_height() + sm_btn.get_height() * i))
+                    else:
+                        surf.blit(self.small_font.render(stat, False, WHITE), (self.game.screen_rect.centerx/2 - button_margin + (self.exit_button.get_width() + button_margin) * j, self.title.get_height() + sm_btn.get_height() * i))
                     
             case ScreenType.CREDITS:
                 surf.blit(self.title, (self.game.screen_rect.centerx - self.title.get_width()/2, self.title.get_height()/2))
