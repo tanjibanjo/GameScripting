@@ -217,7 +217,8 @@ class Screens:
                     self.play_button = self.med_font.render('play again', False, WHITE)
                     if clicked:
                         #save the run and then reset to start again, game is saved before this screen
-                        self.game.reset(True)
+                        self.game.scene = SceneType.UTILITY
+                        self.game.user_interface = self.game.load_screen(ScreenType.PLAYER_SELECT)
                 else:
                     self.play_button = self.med_font.render('play again', False, LAVENDER)
 

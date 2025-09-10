@@ -187,6 +187,7 @@ class Game:
             self.player_level_score = 0
             self.player_total_score = 0
             self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
+            self.player.dash_mod = 4
         else:
             self.level = 'start'
             self.load_level(self.level)
@@ -200,6 +201,7 @@ class Game:
             self.player_level_score = 0
             self.player_total_score = 0
             self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
+            self.player.dash_mod = 4
 
     #the load game function should read the file (if exists) and then add GameData objects to the saveData in main
     def load_game(self):
@@ -420,6 +422,7 @@ class Game:
                         self.load_level(self.level)
                         self.player_deaths += 1
                         self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
+                        self.player.dash_mod = 4
 
                 #camera focus on player
                 self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
