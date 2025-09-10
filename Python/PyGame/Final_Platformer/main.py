@@ -279,11 +279,11 @@ class Game:
             return 'S'
         elif self.player_total_score > 2200:
             return 'A'
-        elif self.player_total_score > 1500:
+        elif self.player_total_score > 1600:
             return 'B'
         elif self.player_total_score > 1100:
             return 'C'
-        elif self.player_total_score > 900:
+        elif self.player_total_score > 800:
             return 'D'
         else:
             return 'F'

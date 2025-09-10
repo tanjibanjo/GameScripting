@@ -143,7 +143,7 @@ class Screens:
                 self.xt_small = pygame.font.SysFont('Arial', 10)
 
                 self.title = self.title_font.render('choose skillset', False, LAVENDER)
-                self.desc = self.xt_small.render('status is increased when enemies are eliminated without dying', False, WHITE)
+                self.desc = self.xt_small.render('status is increased when enemies are eliminated without dying', False, RED)
 
                 self.player_btn1 = self.med_font.render('rogue', False, LAVENDER)
 
@@ -463,7 +463,10 @@ class Screens:
                 button_margin = 10
 
                 for desc in self.descriptions:
-                    surface = self.small_font.render(desc, False, WHITE)
+                    if i == 2 or i == 5:
+                        surface = self.small_font.render(desc, False, RED)
+                    else:
+                        surface = self.small_font.render(desc, False, WHITE)
 
                     #blit the item to underneath the skillset
                     if self.a:
