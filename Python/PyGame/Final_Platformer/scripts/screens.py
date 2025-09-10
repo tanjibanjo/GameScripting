@@ -423,12 +423,12 @@ class Screens:
 
                     #blit the item to underneath the skillset
                     if self.a:
-                        if i < 3:
+                        if i > 2:
                             surf.blit(surface, (self.game.screen_rect.centerx - surface.get_width()/2, self.rogue_rect.centery + self.player_btn1.get_height() + (self.player_btn1.get_height() * j)))
                         else:
                             pass
                     elif self.r:
-                        if i > 2:
+                        if i < 3:
                             surf.blit(surface, (self.game.screen_rect.centerx - surface.get_width()/2, self.assassin_rect.centery + self.player_btn1.get_height() + (self.player_btn2.get_height() * j)))
                         else:
                             pass

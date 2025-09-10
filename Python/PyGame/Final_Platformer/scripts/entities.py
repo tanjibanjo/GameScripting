@@ -247,9 +247,8 @@ class Player(PhysicsEntity): #inherit from entity
         if self.player_class == PlayerType.ASSASSIN:
             self.speed_mod = min((self.speed_mod + .05), 3)
         else:
-            self.dash_mod += .05
+            self.dash_mod = min((self.dash_mod + .1), 5)
 
-        print(self.speed_mod)
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
