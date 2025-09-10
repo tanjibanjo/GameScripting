@@ -198,7 +198,7 @@ class Screens:
                 if pygame.Rect.collidepoint(self.right_button_rect, coords):
                     self.play_button = self.med_font.render('play', False, WHITE)
                     if clicked:
-                        self.game.reset(new_run=True)
+                        self.game.user_interface = self.game.load_screen(ScreenType.PLAYER_SELECT)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.START:
@@ -302,7 +302,7 @@ class Screens:
                     self.play_button = self.med_font.render('play', False, WHITE)
                     #clicking
                     if clicked:
-                        self.game.reset(True)
+                        self.game.user_interface = self.game.load_screen(ScreenType.PLAYER_SELECT)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.CREDITS:
@@ -325,7 +325,8 @@ class Screens:
                     self.play_button = self.med_font.render('play', False, WHITE)
                     #clicking
                     if clicked:
-                        self.game.reset(True)
+                        self.game.scene = SceneType.UTILITY
+                        self.game.user_interface = self.game.load_screen(ScreenType.PLAYER_SELECT)
                 else:
                     self.play_button = self.med_font.render('play', False, LAVENDER)
             case ScreenType.PLAYER_SELECT:
