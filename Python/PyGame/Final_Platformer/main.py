@@ -174,6 +174,12 @@ class Game:
     #function to reset the ui state - passing false resets to menu, true resets a new run
     def reset(self, new_run=False):
         if new_run: # (true is passed, new run will start)
+            #music
+            pygame.mixer.music.fadeout(2000)
+            pygame.mixer.music.unload()
+            pygame.mixer.music.load('data/assassin.wav' if self.player.player_class == PlayerType.ASSASSIN else 'data/rogue.wav')
+            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.play(-1)
             #level
             self.level = 0
             self.load_level(self.level)
@@ -189,6 +195,11 @@ class Game:
             self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
             self.player.dash_mod = 4
         else:
+            pygame.mixer.music.fadeout(2000)
+            pygame.mixer.music.unload()
+            pygame.mixer.music.load('data/TitleScene1.wav')
+            pygame.mixer.music.set_volume(0.6)
+            pygame.mixer.music.play(-1)
             self.level = 'start'
             self.load_level(self.level)
             #revert scene
@@ -292,8 +303,8 @@ class Game:
 
         
         #music - load and start ambience as well
-        pygame.mixer.music.load('data/rogue.wav' if self.player.player_class == PlayerType.ROGUE else 'data/assassin.wav')
-        pygame.mixer.music.set_volume(0.4)
+        pygame.mixer.music.load('data/TitleScene1.wav')
+        pygame.mixer.music.set_volume(0.6)
         pygame.mixer.music.play(-1) #-1 loops forever
 
 
