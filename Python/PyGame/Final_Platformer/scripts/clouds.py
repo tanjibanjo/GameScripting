@@ -12,8 +12,10 @@ class Cloud:
         self.pos[0] += self.speed
 
     def render(self, surf, offset=(0, 0)):
-        render_pos = (self.pos[0] - offset[0] * self.depth, self.pos[1] - offset[1] * self.depth) #if depth is 0.5, cloud will move less since it is further away - easy paralax effect
-        surf.blit(self.img, (render_pos[0] % (surf.get_width() + self.img.get_width()) - self.img.get_width(), render_pos[1] % (surf.get_height() + self.img.get_height()) - self.img.get_height()))
+        render_pos = (self.pos[0] * self.depth, self.pos[1] * self.depth) #if depth is 0.5, cloud will move less since it is further away - easy paralax effect
+        #original is below
+        #render_pos = (self.pos[0] - offset[0] * self.depth, self.pos[1] - offset[1] * self.depth) #if depth is 0.5, cloud will move less since it is further away - easy paralax effect
+        surf.blit(self.img, (render_pos[0] % (surf.get_width() + self.img.get_width()) - self.img.get_width(), render_pos[1] % (surf.get_height() / 3 + self.img.get_height()) - self.img.get_height()))
 
 #class holds info for a bunch of clouds
 class Clouds:
