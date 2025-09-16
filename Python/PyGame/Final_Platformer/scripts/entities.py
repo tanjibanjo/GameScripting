@@ -294,14 +294,13 @@ class Player(PhysicsEntity): #inherit from entity
             self.set_action('wall_slide')
         #only check other states if not in wall slide or reg slide action
 
-        if not self.wall_slide:
-            if not self.sliding:
-                if self.air_time > 4:
-                    self.set_action('jump')
-                elif movement[0] != 0:
-                    self.set_action('run')
-                else:
-                    self.set_action('idle')
+        if not self.wall_slide and not self.sliding:
+            if self.air_time > 4:
+                self.set_action('jump')
+            elif movement[0] != 0:
+                self.set_action('run')
+            else:
+                self.set_action('idle')
 
         if abs(self.dashing) in {60, 50}: #at start or end of dash
             for i in range(11): #create 11 particles with random angles and speeds

@@ -261,7 +261,7 @@ class Game:
         self.seconds_passed = round(self.seconds_passed, 1)
         self.formatted_time = convert_time(self.seconds_passed)
 
-        self.player_total_score = max((self.player_total_score + ((180 - self.seconds_passed) * 7) - self.player_deaths * 49), 0)
+        self.player_total_score = max((self.player_total_score + ((200 - self.seconds_passed) * 7) - self.player_deaths * 49), 0)
 
 
         #append the list
@@ -420,7 +420,7 @@ class Game:
                     self.transition += 1
                     if self.transition > 30:
                         #check if last level is finished
-                        if self.levels_passed + 3 < self.number_levels: #level is not the last one - account for two extra levels in start and game over screens
+                        if self.levels_passed + 5 < self.number_levels: #level is not the last one - account for two extra levels in start and game over screens
                             #use get_map to get a random map id, but first make sure to mark this one as used
                             self.maps[self.level] += 1 #increment to true
                             self.level = self.get_map()
