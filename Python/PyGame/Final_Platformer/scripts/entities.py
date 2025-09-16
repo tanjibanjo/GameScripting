@@ -236,6 +236,7 @@ class Player(PhysicsEntity): #inherit from entity
         self.air_time = 0 #to keep track if in air
         self.wall_slide = False
         self.dashing = 0
+        self.sliding = 0
         self.grounded = False
         self.player_class = playerClass
         self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3 # two jumps before must hit the ground
@@ -275,7 +276,7 @@ class Player(PhysicsEntity): #inherit from entity
             self.air_time = 0
             self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3
             if not self.grounded:
-                self.jump(False)
+                self.grounded = True
 
 
         #reset wallslide every frame - has to be made true
@@ -291,17 +292,19 @@ class Player(PhysicsEntity): #inherit from entity
                 self.flip = True
 
             self.set_action('wall_slide')
-        #only check other states if not in wall slide action
+        #only check other states if not in wall slide or reg slide action
+
         if not self.wall_slide:
-            if self.air_time > 4:
-                self.set_action('jump')
-            elif movement[0] != 0:
-                self.set_action('run')
-            else:
-                self.set_action('idle')
+            if not self.sliding:
+                if self.air_time > 4:
+                    self.set_action('jump')
+                elif movement[0] != 0:
+                    self.set_action('run')
+                else:
+                    self.set_action('idle')
 
         if abs(self.dashing) in {60, 50}: #at start or end of dash
-            for i in range(15): #create 15 particles with random angles and speeds
+            for i in range(11): #create 11 particles with random angles and speeds
                 angle = random.random() * math.pi * 2
                 speed = random.random() * 0.5 + 0.5 #.5 to 1
                 pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed] #convert into cartesian coordinates for velocity
@@ -312,6 +315,14 @@ class Player(PhysicsEntity): #inherit from entity
             self.dashing = max(0, self.dashing - 1)
         if self.dashing < 0:
             self.dashing = min(0, self.dashing + 1)
+
+        #same for sliding
+        if self.sliding > 0:
+            self.sliding = max(0, self.sliding - 1)
+        if self.sliding < 0:
+            self.sliding = min(0, self.sliding + 1)
+
+
         #if we are in first 10 frames of dash, go fast left or right
         #use absolute to remove the direction, keep the velocity - *4 to move faster
         if abs(self.dashing) > 50:
@@ -321,12 +332,16 @@ class Player(PhysicsEntity): #inherit from entity
             pvelocity = [abs(self.dashing) / self.dashing * random.random() * 3, 0] #set velocity so that particles move with the dash (0-3)
             self.game.particles.append(Particle(self.game, 'particle', self.rect().center, velocity=pvelocity, frame= random.randint(0, 7)))
             
+        if abs(self.sliding) > 20:
+            self.velocity[0] = abs(self.sliding) / self.sliding
+            
 
         #normalize the horizontal velocity as well, similar to y axis
         if self.velocity[0] > 0:
             self.velocity[0] = max(self.velocity[0] - 0.1, 0) #bring it slowly to 0
         else:
             self.velocity[0] = min(self.velocity[0] + 0.1, 0) #bring it slowly to 0
+
 
     #build on render
     def render(self, surf, offset=(0, 0)):
@@ -365,7 +380,7 @@ class Player(PhysicsEntity): #inherit from entity
             
         else: #called when release the jump button
             self.gravity = .15
-            self.grounded = True
+
 
     #function for dash
     def dash(self):
@@ -386,3 +401,12 @@ class Player(PhysicsEntity): #inherit from entity
                     self.dashing = 53
             case _:
                 [print('SOMETHING WENT WRONG')]
+
+    #function for slide
+    def slide(self):
+        if not self.sliding and self.grounded:
+            if self.flip:
+                self.sliding = -25
+            else:
+                self.sliding = 25
+            self.set_action('slide')

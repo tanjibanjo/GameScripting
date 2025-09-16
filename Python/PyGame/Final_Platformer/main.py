@@ -518,7 +518,7 @@ class Game:
                             self.sparks.append(Spark(projectile[0], random.random() - 0.5 + (math.pi if projectile[1] > 0 else 0), 2 + random.random()))
                     elif projectile[2] > 360: #if timer is greater than 6s
                         self.projectiles.remove(projectile)
-                    elif abs(self.player.dashing) < 50: # give i frame
+                    elif abs(self.player.dashing) < 50 and not self.player.sliding: # give i frame if in dash or slide
                         if self.player.rect().collidepoint(projectile[0]):
                             self.projectiles.remove(projectile)
                             self.dead += 1
@@ -572,6 +572,8 @@ class Game:
                                     self.sfx['jump'].play()
                             if event.key == pygame.K_LSHIFT or event.key == pygame.K_x:
                                 self.player.dash()
+                            if event.key == pygame.K_c or event.key == pygame.K_LCTRL:
+                                self.player.slide()
                     if event.type == pygame.KEYUP: #release key
                         if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                             self.movement[0] = False
