@@ -139,7 +139,7 @@ class Enemy(PhysicsEntity):
 
         #generate heavy enemy logic
         if self.game.level != 'start' or self.game.level != 'game_over':
-            if self.game.level >= 2:
+            if self.game.levels_passed >= 2:
                 #randomly choose if will be heavy enemy or not 1/4 chance rn
                 if(random.randint(0, 3) < 1):
                     self.heavy_enemy = True
