@@ -196,6 +196,7 @@ class Game:
     #function to reset the ui state - passing false resets to menu, true resets a new run
     def reset(self, new_run=False):
         if new_run: # (true is passed, new run will start)
+
             #map reload
             i=0
             for j in range(self.number_levels - 2):
@@ -203,7 +204,7 @@ class Game:
                 i+=1
                 
             #music
-            pygame.mixer.music.fadeout(2000)
+            pygame.mixer.music.fadeout(1000)
             pygame.mixer.music.unload()
             pygame.mixer.music.load('data/assassin.wav' if self.player.player_class == PlayerType.ASSASSIN else 'data/rogue.wav')
             pygame.mixer.music.set_volume(0.4)
@@ -339,6 +340,7 @@ class Game:
                 #handle screenshake
                 self.screenshake = max(0, self.screenshake - 1)
 
+
                 #camera focus on player
                 self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
                 self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 15
@@ -369,6 +371,9 @@ class Game:
                 self.user_interface.update(coords, clicked=clicked)
                 self.user_interface.render(self.display)
 
+                if self.transition < 0:
+                    self.transition +=1
+
                 #render tile map behind the player
                 self.tilemap.render(self.display, offset=render_scroll)
 
@@ -394,6 +399,13 @@ class Game:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_TAB:
                             self.change_screen_size()
+
+                #only when transitioning
+                if self.transition:
+                    transition_surf = pygame.Surface(self.display.get_size())
+                    pygame.draw.circle(transition_surf, (255, 255, 255), (self.display.get_width() // 2, self.display.get_height() // 2), (30 - abs(self.transition)) * 8)
+                    transition_surf.set_colorkey((255, 255, 255))
+                    self.display.blit(transition_surf, (0, 0))
 
 
                 #display stuff
