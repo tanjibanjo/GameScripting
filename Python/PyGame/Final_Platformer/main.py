@@ -107,6 +107,15 @@ class Game:
         self.number_levels = len(os.listdir(BASE_PATH + '/data/maps'))
         self.level = 'start'
         self.load_level(self.level)
+        self.levels_passed = 0
+        self.maps = {}
+
+        #load maps - 0 for false, this is for random map selection
+        i=0
+        for j in range(self.number_levels - 2):
+            self.maps[i] = 0
+            i+=1
+
 
         #game stuff- title screen etc
         self.scene = SceneType.START
@@ -133,6 +142,22 @@ class Game:
             self.height = 480 #960
             self.screen = pygame.display.set_mode((self.width, self.height)) #640, 480
         
+    #function to return a map id in int form
+    # -should make sure that the map hasn't been used yet and also keeps track of how many maps cleared
+    #  -this way, there can be a bunch of maps and it will be more randomized runs
+    def get_map(self):
+        choice = random.randint(1, self.number_levels - 3)
+        print('inside map')
+        if not self.maps[choice]:
+            print(choice)
+            return choice
+        else:
+            while self.maps[choice]:
+                choice = random.randint(1, self.number_levels - 3)
+                if not self.maps[choice]:
+                    print(choice)
+                    return choice
+
 
     #function to load the map
     def load_level(self, map_id):
@@ -174,6 +199,12 @@ class Game:
     #function to reset the ui state - passing false resets to menu, true resets a new run
     def reset(self, new_run=False):
         if new_run: # (true is passed, new run will start)
+            #map reload
+            i=0
+            for j in range(self.number_levels - 2):
+                self.maps[i] = 0
+                i+=1
+                
             #music
             pygame.mixer.music.fadeout(2000)
             pygame.mixer.music.unload()
@@ -181,6 +212,7 @@ class Game:
             pygame.mixer.music.set_volume(0.4)
             pygame.mixer.music.play(-1)
             #level
+            self.levels_passed = 0
             self.level = 0
             self.load_level(self.level)
             #scene back to gameplay
@@ -192,7 +224,7 @@ class Game:
             self.player_deaths = 0
             self.player_level_score = 0
             self.player_total_score = 0
-            self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
+            self.player.speed_mod = 2.0 if self.player.player_class == PlayerType.ASSASSIN else 1.7
             self.player.dash_mod = 4
         else:
             #music is already running from end game screen in this case
@@ -202,13 +234,6 @@ class Game:
             self.scene = SceneType.START
             self.user_interface = self.load_screen(ScreenType.START)
             self.block_input = False
-            #timer does not need to be reset
-            #stats
-            self.player_deaths = 0
-            self.player_level_score = 0
-            self.player_total_score = 0
-            self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
-            self.player.dash_mod = 4
 
     #the load game function should read the file (if exists) and then add GameData objects to the saveData in main
     def load_game(self):
@@ -398,13 +423,21 @@ class Game:
                     self.transition += 1
                     if self.transition > 30:
                         #check if last level is finished
-                        if self.level + 3 < self.number_levels: #level is not the last one - account for two extra levels in start and game over screens
-                            self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
+                        if self.levels_passed + 3 < self.number_levels: #level is not the last one - account for two extra levels in start and game over screens
+                            #use get_map to get a random map id, but first make sure to mark this one as used
+                            self.maps[self.level] += 1 #increment to true
+                            self.level = self.get_map()
+                            
+                            #self.level = min(self.level + 1, self.number_levels - 1) #increment to next level if all enemies are destroyed - levels must be names in ascending order
+                            self.levels_passed +=1
                             #add score
                             self.player_total_score += self.player_level_score
                             #load new level
                             self.load_level(self.level)
                         else: #equal 
+                            self.levels_passed += 1
+                            self.maps[self.level] += 1
+
                             self.block_input = True
                             self.scene = SceneType.GAME_OVER
                             self.movement[0] = False

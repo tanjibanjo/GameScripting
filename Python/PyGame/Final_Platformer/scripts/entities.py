@@ -239,7 +239,7 @@ class Player(PhysicsEntity): #inherit from entity
         self.grounded = False
         self.player_class = playerClass
         self.jumps = 2 if self.player_class == PlayerType.ASSASSIN else 3 # two jumps before must hit the ground
-        self.speed_mod = 2.2 if self.player_class == PlayerType.ASSASSIN else 1.7
+        self.speed_mod = 2.0 if self.player_class == PlayerType.ASSASSIN else 1.7
         self.dash_mod = 4
         
     #function handles adding a speed mod or dash mod to player as they get on a roll
@@ -247,8 +247,10 @@ class Player(PhysicsEntity): #inherit from entity
         #add bufffs
         if self.player_class == PlayerType.ASSASSIN:
             self.speed_mod = min((self.speed_mod + .05), 3)
+
         else:
             self.dash_mod = min((self.dash_mod + .1), 5)
+
 
 
     def update(self, tilemap, movement=(0, 0)):
@@ -373,9 +375,9 @@ class Player(PhysicsEntity): #inherit from entity
                 if not self.dashing:
                     self.game.sfx['dash'].play()
                     if self.flip:
-                        self.dashing = -62
+                        self.dashing = -59
                     else:
-                        self.dashing = 62
+                        self.dashing = 59 
             case PlayerType.ASSASSIN:
                 self.game.sfx['dash'].play()
                 if self.flip:
