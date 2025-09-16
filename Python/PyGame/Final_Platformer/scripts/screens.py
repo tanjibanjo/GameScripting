@@ -41,10 +41,12 @@ class Screens:
                 self.dash = self.med_font.render('dash', False, LAVENDER)
                 self.move = self.med_font.render('move', False, LAVENDER)
                 self.jump = self.med_font.render('jump', False, LAVENDER)
+                self.slide = self.med_font.render('slide', False, LAVENDER)
                 #descriptions
                 self.desc_dash = self.desc_font.render("X or LSHIFT - dash through enemies to eliminate them.", False, WHITE)
                 self.desc_move = self.desc_font.render('A/D or ARROW KEYS - use to wallslide while in air.', False, WHITE)
                 self.desc_jump = self.desc_font.render('SPACE or W - you have two jumps.', False, WHITE)
+                self.desc_slide = self.desc_font.render('C or CTRL - slide to avoid projectiles', False, WHITE)
                 self.objective = self.desc_font.render('mission: eliminate the enemies to clear the level.', False, RED)
                 #button words
                 self.play_button = self.med_font.render('play', False, LAVENDER)
@@ -361,18 +363,23 @@ class Screens:
     def render(self, surf):
         match(self.type):
             case ScreenType.CONTROLS:
+                margin = 20
                 #display stuff
                 #screen title
-                self.game.display_2.blit(self.control_screen_title, (self.game.screen_rect.centerx - self.control_screen_title.get_width()/2, self.control_screen_title.get_height()))
+                self.game.display_2.blit(self.control_screen_title, (self.game.screen_rect.centerx - self.control_screen_title.get_width()/2, self.control_screen_title.get_height() - margin))
                 #main controls
-                surf.blit(self.dash, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height())))
-                surf.blit(self.move, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 2)))
-                surf.blit(self.jump, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 4)))
+                surf.blit(self.dash, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height()) - margin))
+                surf.blit(self.move, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 2) - margin))
+                surf.blit(self.jump, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 4) - margin))
+                surf.blit(self.slide, (self.game.screen_rect.centerx / 4, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 6) - margin))
+
                 #descriptions
-                surf.blit(self.desc_dash, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height())))
-                surf.blit(self.desc_move, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3)))
-                surf.blit(self.desc_jump, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5)))
-                surf.blit(self.objective, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 6)))
+                surf.blit(self.desc_dash, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height()) - margin))
+                surf.blit(self.desc_move, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 3) - margin))
+                surf.blit(self.desc_jump, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 5) - margin))
+                surf.blit(self.desc_slide, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 7) - margin))
+
+                surf.blit(self.objective, (self.game.screen_rect.centerx / 4 + 5, (15 + self.control_screen_title.get_height() + self.dash.get_height() * 7) - margin * .5))
                 #draw the words
                 surf.blit(self.exit_button, (self.left_button_rect.centerx - self.exit_button.get_width()/2, self.left_button_rect.centery - self.exit_button.get_height()/2))
                 surf.blit(self.play_button, (self.right_button_rect.centerx - self.play_button.get_width()/2, self.right_button_rect.centery - self.play_button.get_height()/2))
