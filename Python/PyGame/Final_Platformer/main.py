@@ -195,11 +195,7 @@ class Game:
             self.player.speed_mod = 2.2 if self.player.player_class == PlayerType.ASSASSIN else 1.7
             self.player.dash_mod = 4
         else:
-            #pygame.mixer.music.fadeout(2000)
-            #pygame.mixer.music.unload()
-            #pygame.mixer.music.load('data/TitleScene1.wav')
-            #pygame.mixer.music.set_volume(0.6)
-            #pygame.mixer.music.play(-1)
+            #music is already running from end game screen in this case
             self.level = 'start'
             self.load_level(self.level)
             #revert scene
