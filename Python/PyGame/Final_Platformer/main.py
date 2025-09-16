@@ -147,15 +147,12 @@ class Game:
     #  -this way, there can be a bunch of maps and it will be more randomized runs
     def get_map(self):
         choice = random.randint(1, self.number_levels - 3)
-        print('inside map')
         if not self.maps[choice]:
-            print(choice)
             return choice
         else:
             while self.maps[choice]:
                 choice = random.randint(1, self.number_levels - 3)
                 if not self.maps[choice]:
-                    print(choice)
                     return choice
 
 
