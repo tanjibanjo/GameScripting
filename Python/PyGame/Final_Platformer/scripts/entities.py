@@ -308,7 +308,7 @@ class Player(PhysicsEntity): #inherit from entity
             else:
                 self.set_action('idle')
         
-        print(self.air_time)
+
 
         if abs(self.dashing) in {60, 50}: #at start or end of dash
             for i in range(11): #create 11 particles with random angles and speeds
