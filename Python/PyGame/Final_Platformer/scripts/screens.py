@@ -57,7 +57,7 @@ class Screens:
                 self.right_button_rect = pygame.Rect(self.game.screen_rect.centerx + button_margin, self.game.screen_rect.centery + self.play_button.get_height() + button_margin, self.play_button.get_width() + button_margin * 2, self.play_button.get_height() + button_margin)
             case ScreenType.START:
                 #title and button words
-                self.start_title = self.title_font.render("2d.samurai", False, (150, 120, 182))
+                self.start_title = self.title_font.render("samurai41", False, (150, 120, 182))
                 self.play_button = self.small_font.render("play", False, LAVENDER)
                 self.exit_button = self.small_font.render('exit', False, LAVENDER)
                 self.controls_button = self.small_font.render('controls', False, LAVENDER)

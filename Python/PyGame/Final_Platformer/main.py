@@ -591,6 +591,8 @@ class Game:
                         if event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
                             if not self.player.grounded:
                                 self.player.jump(False) #passing false means the jump button is disengaged, and brings gravity back
+                        if event.key == pygame.K_c or event.key == pygame.K_LCTRL:
+                                self.player.sliding = 0
 
                 #only when transitioning
                 if self.transition:

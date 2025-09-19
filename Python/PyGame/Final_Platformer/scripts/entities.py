@@ -278,6 +278,12 @@ class Player(PhysicsEntity): #inherit from entity
             if not self.grounded:
                 self.grounded = True
 
+        #same for sliding
+        if self.sliding > 0:
+            self.sliding = max(0, self.sliding - 1)
+        if self.sliding < 0:
+            self.sliding = min(0, self.sliding + 1)
+
 
         #reset wallslide every frame - has to be made true
         self.wall_slide = False
@@ -295,12 +301,14 @@ class Player(PhysicsEntity): #inherit from entity
         #only check other states if not in wall slide or reg slide action
 
         if not self.wall_slide and not self.sliding:
-            if self.air_time > 4:
+            if self.air_time > 5:
                 self.set_action('jump')
             elif movement[0] != 0:
                 self.set_action('run')
             else:
                 self.set_action('idle')
+        
+        print(self.air_time)
 
         if abs(self.dashing) in {60, 50}: #at start or end of dash
             for i in range(11): #create 11 particles with random angles and speeds
@@ -314,12 +322,6 @@ class Player(PhysicsEntity): #inherit from entity
             self.dashing = max(0, self.dashing - 1)
         if self.dashing < 0:
             self.dashing = min(0, self.dashing + 1)
-
-        #same for sliding
-        if self.sliding > 0:
-            self.sliding = max(0, self.sliding - 1)
-        if self.sliding < 0:
-            self.sliding = min(0, self.sliding + 1)
 
 
         #if we are in first 10 frames of dash, go fast left or right
@@ -409,3 +411,4 @@ class Player(PhysicsEntity): #inherit from entity
             else:
                 self.sliding = 25
             self.set_action('slide')
+            
